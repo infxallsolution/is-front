@@ -21,14 +21,10 @@ export const LoginForm = props => {
 	const navigate = useNavigate();
 
 	const { 
-		otherSignIn, 
 		showForgetPassword, 
 		hideAuthMessage,
 		onForgetPasswordClick,
 		showLoading,
-		signInWithGoogle,
-		signInWithFacebook,
-		extra, 
 		signIn, 
 		token, 
 		loading,
@@ -39,7 +35,7 @@ export const LoginForm = props => {
 	} = props
 
 	const initialCredential = {
-		email: 'user1@themenate.net',
+		userName: 'user1@themenate.net',
 		password: '2005ipo'
 	}
 
@@ -47,16 +43,6 @@ export const LoginForm = props => {
 		showLoading()
 		signIn(values);
 	};
-
-	const onGoogleLogin = () => {
-		showLoading()
-		signInWithGoogle()
-	}
-
-	const onFacebookLogin = () => {
-		showLoading()
-		signInWithFacebook()
-	}
 
 	useEffect(() => {
 		if (token !== null && allowRedirect) {
@@ -69,31 +55,6 @@ export const LoginForm = props => {
 			};
 		}
 	});
-	
-	const renderOtherSignIn = (
-		<div>
-			<Divider>
-				<span className="text-muted font-size-base font-weight-normal">or connect with</span>
-			</Divider>
-			<div className="d-flex justify-content-center">
-				<Button 
-					onClick={() => onGoogleLogin()} 
-					className="mr-2" 
-					disabled={loading} 
-					icon={<CustomIcon svg={GoogleSVG}/>}
-				>
-					Google
-				</Button>
-				<Button 
-					onClick={() => onFacebookLogin()} 
-					icon={<CustomIcon svg={FacebookSVG}/>}
-					disabled={loading} 
-				>
-					Facebook
-				</Button>
-			</div>
-		</div>
-	)
 
 	return (
 		<>
@@ -112,8 +73,8 @@ export const LoginForm = props => {
 				onFinish={onLogin}
 			>
 				<Form.Item 
-					name="email" 
-					label="Email" 
+					name="userName" 
+					label="Nombre de usuario" 
 					rules={[
 						{ 
 							required: true,
@@ -130,7 +91,7 @@ export const LoginForm = props => {
 					name="password" 
 					label={
 						<div className={`${showForgetPassword? 'd-flex justify-content-between w-100 align-items-center' : ''}`}>
-							<span>Password</span>
+							<span>Contraseña</span>
 							{
 								showForgetPassword && 
 								<span 
@@ -153,13 +114,10 @@ export const LoginForm = props => {
 				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit" block loading={loading}>
-						Sign In
+						Iniciar sesión
 					</Button>
 				</Form.Item>
-				{
-					otherSignIn ? renderOtherSignIn : null
-				}
-				{ extra }
+				
 			</Form>
 		</>
 	)
