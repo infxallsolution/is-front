@@ -1,6 +1,10 @@
-import { DashboardOutlined, YuqueOutlined } from '@ant-design/icons';
-import { APP_PREFIX_PATH } from 'configs/AppConfig'
-
+import {
+  DashboardOutlined,
+  YuqueOutlined,
+  UsergroupAddOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
+import { APP_PREFIX_PATH } from "configs/AppConfig";
 
 const dashBoardNavTree = [
   {
@@ -22,43 +26,33 @@ const dashBoardNavTree = [
     ],
   },
   {
-    key: "pollination",
-    path: `${APP_PREFIX_PATH}/pollination`,
-    title: "Pollination",
-    icon: YuqueOutlined,
+    key: "Admin",
+    path: `${APP_PREFIX_PATH}/admin`,
+    title: "Administracion",
+    icon: UsergroupAddOutlined,
     breadcrumb: false,
     isGroupTitle: true,
     submenu: [
       {
-        key: "Farm",
-        path: `${APP_PREFIX_PATH}/pollination/farm`,
-        title: "Farm",
-        icon: YuqueOutlined,
+        key: "clients",
+        path: `${APP_PREFIX_PATH}/admin/clients`,
+        title: "Clientes",
+        icon: UsergroupAddOutlined,
         breadcrumb: false,
         submenu: [],
       },
       {
-        key: "Lot",
-        path: `${APP_PREFIX_PATH}/pollination/lot`,
-        title: "Lot",
-        icon: YuqueOutlined,
+        key: "modules",
+        path: `${APP_PREFIX_PATH}/admin/modules`,
+        title: "Modulos",
+        icon: UnorderedListOutlined,
         breadcrumb: false,
         submenu: [],
       },
-      {
-        key: "Section",
-        path: `${APP_PREFIX_PATH}/pollination/section`,
-        title: "Section",
-        icon: YuqueOutlined,
-        breadcrumb: false,
-        submenu: [],
-      }
     ],
   },
 ];
 
-const navigationConfig = [
-  ...dashBoardNavTree
-]
+const navigationConfig = [...dashBoardNavTree];
 
 export default navigationConfig;

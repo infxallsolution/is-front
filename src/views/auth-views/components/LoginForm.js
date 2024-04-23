@@ -35,7 +35,7 @@ export const LoginForm = props => {
 	} = props
 
 	const initialCredential = {
-		userName: 'user1@themenate.net',
+		email: 'user1@themenate.net',
 		password: '2005ipo'
 	}
 
@@ -73,7 +73,7 @@ export const LoginForm = props => {
 				onFinish={onLogin}
 			>
 				<Form.Item 
-					name="userName" 
+					name="email" 
 					label="Nombre de usuario" 
 					rules={[
 						{ 

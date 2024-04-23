@@ -31,18 +31,13 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/app-views/analytics/index')),
     },
     {
-        key: 'pollinitation.farm',
-        path: `${APP_PREFIX_PATH}/pollination/farm`,
-        component: React.lazy(() => import('views/app-views/pollination/farm')),
+        key: "clients.register",
+        path: `${APP_PREFIX_PATH}/admin/clients`,
+        component: React.lazy(() => import('views/app-views/admin/clients')),
     },
     {
-        key: 'pollinitation.lot',
-        path: `${APP_PREFIX_PATH}/pollination/lot`,
-        component: React.lazy(() => import('views/app-views/pollination/lot')),
-    },
-    {
-        key: 'pollinitation.section',
-        path: `${APP_PREFIX_PATH}/pollination/section`,
-        component: React.lazy(() => import('views/app-views/pollination/section')),
+        key: "modules",
+        path: `${APP_PREFIX_PATH}/admin/modules`,
+        component: React.lazy(() => import('views/app-views/admin/modules')),
     }
 ]
