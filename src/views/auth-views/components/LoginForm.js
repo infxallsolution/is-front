@@ -3,15 +3,11 @@ import { connect } from 'react-redux';
 import { Button, Form, Input, Divider, Alert } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-import { GoogleSVG, FacebookSVG } from 'assets/svg/icon';
-import CustomIcon from 'components/util-components/CustomIcon'
 import { 
 	signIn, 
 	showLoading, 
 	showAuthMessage, 
 	hideAuthMessage, 
-	signInWithGoogle, 
-	signInWithFacebook 
 } from 'store/slices/authSlice';
 import { useNavigate } from 'react-router-dom'
 import { motion } from "framer-motion"
@@ -147,8 +143,6 @@ const mapDispatchToProps = {
 	showAuthMessage,
 	showLoading,
 	hideAuthMessage,
-	signInWithGoogle,
-	signInWithFacebook
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

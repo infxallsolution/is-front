@@ -1,5 +1,5 @@
 import { Card, Col, Row } from 'antd';
-import ModulesForm from 'components/app-components/Modules/ModulesForm';
+import ModulesForm from 'components/app-components/modules/ModulesForm';
 import AppHeader from 'components/shared-components/AppHeader'
 import React from 'react'
 
