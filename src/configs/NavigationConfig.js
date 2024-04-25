@@ -35,7 +35,7 @@ const dashBoardNavTree = [
     submenu: [
       {
         key: "clients",
-        path: `${APP_PREFIX_PATH}/admin/clients`,
+        path: `${APP_PREFIX_PATH}/admin/clients/list`,
         title: "Clientes",
         icon: UsergroupAddOutlined,
         breadcrumb: false,

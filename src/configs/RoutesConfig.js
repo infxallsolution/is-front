@@ -32,8 +32,13 @@ export const protectedRoutes = [
     },
     {
         key: "clients.register",
-        path: `${APP_PREFIX_PATH}/admin/clients`,
-        component: React.lazy(() => import('views/app-views/admin/clients')),
+        path: `${APP_PREFIX_PATH}/admin/clients/register`,
+        component: React.lazy(() => import('views/app-views/admin/clients/register')),
+    },
+    {
+        key: "clients.list",
+        path: `${APP_PREFIX_PATH}/admin/clients/list`,
+        component: React.lazy(() => import('views/app-views/admin/clients/listClients')),
     },
     {
         key: "modules",

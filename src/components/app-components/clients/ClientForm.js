@@ -5,70 +5,78 @@ import {
   UserOutlined,
   NumberOutlined,
   CaretDownOutlined,
+  MailOutlined,
+  NodeIndexOutlined,
 } from "@ant-design/icons";
+import { clientRules } from "utils/rules";
 
 const ClientForm = () => {
   const [form] = Form.useForm();
 
+  const onFinish = (values) => {
+    console.log("form: ", values);
+    form.resetFields();
+  }
+
   const [loading, setLoading] = useState(false);
 
-  const rules = {
-    identification: [
-      {
-        required: true,
-        message: "Por favor ingrese su identificación!",
-      },
-    ],
-    businessName: [
-      {
-        required: true,
-        message: "Por favor ingresa su razón social!",
-      },
-    ],
-    contactNumber: [
-      {
-        required: true,
-        message: "Por favor ingresa su numero de contacto!",
-      },
-    ],
-    clientType: [
-      {
-        required: true,
-        message: "Por favor seleccione un tipo de cliente!",
-      },
-    ],
-  };
-
   return (
-    <div style={{}}>
+    <div>
       <Form
         form={form}
         name="register-form"
         size="small"
+        onFinish={onFinish}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 10 }}
-        // onFinish={onSignUp}
+        initialValues={{
+          identification: "",
+          name: "",
+          email: "",
+          address: "",
+          contactNumber: "",
+          clientType: "",
+        }}
       >
         <Form.Item
           name="identification"
           label="Nit / Cédula"
-          rules={rules.identification}
+          rules={clientRules.identification}
           hasFeedback
         >
-          <Input prefix={<UserOutlined className="text-primary" />} />
+          <Input
+            prefix={<UserOutlined className="text-primary" />}
+            placeholder={"Ingrese el Nit (Con digito de verificación) o Cédula"}
+          />
         </Form.Item>
         <Form.Item
-          name="businessName"
+          name="name"
           label="Razón Social"
-          rules={rules.businessName}
+          rules={clientRules.businessName}
           hasFeedback
         >
           <Input prefix={<LockOutlined className="text-primary" />} />
         </Form.Item>
         <Form.Item
+          name="email"
+          label="Correo Electrónico"
+          rules={clientRules.email}
+          hasFeedback
+        >
+          <Input prefix={<MailOutlined className="text-primary" />} />
+        </Form.Item>
+        <Form.Item
+          name="address"
+          label="Dirección"
+          rules={clientRules.address}
+          hasFeedback
+        >
+          <Input prefix={<NodeIndexOutlined className="text-primary" />} />
+        </Form.Item>
+        <Form.Item
           name="contactNumber"
           label="Numero de contacto"
-          rules={rules.contactNumber}
+          rules={clientRules.contactNumber}
           hasFeedback
         >
           <Input
@@ -76,21 +84,13 @@ const ClientForm = () => {
             prefix={<NumberOutlined className="text-primary" />}
           />
         </Form.Item>
-        <Form.Item
-          name="clientType"
-          label="Tipo de cliente"
-          rules={[
-            {
-              required: true,
-              message: "Please select a role!",
-            },
-          ]}
-        >
+        <Form.Item name="type" label="Tipo de cliente" rules={clientRules.type}>
           <Select
-            placeholder="Seleccione Tipo de cliente"
+            placeholder="Seleccione Tipo de negocio"
             suffixIcon={<CaretDownOutlined className="text-primary" />}
           >
-            <Select.Option value="lucy">Lucy</Select.Option>
+            <Select.Option value="PALM">Palma</Select.Option>
+            <Select.Option value="BANANA">Banano</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item

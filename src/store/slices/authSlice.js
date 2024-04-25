@@ -41,29 +41,6 @@ export const signOut = createAsyncThunk('auth/logout',async () => {
     return response.data
 })
 
-export const signInWithGoogle = createAsyncThunk('auth/signInWithGoogle', async (_, { rejectWithValue }) => {
-    try {
-		const response = await AuthService.loginInOAuth()
-		const token = response.data.token;
-		localStorage.setItem(AUTH_TOKEN, token);
-		return token;
-	} catch (err) {
-		return rejectWithValue(err.response?.data?.message || 'Error')
-	}
-})
-
-export const signInWithFacebook = createAsyncThunk('auth/signInWithFacebook', async (_, { rejectWithValue }) => {
-    try {
-		const response = await AuthService.loginInOAuth()
-		const token = response.data.token;
-		localStorage.setItem(AUTH_TOKEN, token);
-		return token;
-	} catch (err) {
-		return rejectWithValue(err.response?.data?.message || 'Error')
-	}
-})
-
-
 export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
@@ -129,32 +106,6 @@ export const authSlice = createSlice({
 				state.token = action.payload
 			})
 			.addCase(signUp.rejected, (state, action) => {
-				state.message = action.payload
-				state.showMessage = true
-				state.loading = false
-			})
-			.addCase(signInWithGoogle.pending, (state) => {
-				state.loading = true
-			})
-			.addCase(signInWithGoogle.fulfilled, (state, action) => {
-				state.loading = false
-				state.redirect = '/'
-				state.token = action.payload
-			})
-			.addCase(signInWithGoogle.rejected, (state, action) => {
-				state.message = action.payload
-				state.showMessage = true
-				state.loading = false
-			})
-			.addCase(signInWithFacebook.pending, (state) => {
-				state.loading = true
-			})
-			.addCase(signInWithFacebook.fulfilled, (state, action) => {
-				state.loading = false
-				state.redirect = '/'
-				state.token = action.payload
-			})
-			.addCase(signInWithFacebook.rejected, (state, action) => {
 				state.message = action.payload
 				state.showMessage = true
 				state.loading = false

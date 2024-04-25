@@ -1,7 +1,7 @@
-import { Card, Col, Row } from 'antd'
-import ClientForm from 'components/app-components/clients/ClientForm';
-import AppHeader from 'components/shared-components/AppHeader';
-import React from 'react'
+import { Card } from "antd";
+import ClientTable from "components/app-components/Clients/ClientTable";
+import AppHeader from "components/shared-components/AppHeader";
+import React from "react";
 
 const index = () => {
   return (
@@ -15,10 +15,10 @@ const index = () => {
         ]}
       />
       <Card>
-        <ClientForm />
+        <ClientTable />
       </Card>
     </>
   );
-}
+};
 
-export default index
+export default index;

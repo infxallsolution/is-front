@@ -35,10 +35,6 @@ const Login = props => {
                   >
                     Inicio de sesión
                   </h2>
-                  <p>
-                    Don't have an account yet?{" "}
-                    <a href="/auth/register">Sign Up</a>
-                  </p>
                 </div>
                 <Row justify="center">
                   <Col xs={24} sm={24} md={20} lg={20}>
