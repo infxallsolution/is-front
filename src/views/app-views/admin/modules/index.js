@@ -1,7 +1,7 @@
-import { Card, Col, Row } from 'antd';
-import ModulesForm from 'components/app-components/Modules/ModulesForm';
-import AppHeader from 'components/shared-components/AppHeader'
-import React from 'react'
+import { Card, Col, Row } from "antd";
+import ModulesForm from "components/app-components/modules/ModulesForm";
+import AppHeader from "components/shared-components/AppHeader";
+import React from "react";
 
 const index = () => {
   return (
@@ -19,6 +19,6 @@ const index = () => {
       </Card>
     </>
   );
-}
+};
 
-export default index
+export default index;

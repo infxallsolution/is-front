@@ -1,5 +1,5 @@
 import { Card } from 'antd'
-import ClientForm from 'components/app-components/Clients/ClientForm';
+import ClientForm from 'components/app-components/clients/ClientForm';
 import AppHeader from 'components/shared-components/AppHeader';
 import React from 'react'
 

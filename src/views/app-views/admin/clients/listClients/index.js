@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import ClientTable from "components/app-components/Clients/ClientTable";
+import ClientTable from "components/app-components/clients/ClientTable";
 import AppHeader from "components/shared-components/AppHeader";
 import React from "react";
 
