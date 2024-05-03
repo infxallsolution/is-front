@@ -1,0 +1,1707 @@
+{
+  "$defs": {
+    "BarChartWidget": {
+      "description": "Use a bar chart to display a series of bars, each with a discrete x value and a continuous y value. eg:\n{\n    \"type\": \"bar-chart\",\n    \"data\": [\n        {\"x\": \"A\", \"y\": 10},\n        {\"x\": \"B\", \"y\": 20},\n        {\"x\": \"C\", \"y\": 25},\n    ]\n}",
+      "properties": {
+        "type": {
+          "const": "bar-chart",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "data": {
+          "description": "Widget data",
+          "items": {
+            "properties": {
+              "x": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "X"
+              },
+              "y": {
+                "title": "Y",
+                "type": "number"
+              }
+            },
+            "required": ["x", "y"],
+            "title": "BarDataPoint",
+            "type": "object"
+          },
+          "title": "Data",
+          "type": "array"
+        }
+      },
+      "required": ["type", "data"],
+      "title": "BarChartWidget",
+      "type": "object"
+    },
+    "BarDataPoint": {
+      "properties": {
+        "x": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "X"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": ["x", "y"],
+      "title": "BarDataPoint",
+      "type": "object"
+    },
+    "DateRangeSelectWidget": {
+      "properties": {
+        "type": {
+          "const": "date-range-select",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "initial_start": {
+          "default": "",
+          "description": "Initial start date value",
+          "title": "Initial Start",
+          "type": "string"
+        },
+        "initial_end": {
+          "default": "",
+          "description": "Initial end date value",
+          "title": "Initial End",
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "title": "DateRangeSelectWidget",
+      "type": "object"
+    },
+    "DateSelectWidget": {
+      "properties": {
+        "type": {
+          "const": "date-select",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "initial": {
+          "default": "",
+          "description": "Initial date value",
+          "title": "Initial",
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "title": "DateSelectWidget",
+      "type": "object"
+    },
+    "DescriptionWidget": {
+      "description": "A description widget. Use a description to display a summary description at the top of a page or section. eg:\n{\n    \"type\": \"description\",\n    \"description\": \"Some description text\"\n} ",
+      "properties": {
+        "type": {
+          "const": "description",
+          "title": "Type"
+        }
+      },
+      "required": ["type"],
+      "title": "DescriptionWidget",
+      "type": "object"
+    },
+    "HorizontalRulerWidget": {
+      "description": "A horizontal ruler widget. Use a horizontal ruler to separate sections of a page. eg:\n{\n    \"type\": \"horizontal-ruler\"\n} ",
+      "properties": {
+        "type": {
+          "const": "horizontal-ruler",
+          "title": "Type"
+        }
+      },
+      "required": ["type"],
+      "title": "HorizontalRulerWidget",
+      "type": "object"
+    },
+    "LineChartSeries": {
+      "properties": {
+        "label": {
+          "description": "Line label",
+          "title": "Label",
+          "type": "string"
+        },
+        "data": {
+          "description": "Line data data",
+          "items": {
+            "properties": {
+              "x": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "X"
+              },
+              "y": {
+                "title": "Y",
+                "type": "number"
+              }
+            },
+            "required": ["x", "y"],
+            "title": "LineDataPoint",
+            "type": "object"
+          },
+          "title": "Data",
+          "type": "array"
+        }
+      },
+      "required": ["label", "data"],
+      "title": "LineChartSeries",
+      "type": "object"
+    },
+    "LineChartWidget": {
+      "description": "Use a line chart to display a series of lines, each with a label and a series of data. X values can be either continuous or discrete. \nExample:\n    {\"type\": \"line-chart\", \"datasets\": [\n        {\n            \"label\": \"A\",\n            \"data\": [\n                {\"x\": \"A\", \"y\": 10},\n                {\"x\": \"B\", \"y\": 20},\n                {\"x\": \"C\", \"y\": 25},\n            ],\n        }]\n    }",
+      "properties": {
+        "type": {
+          "const": "line-chart",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "datasets": {
+          "description": "List of series to display on the line chart",
+          "items": {
+            "properties": {
+              "label": {
+                "description": "Line label",
+                "title": "Label",
+                "type": "string"
+              },
+              "data": {
+                "description": "Line data data",
+                "items": {
+                  "properties": {
+                    "x": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ],
+                      "title": "X"
+                    },
+                    "y": {
+                      "title": "Y",
+                      "type": "number"
+                    }
+                  },
+                  "required": ["x", "y"],
+                  "title": "LineDataPoint",
+                  "type": "object"
+                },
+                "title": "Data",
+                "type": "array"
+              }
+            },
+            "required": ["label", "data"],
+            "title": "LineChartSeries",
+            "type": "object"
+          },
+          "title": "Datasets",
+          "type": "array"
+        }
+      },
+      "required": ["type", "datasets"],
+      "title": "LineChartWidget",
+      "type": "object"
+    },
+    "LineDataPoint": {
+      "properties": {
+        "x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "X"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": ["x", "y"],
+      "title": "LineDataPoint",
+      "type": "object"
+    },
+    "MetricData": {
+      "properties": {
+        "data_type": {
+          "default": "number",
+          "description": "Data type of the metric value",
+          "enum": ["number", "currency", "percent", "string"],
+          "title": "Data Type",
+          "type": "string"
+        },
+        "data_formatter": {
+          "default": "",
+          "description": "Data formatters to apply to the metric value",
+          "enum": ["number", "currency", "percent", ""],
+          "title": "Data Formatter",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Value of the metric to display",
+          "title": "Value"
+        },
+        "sentiment": {
+          "default": "",
+          "description": "Sentiment of the metric value, eg. positive, negative, neutral",
+          "enum": ["positive", "negative", "neutral", ""],
+          "title": "Sentiment",
+          "type": "string"
+        },
+        "currency": {
+          "default": "",
+          "description": "Currency code",
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": ["value"],
+      "title": "MetricData",
+      "type": "object"
+    },
+    "MetricWidget": {
+      "description": "Use a metric to display a single value, with optional sentiment. eg:\n{\n    \"type\": \"metric\",\n    \"data\": {\n        \"data_type\": \"number\",\n        \"value\": 10\n    }\n}",
+      "properties": {
+        "type": {
+          "const": "metric",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "data": {
+          "allOf": [
+            {
+              "properties": {
+                "data_type": {
+                  "default": "number",
+                  "description": "Data type of the metric value",
+                  "enum": ["number", "currency", "percent", "string"],
+                  "title": "Data Type",
+                  "type": "string"
+                },
+                "data_formatter": {
+                  "default": "",
+                  "description": "Data formatters to apply to the metric value",
+                  "enum": ["number", "currency", "percent", ""],
+                  "title": "Data Formatter",
+                  "type": "string"
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ],
+                  "description": "Value of the metric to display",
+                  "title": "Value"
+                },
+                "sentiment": {
+                  "default": "",
+                  "description": "Sentiment of the metric value, eg. positive, negative, neutral",
+                  "enum": ["positive", "negative", "neutral", ""],
+                  "title": "Sentiment",
+                  "type": "string"
+                },
+                "currency": {
+                  "default": "",
+                  "description": "Currency code",
+                  "title": "Currency",
+                  "type": "string"
+                }
+              },
+              "required": ["value"],
+              "title": "MetricData",
+              "type": "object"
+            }
+          ],
+          "description": "Widget data"
+        }
+      },
+      "required": ["type", "data"],
+      "title": "MetricWidget",
+      "type": "object"
+    },
+    "MultiSelectWidget": {
+      "properties": {
+        "type": {
+          "const": "select-multi",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "options": {
+          "default": null,
+          "description": "List of options",
+          "items": {
+            "properties": {
+              "value": {
+                "description": "Option value",
+                "title": "Value",
+                "type": "string"
+              },
+              "label": {
+                "description": "Option label",
+                "title": "Label",
+                "type": "string"
+              }
+            },
+            "required": ["value", "label"],
+            "title": "SelectOption",
+            "type": "object"
+          },
+          "title": "Options",
+          "type": "array"
+        },
+        "initial": {
+          "anyOf": [
+            {
+              "items": {
+                "properties": {
+                  "value": {
+                    "description": "Option value",
+                    "title": "Value",
+                    "type": "string"
+                  },
+                  "label": {
+                    "description": "Option label",
+                    "title": "Label",
+                    "type": "string"
+                  }
+                },
+                "required": ["value", "label"],
+                "title": "SelectOption",
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial value",
+          "title": "Initial"
+        }
+      },
+      "required": ["type"],
+      "title": "MultiSelectWidget",
+      "type": "object"
+    },
+    "PieChartDataPoint": {
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": ["label", "value"],
+      "title": "PieChartDataPoint",
+      "type": "object"
+    },
+    "PieChartWidget": {
+      "description": "A pie chart widget. Use a pie chart to display a series of slices, each with a label and a value. Values must be postive.\nFor best results, a pie chart should have at most 5 slices. eg:\n{ \n    \"type\": \"pie-chart\",\n    \"data\": [\n        {\"label\": \"A\", \"value\": 10},\n        {\"label\": \"B\", \"value\": 20},\n        {\"label\": \"C\", \"value\": 25},\n    ]\n}",
+      "properties": {
+        "type": {
+          "const": "pie-chart",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "data": {
+          "description": "Pie chart data points",
+          "items": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "number"
+              }
+            },
+            "required": ["label", "value"],
+            "title": "PieChartDataPoint",
+            "type": "object"
+          },
+          "title": "Data",
+          "type": "array"
+        }
+      },
+      "required": ["type", "data"],
+      "title": "PieChartWidget",
+      "type": "object"
+    },
+    "ScatterChartSeries": {
+      "properties": {
+        "label": {
+          "description": "Series label",
+          "title": "Label",
+          "type": "string"
+        },
+        "data": {
+          "description": "Series data",
+          "items": {
+            "properties": {
+              "x": {
+                "title": "X",
+                "type": "number"
+              },
+              "y": {
+                "title": "Y",
+                "type": "number"
+              }
+            },
+            "required": ["x", "y"],
+            "title": "ScatterDataPoint",
+            "type": "object"
+          },
+          "title": "Data",
+          "type": "array"
+        }
+      },
+      "required": ["label", "data"],
+      "title": "ScatterChartSeries",
+      "type": "object"
+    },
+    "ScatterChartWidget": {
+      "description": "Use a scatter chart to display a series of data, each with a label and a series of points. X and Y values are continuous. eg:\n{\n    \"type\": \"scatter-chart\",\n    \"datasets\": [\n        {\n            \"label\": \"A\",\n            \"data\": [\n                {\"x\": 1, \"y\": 10},\n                {\"x\": 2, \"y\": 20},\n                {\"x\": 3, \"y\": 25}\n            ]\n        },\n        {\n            \"label\": \"B\",\n            \"data\": [\n                {\"x\": 1.2, \"y\": 15},\n                {\"x\": 2.8, \"y\": 25},\n                {\"x\": 3.14, \"y\": 30}\n            ]\n        }\n    ]\n}",
+      "properties": {
+        "type": {
+          "const": "scatter-chart",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "datasets": {
+          "description": "List of series to display on the scatter chart",
+          "items": {
+            "properties": {
+              "label": {
+                "description": "Series label",
+                "title": "Label",
+                "type": "string"
+              },
+              "data": {
+                "description": "Series data",
+                "items": {
+                  "properties": {
+                    "x": {
+                      "title": "X",
+                      "type": "number"
+                    },
+                    "y": {
+                      "title": "Y",
+                      "type": "number"
+                    }
+                  },
+                  "required": ["x", "y"],
+                  "title": "ScatterDataPoint",
+                  "type": "object"
+                },
+                "title": "Data",
+                "type": "array"
+              }
+            },
+            "required": ["label", "data"],
+            "title": "ScatterChartSeries",
+            "type": "object"
+          },
+          "title": "Datasets",
+          "type": "array"
+        }
+      },
+      "required": ["type", "datasets"],
+      "title": "ScatterChartWidget",
+      "type": "object"
+    },
+    "ScatterDataPoint": {
+      "properties": {
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": ["x", "y"],
+      "title": "ScatterDataPoint",
+      "type": "object"
+    },
+    "SearchWidget": {
+      "properties": {
+        "type": {
+          "const": "search",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "initial": {
+          "default": "",
+          "description": "Initial search value",
+          "title": "Initial",
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "title": "SearchWidget",
+      "type": "object"
+    },
+    "SelectOption": {
+      "properties": {
+        "value": {
+          "description": "Option value",
+          "title": "Value",
+          "type": "string"
+        },
+        "label": {
+          "description": "Option label",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": ["value", "label"],
+      "title": "SelectOption",
+      "type": "object"
+    },
+    "SingleSelectWidget": {
+      "properties": {
+        "type": {
+          "const": "select-single",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "options": {
+          "default": null,
+          "description": "List of options",
+          "items": {
+            "properties": {
+              "value": {
+                "description": "Option value",
+                "title": "Value",
+                "type": "string"
+              },
+              "label": {
+                "description": "Option label",
+                "title": "Label",
+                "type": "string"
+              }
+            },
+            "required": ["value", "label"],
+            "title": "SelectOption",
+            "type": "object"
+          },
+          "title": "Options",
+          "type": "array"
+        },
+        "initial": {
+          "anyOf": [
+            {
+              "properties": {
+                "value": {
+                  "description": "Option value",
+                  "title": "Value",
+                  "type": "string"
+                },
+                "label": {
+                  "description": "Option label",
+                  "title": "Label",
+                  "type": "string"
+                }
+              },
+              "required": ["value", "label"],
+              "title": "SelectOption",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial value"
+        }
+      },
+      "required": ["type"],
+      "title": "SingleSelectWidget",
+      "type": "object"
+    },
+    "TableColumn": {
+      "properties": {
+        "name": {
+          "description": "Column name",
+          "title": "Name",
+          "type": "string"
+        },
+        "data_key": {
+          "description": "Data key to use for this column",
+          "title": "Data Key",
+          "type": "string"
+        },
+        "data_type": {
+          "default": "string",
+          "description": "Data type of the column",
+          "enum": ["string", "number", "date", "currency"],
+          "title": "Data Type",
+          "type": "string"
+        },
+        "data_formatter": {
+          "default": "",
+          "description": "Data formatters to apply to the column",
+          "enum": ["number", "currency", "date", "percent", "link", ""],
+          "title": "Data Formatter",
+          "type": "string"
+        },
+        "align": {
+          "default": "start",
+          "description": "Alignment of the column",
+          "enum": ["start", "center", "end"],
+          "title": "Align",
+          "type": "string"
+        }
+      },
+      "required": ["name", "data_key"],
+      "title": "TableColumn",
+      "type": "object"
+    },
+    "TableWidget": {
+      "description": "Use a table to display tabular data. eg:\n{\n    \"type\": \"table\",\n    \"columns\": [\n        {\n            \"name\": \"Column 1\",\n            \"data_key\": \"col1\",\n        },\n        {\n            \"name\": \"Column 2\",\n            \"data_key\": \"col2\",\n        }\n    ],\n    \"rows\": [\n        {\"col1\": \"Alice\", \"col2\": 25},\n        {\"col1\": \"Bob\", \"col2\": 30}\n    ]\n}",
+      "properties": {
+        "type": {
+          "const": "table",
+          "title": "Type"
+        },
+        "title": {
+          "default": "",
+          "description": "Widget title",
+          "maxLength": 100,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "description": "Widget description",
+          "maxLength": 500,
+          "title": "Description",
+          "type": "string"
+        },
+        "columns": {
+          "items": {
+            "properties": {
+              "name": {
+                "description": "Column name",
+                "title": "Name",
+                "type": "string"
+              },
+              "data_key": {
+                "description": "Data key to use for this column",
+                "title": "Data Key",
+                "type": "string"
+              },
+              "data_type": {
+                "default": "string",
+                "description": "Data type of the column",
+                "enum": ["string", "number", "date", "currency"],
+                "title": "Data Type",
+                "type": "string"
+              },
+              "data_formatter": {
+                "default": "",
+                "description": "Data formatters to apply to the column",
+                "enum": ["number", "currency", "date", "percent", "link", ""],
+                "title": "Data Formatter",
+                "type": "string"
+              },
+              "align": {
+                "default": "start",
+                "description": "Alignment of the column",
+                "enum": ["start", "center", "end"],
+                "title": "Align",
+                "type": "string"
+              }
+            },
+            "required": ["name", "data_key"],
+            "title": "TableColumn",
+            "type": "object"
+          },
+          "title": "Columns",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": ["type", "columns", "rows"],
+      "title": "TableWidget",
+      "type": "object"
+    },
+    "TitleWidget": {
+      "description": "A title widget. Use a title to display a summary title at the top of a page or section. eg:\n{\n    \"type\": \"title\",\n    \"title\": \"Title Text\"\n}",
+      "properties": {
+        "type": {
+          "const": "title",
+          "title": "Type"
+        }
+      },
+      "required": ["type"],
+      "title": "TitleWidget",
+      "type": "object"
+    },
+    "VerticalRulerWidget": {
+      "description": "A vertical ruler widget. Use a vertical ruler to separate sections of a page. eg:\n{\n    \"type\": \"vertical-ruler\"\n} ",
+      "properties": {
+        "type": {
+          "const": "vertical-ruler",
+          "title": "Type"
+        }
+      },
+      "required": ["type"],
+      "title": "VerticalRulerWidget",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "version": {
+      "default": "0.0.1",
+      "description": "Schema version",
+      "title": "Version",
+      "type": "string"
+    },
+    "generated_at": {
+      "description": "Dashboard generation time",
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "title": {
+      "default": "",
+      "description": "Dashboard title",
+      "maxLength": 100,
+      "title": "Title",
+      "type": "string"
+    },
+    "description": {
+      "default": "",
+      "description": "Dashboard description",
+      "maxLength": 500,
+      "title": "Description",
+      "type": "string"
+    },
+    "widgets": {
+      "description": "Dashboard widgets",
+      "items": {
+        "anyOf": [
+          {
+            "properties": {
+              "type": {
+                "const": "date-select",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "initial": {
+                "default": "",
+                "description": "Initial date value",
+                "title": "Initial",
+                "type": "string"
+              }
+            },
+            "required": ["type"],
+            "title": "DateSelectWidget",
+            "type": "object"
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "date-range-select",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "initial_start": {
+                "default": "",
+                "description": "Initial start date value",
+                "title": "Initial Start",
+                "type": "string"
+              },
+              "initial_end": {
+                "default": "",
+                "description": "Initial end date value",
+                "title": "Initial End",
+                "type": "string"
+              }
+            },
+            "required": ["type"],
+            "title": "DateRangeSelectWidget",
+            "type": "object"
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "search",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "initial": {
+                "default": "",
+                "description": "Initial search value",
+                "title": "Initial",
+                "type": "string"
+              }
+            },
+            "required": ["type"],
+            "title": "SearchWidget",
+            "type": "object"
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "select-single",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "options": {
+                "default": null,
+                "description": "List of options",
+                "items": {
+                  "properties": {
+                    "value": {
+                      "description": "Option value",
+                      "title": "Value",
+                      "type": "string"
+                    },
+                    "label": {
+                      "description": "Option label",
+                      "title": "Label",
+                      "type": "string"
+                    }
+                  },
+                  "required": ["value", "label"],
+                  "title": "SelectOption",
+                  "type": "object"
+                },
+                "title": "Options",
+                "type": "array"
+              },
+              "initial": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "value": {
+                        "description": "Option value",
+                        "title": "Value",
+                        "type": "string"
+                      },
+                      "label": {
+                        "description": "Option label",
+                        "title": "Label",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["value", "label"],
+                    "title": "SelectOption",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Initial value"
+              }
+            },
+            "required": ["type"],
+            "title": "SingleSelectWidget",
+            "type": "object"
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "select-multi",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "options": {
+                "default": null,
+                "description": "List of options",
+                "items": {
+                  "properties": {
+                    "value": {
+                      "description": "Option value",
+                      "title": "Value",
+                      "type": "string"
+                    },
+                    "label": {
+                      "description": "Option label",
+                      "title": "Label",
+                      "type": "string"
+                    }
+                  },
+                  "required": ["value", "label"],
+                  "title": "SelectOption",
+                  "type": "object"
+                },
+                "title": "Options",
+                "type": "array"
+              },
+              "initial": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "properties": {
+                        "value": {
+                          "description": "Option value",
+                          "title": "Value",
+                          "type": "string"
+                        },
+                        "label": {
+                          "description": "Option label",
+                          "title": "Label",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["value", "label"],
+                      "title": "SelectOption",
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Initial value",
+                "title": "Initial"
+              }
+            },
+            "required": ["type"],
+            "title": "MultiSelectWidget",
+            "type": "object"
+          },
+          {
+            "description": "Use a metric to display a single value, with optional sentiment. eg:\n{\n    \"type\": \"metric\",\n    \"data\": {\n        \"data_type\": \"number\",\n        \"value\": 10\n    }\n}",
+            "properties": {
+              "type": {
+                "const": "metric",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "properties": {
+                      "data_type": {
+                        "default": "number",
+                        "description": "Data type of the metric value",
+                        "enum": ["number", "currency", "percent", "string"],
+                        "title": "Data Type",
+                        "type": "string"
+                      },
+                      "data_formatter": {
+                        "default": "",
+                        "description": "Data formatters to apply to the metric value",
+                        "enum": ["number", "currency", "percent", ""],
+                        "title": "Data Formatter",
+                        "type": "string"
+                      },
+                      "value": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Value of the metric to display",
+                        "title": "Value"
+                      },
+                      "sentiment": {
+                        "default": "",
+                        "description": "Sentiment of the metric value, eg. positive, negative, neutral",
+                        "enum": ["positive", "negative", "neutral", ""],
+                        "title": "Sentiment",
+                        "type": "string"
+                      },
+                      "currency": {
+                        "default": "",
+                        "description": "Currency code",
+                        "title": "Currency",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["value"],
+                    "title": "MetricData",
+                    "type": "object"
+                  }
+                ],
+                "description": "Widget data"
+              }
+            },
+            "required": ["type", "data"],
+            "title": "MetricWidget",
+            "type": "object"
+          },
+          {
+            "description": "Use a bar chart to display a series of bars, each with a discrete x value and a continuous y value. eg:\n{\n    \"type\": \"bar-chart\",\n    \"data\": [\n        {\"x\": \"A\", \"y\": 10},\n        {\"x\": \"B\", \"y\": 20},\n        {\"x\": \"C\", \"y\": 25},\n    ]\n}",
+            "properties": {
+              "type": {
+                "const": "bar-chart",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "data": {
+                "description": "Widget data",
+                "items": {
+                  "properties": {
+                    "x": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ],
+                      "title": "X"
+                    },
+                    "y": {
+                      "title": "Y",
+                      "type": "number"
+                    }
+                  },
+                  "required": ["x", "y"],
+                  "title": "BarDataPoint",
+                  "type": "object"
+                },
+                "title": "Data",
+                "type": "array"
+              }
+            },
+            "required": ["type", "data"],
+            "title": "BarChartWidget",
+            "type": "object"
+          },
+          {
+            "description": "Use a table to display tabular data. eg:\n{\n    \"type\": \"table\",\n    \"columns\": [\n        {\n            \"name\": \"Column 1\",\n            \"data_key\": \"col1\",\n        },\n        {\n            \"name\": \"Column 2\",\n            \"data_key\": \"col2\",\n        }\n    ],\n    \"rows\": [\n        {\"col1\": \"Alice\", \"col2\": 25},\n        {\"col1\": \"Bob\", \"col2\": 30}\n    ]\n}",
+            "properties": {
+              "type": {
+                "const": "table",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "columns": {
+                "items": {
+                  "properties": {
+                    "name": {
+                      "description": "Column name",
+                      "title": "Name",
+                      "type": "string"
+                    },
+                    "data_key": {
+                      "description": "Data key to use for this column",
+                      "title": "Data Key",
+                      "type": "string"
+                    },
+                    "data_type": {
+                      "default": "string",
+                      "description": "Data type of the column",
+                      "enum": ["string", "number", "date", "currency"],
+                      "title": "Data Type",
+                      "type": "string"
+                    },
+                    "data_formatter": {
+                      "default": "",
+                      "description": "Data formatters to apply to the column",
+                      "enum": [
+                        "number",
+                        "currency",
+                        "date",
+                        "percent",
+                        "link",
+                        ""
+                      ],
+                      "title": "Data Formatter",
+                      "type": "string"
+                    },
+                    "align": {
+                      "default": "start",
+                      "description": "Alignment of the column",
+                      "enum": ["start", "center", "end"],
+                      "title": "Align",
+                      "type": "string"
+                    }
+                  },
+                  "required": ["name", "data_key"],
+                  "title": "TableColumn",
+                  "type": "object"
+                },
+                "title": "Columns",
+                "type": "array"
+              },
+              "rows": {
+                "items": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "object"
+                },
+                "title": "Rows",
+                "type": "array"
+              }
+            },
+            "required": ["type", "columns", "rows"],
+            "title": "TableWidget",
+            "type": "object"
+          },
+          {
+            "description": "A pie chart widget. Use a pie chart to display a series of slices, each with a label and a value. Values must be postive.\nFor best results, a pie chart should have at most 5 slices. eg:\n{ \n    \"type\": \"pie-chart\",\n    \"data\": [\n        {\"label\": \"A\", \"value\": 10},\n        {\"label\": \"B\", \"value\": 20},\n        {\"label\": \"C\", \"value\": 25},\n    ]\n}",
+            "properties": {
+              "type": {
+                "const": "pie-chart",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "data": {
+                "description": "Pie chart data points",
+                "items": {
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "type": "string"
+                    },
+                    "value": {
+                      "title": "Value",
+                      "type": "number"
+                    }
+                  },
+                  "required": ["label", "value"],
+                  "title": "PieChartDataPoint",
+                  "type": "object"
+                },
+                "title": "Data",
+                "type": "array"
+              }
+            },
+            "required": ["type", "data"],
+            "title": "PieChartWidget",
+            "type": "object"
+          },
+          {
+            "description": "Use a line chart to display a series of lines, each with a label and a series of data. X values can be either continuous or discrete. \nExample:\n    {\"type\": \"line-chart\", \"datasets\": [\n        {\n            \"label\": \"A\",\n            \"data\": [\n                {\"x\": \"A\", \"y\": 10},\n                {\"x\": \"B\", \"y\": 20},\n                {\"x\": \"C\", \"y\": 25},\n            ],\n        }]\n    }",
+            "properties": {
+              "type": {
+                "const": "line-chart",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "datasets": {
+                "description": "List of series to display on the line chart",
+                "items": {
+                  "properties": {
+                    "label": {
+                      "description": "Line label",
+                      "title": "Label",
+                      "type": "string"
+                    },
+                    "data": {
+                      "description": "Line data data",
+                      "items": {
+                        "properties": {
+                          "x": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "integer"
+                              }
+                            ],
+                            "title": "X"
+                          },
+                          "y": {
+                            "title": "Y",
+                            "type": "number"
+                          }
+                        },
+                        "required": ["x", "y"],
+                        "title": "LineDataPoint",
+                        "type": "object"
+                      },
+                      "title": "Data",
+                      "type": "array"
+                    }
+                  },
+                  "required": ["label", "data"],
+                  "title": "LineChartSeries",
+                  "type": "object"
+                },
+                "title": "Datasets",
+                "type": "array"
+              }
+            },
+            "required": ["type", "datasets"],
+            "title": "LineChartWidget",
+            "type": "object"
+          },
+          {
+            "description": "Use a scatter chart to display a series of data, each with a label and a series of points. X and Y values are continuous. eg:\n{\n    \"type\": \"scatter-chart\",\n    \"datasets\": [\n        {\n            \"label\": \"A\",\n            \"data\": [\n                {\"x\": 1, \"y\": 10},\n                {\"x\": 2, \"y\": 20},\n                {\"x\": 3, \"y\": 25}\n            ]\n        },\n        {\n            \"label\": \"B\",\n            \"data\": [\n                {\"x\": 1.2, \"y\": 15},\n                {\"x\": 2.8, \"y\": 25},\n                {\"x\": 3.14, \"y\": 30}\n            ]\n        }\n    ]\n}",
+            "properties": {
+              "type": {
+                "const": "scatter-chart",
+                "title": "Type"
+              },
+              "title": {
+                "default": "",
+                "description": "Widget title",
+                "maxLength": 100,
+                "title": "Title",
+                "type": "string"
+              },
+              "description": {
+                "default": "",
+                "description": "Widget description",
+                "maxLength": 500,
+                "title": "Description",
+                "type": "string"
+              },
+              "datasets": {
+                "description": "List of series to display on the scatter chart",
+                "items": {
+                  "properties": {
+                    "label": {
+                      "description": "Series label",
+                      "title": "Label",
+                      "type": "string"
+                    },
+                    "data": {
+                      "description": "Series data",
+                      "items": {
+                        "properties": {
+                          "x": {
+                            "title": "X",
+                            "type": "number"
+                          },
+                          "y": {
+                            "title": "Y",
+                            "type": "number"
+                          }
+                        },
+                        "required": ["x", "y"],
+                        "title": "ScatterDataPoint",
+                        "type": "object"
+                      },
+                      "title": "Data",
+                      "type": "array"
+                    }
+                  },
+                  "required": ["label", "data"],
+                  "title": "ScatterChartSeries",
+                  "type": "object"
+                },
+                "title": "Datasets",
+                "type": "array"
+              }
+            },
+            "required": ["type", "datasets"],
+            "title": "ScatterChartWidget",
+            "type": "object"
+          },
+          {
+            "description": "A title widget. Use a title to display a summary title at the top of a page or section. eg:\n{\n    \"type\": \"title\",\n    \"title\": \"Title Text\"\n}",
+            "properties": {
+              "type": {
+                "const": "title",
+                "title": "Type"
+              }
+            },
+            "required": ["type"],
+            "title": "TitleWidget",
+            "type": "object"
+          },
+          {
+            "description": "A description widget. Use a description to display a summary description at the top of a page or section. eg:\n{\n    \"type\": \"description\",\n    \"description\": \"Some description text\"\n} ",
+            "properties": {
+              "type": {
+                "const": "description",
+                "title": "Type"
+              }
+            },
+            "required": ["type"],
+            "title": "DescriptionWidget",
+            "type": "object"
+          },
+          {
+            "description": "A horizontal ruler widget. Use a horizontal ruler to separate sections of a page. eg:\n{\n    \"type\": \"horizontal-ruler\"\n} ",
+            "properties": {
+              "type": {
+                "const": "horizontal-ruler",
+                "title": "Type"
+              }
+            },
+            "required": ["type"],
+            "title": "HorizontalRulerWidget",
+            "type": "object"
+          },
+          {
+            "description": "A vertical ruler widget. Use a vertical ruler to separate sections of a page. eg:\n{\n    \"type\": \"vertical-ruler\"\n} ",
+            "properties": {
+              "type": {
+                "const": "vertical-ruler",
+                "title": "Type"
+              }
+            },
+            "required": ["type"],
+            "title": "VerticalRulerWidget",
+            "type": "object"
+          }
+        ]
+      },
+      "title": "Widgets",
+      "type": "array"
+    }
+  },
+  "required": ["widgets"],
+  "title": "Dashboard",
+  "type": "object"
+}
