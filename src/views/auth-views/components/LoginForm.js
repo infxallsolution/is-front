@@ -1,19 +1,17 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { Button, Form, Input, Alert } from "antd";
-import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
-import PropTypes from "prop-types";
-import {
-  signIn,
-  showLoading,
-  showAuthMessage,
-  hideAuthMessage,
-  signInWithGoogle,
-  signInWithFacebook,
-} from "store/slices/authSlice";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { loginRules } from "utils/rules";
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Button, Form, Input, Alert } from 'antd';
+import { MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
+import { 
+	signIn, 
+	showLoading, 
+	showAuthMessage, 
+	hideAuthMessage, 
+} from 'store/slices/authSlice';
+import { useNavigate } from 'react-router-dom'
+import { motion } from "framer-motion"
+import { loginRules } from 'utils/rules';
 
 export const LoginForm = (props) => {
   const navigate = useNavigate();
@@ -140,10 +138,10 @@ const mapStateToProps = ({ auth }) => {
 };
 
 const mapDispatchToProps = {
-  signIn,
-  showAuthMessage,
-  showLoading,
-  hideAuthMessage,
-};
+	signIn,
+	showAuthMessage,
+	showLoading,
+	hideAuthMessage,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

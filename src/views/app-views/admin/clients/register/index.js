@@ -1,9 +1,11 @@
-import { Card } from 'antd'
-import ClientForm from 'components/app-components/clients/ClientForm';
-import AppHeader from 'components/shared-components/AppHeader';
-import React from 'react'
+import { Button, Card } from "antd";
+import ClientForm from "components/app-components/clients/ClientForm";
+import AppHeader from "components/shared-components/AppHeader";
+import React from "react";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { NavLink } from "react-router-dom";
 
-const index = () => {
+const ClientRegister = () => {
   return (
     <>
       <AppHeader
@@ -15,10 +17,21 @@ const index = () => {
         ]}
       />
       <Card>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            marginBottom: "20px",
+          }}
+        >
+          <NavLink to={"/app/admin/clients/list"}>
+            <ArrowLeftOutlined /> Regresar
+          </NavLink>
+        </div>
         <ClientForm />
       </Card>
     </>
   );
-}
+};
 
-export default index
+export default ClientRegister;

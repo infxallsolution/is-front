@@ -1,9 +1,9 @@
-import { Card, Col, Row } from "antd";
-import ModulesForm from "components/app-components/modules/ModulesForm";
-import AppHeader from "components/shared-components/AppHeader";
-import React from "react";
+import { Card } from 'antd';
+import ModulesForm from 'components/app-components/modules/ModulesForm';
+import AppHeader from 'components/shared-components/AppHeader'
+import React from 'react'
 
-const index = () => {
+const Modules = () => {
   return (
     <>
       <AppHeader
@@ -21,4 +21,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Modules
