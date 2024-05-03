@@ -19,6 +19,6 @@ const Modules = () => {
       </Card>
     </>
   );
-}
+};
 
 export default Modules
