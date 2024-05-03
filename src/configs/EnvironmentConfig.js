@@ -1,5 +1,5 @@
 const dev = {
-  API_ENDPOINT_URL: '/api'
+  API_ENDPOINT_URL: 'http://172.30.20.70:5000/api'
 };
 
 const prod = {
