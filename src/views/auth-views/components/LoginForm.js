@@ -31,8 +31,9 @@ export const LoginForm = (props) => {
   } = props;
 
   const initialCredential = {
-    email: "user1@themenate.net",
-    password: "2005ipo",
+    identification: "100",
+    username: "pperez",
+    password: "1234567",
   };
 
   const onLogin = (values) => {
@@ -80,7 +81,7 @@ export const LoginForm = (props) => {
           />
         </Form.Item>
         <Form.Item
-          name="email"
+          name="username"
           label="Nombre de usuario"
           rules={loginRules.email}
         >

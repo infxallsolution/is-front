@@ -48,15 +48,11 @@ const loginRules = {
       message: "Por favor ingrese su identificación!",
     },
   ],
-  email: [
+  username: [
     {
-      required: true,
-      message: "Por favor ingresa tu correo electrónico!",
-    },
-    {
-      type: "email",
-      message: "Por favor ingresa un correo electrónico valido!",
-    },
+      requierd: true,
+      message: "Por favor ingrese su usuario!",
+    }
   ],
   password: [
     {
