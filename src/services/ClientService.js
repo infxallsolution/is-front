@@ -29,7 +29,7 @@ export const ClientService = {
   },
   updateClient: async (data, id) => {
     const response = await fetch(`${URL_BASE}/client/update/${id}`, {
-      method: "PUT",
+      method: "POST",
       headers: authHeader(),
       body: JSON.stringify(data),
     });

@@ -1,4 +1,4 @@
-import { Button, Empty, Table } from "antd";
+import { Button, Empty, Table, Tag } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import SearchInput from "../Global/SearchInput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -41,9 +41,16 @@ const ClientTable = () => {
       dataIndex: "type",
     },
     {
-      key: "status",
+      key: "state",
       title: "Estado",
-      dataIndex: "status",
+      dataIndex: "state",
+      render: (state) => {
+        return state ? (
+          <Tag color="green">Activo</Tag>
+        ) : (
+          <Tag color="red">Inactivo</Tag>
+        );
+      }
     },
     {
       key: "actions",
@@ -95,7 +102,7 @@ const ClientTable = () => {
 
   return (
     <div>
-      <SearchInput onSearch={onSearch} />
+      <SearchInput onSearch={onSearch} placeholder={"Escriba para buscar un cliente"}/>
       {results.length === 0 ? (
         <Empty description={false} />
       ) : (
