@@ -2,10 +2,7 @@ import { Button, Card } from "antd";
 import ClientTable from "components/app-components/clients/ClientTable";
 import AppHeader from "components/shared-components/AppHeader";
 import React from "react";
-import {
-  ArrowLeftOutlined,
-} from "@ant-design/icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Client = () => {
   const navigate = useNavigate();
@@ -28,14 +25,13 @@ const Client = () => {
             marginBottom: "20px",
           }}
         >
-          {/* <NavLink to={"/app/pollination/treenode"}>
-            <ArrowLeftOutlined /> Regresar
-          </NavLink> */}
-          <NavLink to={"/app/admin/clients/register"}>
-            <Button type="primary" style={{ marginRight: "10px" }}>
-              Agregar Cliente
-            </Button>
-          </NavLink>
+          <Button
+            type="primary"
+            style={{ marginRight: "10px" }}
+            onClick={() => navigate("/app/admin/clients/register")}
+          >
+            Agregar Cliente
+          </Button>
         </div>
         <ClientTable />
       </Card>

@@ -1,5 +1,5 @@
-import { Input } from 'antd'
-import React from 'react'
+import { Input } from "antd";
+import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
 
 const SearchInput = ({ onSearch, isLoading }) => {
@@ -12,12 +12,11 @@ const SearchInput = ({ onSearch, isLoading }) => {
       <Input.Search
         placeholder="input search text"
         enterButton={<SearchOutlined />}
-        onSearch={onSearch}
-        allowClear
+        onChange={(e) => onSearch(e.target.value)}
         loading={isLoading}
       />
     </div>
   );
 };
 
-export default SearchInput
+export default SearchInput;

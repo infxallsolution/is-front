@@ -1,42 +1,41 @@
 import { env } from "configs/EnvironmentConfig";
 import { authHeader } from "./AuthHeader";
 
-const ClientService = {};
-
 const URL_BASE = env.API_ENDPOINT_URL;
 
-ClientService.getAllClients =  () => {
-  return fetch({
-    url: `${URL_BASE}/client/list`,
-    method: "get",
-    headers: authHeader(),
-  });
+export const ClientService = {
+  getAllClients: async () => {
+    const response = await fetch(`${URL_BASE}/client/list`, {
+      headers: authHeader(),
+    });
+    const data = await response.json();
+    return data;
+  },
+  getClient: async (id) => {
+    const response = await fetch(`${URL_BASE}/client/get/${id}`, {
+      headers: authHeader(),
+    });
+    const data = await response.json();
+    return data;
+  },
+  insertClient: async (data) => {
+    const response = await fetch(`${URL_BASE}/client/insert`, {
+      method: "POST",
+      headers: authHeader(),
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    return responseData;
+  },
+  updateClient: async (data, id) => {
+    const response = await fetch(`${URL_BASE}/client/update/${id}`, {
+      method: "PUT",
+      headers: authHeader(),
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    return responseData;
+  },
 };
-
-ClientService.getClient = (id) => {
-  return fetch({
-    url: `${URL_BASE}/client/get/${id}`,
-    method: "get",
-    headers: authHeader(),
-  });
-};
-
-ClientService.insertClient = (data) => {
-  return fetch({
-    url: `${URL_BASE}/client/insert`,
-    method: "post",
-    headers: authHeader(),
-    data: data,
-  });
-};
-
-ClientService.updateClient = (data, id) => {
-  return fetch({
-    url: `${URL_BASE}/client/update/${id}`,
-    method: "put",
-    headers: authHeader(),
-    data: data,
-  });
-}
 
 export default ClientService;
