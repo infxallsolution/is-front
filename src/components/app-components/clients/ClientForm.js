@@ -11,37 +11,69 @@ import {
 import { clientRules } from "utils/rules";
 import ClientService from "services/ClientService";
 import { error, success } from "utils/notifications";
+import { useNavigate } from "react-router-dom";
 
 const ClientForm = () => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate()
+  const [client, setClient] = useState({});
   const urlId = window.location.pathname.split("/")[5];
   const edit = window.location.search.split("?")[1] === "action=edit";
 
   const onFinish = (values) => {
     setLoading(true);
-    ClientService.insertClient(values).then((response) => {
-      if (response.status === 200) {
-        success(messageApi, {
-          content: "Cliente registrado correctamente",
-        });
-        setLoading(false);
-        form.resetFields();
-      } else {
-        error(messageApi, {
-          content: "Error al registrar el cliente",
-        });
-        setLoading(false);
-      }
-    });
+    if (edit) {
+      ClientService.updateClient(values, urlId).then((response) => {
+        if (response.status === 200) {
+          success(messageApi, {
+            content: "Cliente actualizado correctamente",
+          });
+          setLoading(false);
+          form.resetFields();
+          navigate("/app/admin/clients/list");
+        } else {
+          error(messageApi, {
+            content: "Error al actualizar el cliente",
+          });
+          setLoading(false);
+        }
+      });
+      return;
+    } else {
+      ClientService.insertClient(values).then((response) => {
+        if (response.status === 200) {
+          success(messageApi, {
+            content: "Cliente registrado correctamente",
+          });
+          setLoading(false);
+          form.resetFields();
+        } else {
+          error(messageApi, {
+            content: "Error al registrar el cliente",
+          });
+          setLoading(false);
+        }
+      });
+    }
   };
 
   useEffect(() => {
-    ClientService.getClient(urlId).then((response) => {
-      console.log(response);
-    });
-  }, [urlId])
-
+    if (edit) {
+      ClientService.getClient(urlId).then((response) => {
+        setClient(response);
+        form.setFieldsValue({
+          identification: response.identification,
+          name: response.name,
+          email: response.email,
+          address: response.address,
+          contact: response.contact,
+          type: response.type,
+        });
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlId, edit]);
 
   const [loading, setLoading] = useState(false);
 
@@ -76,6 +108,7 @@ const ClientForm = () => {
               placeholder={
                 "Ingrese el Nit (Con digito de verificación) o Cédula"
               }
+              disabled={edit}
             />
           </Form.Item>
           <Form.Item
@@ -108,10 +141,7 @@ const ClientForm = () => {
             rules={clientRules.contactNumber}
             hasFeedback
           >
-            <Input
-              type="number"
-              prefix={<NumberOutlined className="text-primary" />}
-            />
+            <Input prefix={<NumberOutlined className="text-primary" />} />
           </Form.Item>
           <Form.Item
             name="type"
@@ -134,7 +164,7 @@ const ClientForm = () => {
             }}
           >
             <Button type="primary" htmlType="submit" block loading={loading}>
-              Registrar cliente
+              {edit ? "Editar cliente" : "Registrar cliente"}
             </Button>
           </Form.Item>
         </Form>

@@ -2,7 +2,7 @@ import { Input } from "antd";
 import React from "react";
 import { SearchOutlined } from "@ant-design/icons";
 
-const SearchInput = ({ onSearch, isLoading }) => {
+const SearchInput = ({ onSearch, isLoading, placeholder }) => {
   return (
     <div
       style={{
@@ -10,7 +10,7 @@ const SearchInput = ({ onSearch, isLoading }) => {
       }}
     >
       <Input.Search
-        placeholder="input search text"
+        placeholder={placeholder}
         enterButton={<SearchOutlined />}
         onChange={(e) => onSearch(e.target.value)}
         loading={isLoading}
