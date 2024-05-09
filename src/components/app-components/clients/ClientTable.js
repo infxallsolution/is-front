@@ -1,13 +1,44 @@
-import { Button, Empty, Table, Tag } from "antd";
+import { Button, Empty, Table, Tag, message } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import SearchInput from "../Global/SearchInput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ClientService from "services/ClientService";
 import { useNavigate } from "react-router-dom";
+import { error, success } from "utils/notifications";
 
 const ClientTable = () => {
 
   const navigate = useNavigate()
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const disableClient = (id) => {
+    ClientService.disableClient(id).then((response) => {
+      if (response.status === 200) {
+        success(messageApi, {
+          content: "Cliente deshabilitado correctamente",
+        });
+      }else{
+        error(messageApi, {
+          content: "Error al deshabilitar el cliente",
+        });
+      }
+    });
+  }
+
+  const enableClient = (id) => {
+    ClientService.enableClient(id).then((response) => {
+      if (response.status === 200) {
+        success(messageApi, {
+          content: "Cliente habilitado correctamente",
+        });
+      }else{
+        error(messageApi, {
+          content: "Error al habilitar el cliente",
+        });
+      }
+    });
+  }
+
 
   const columns = useMemo(()=>[
     {
@@ -59,21 +90,33 @@ const ClientTable = () => {
       render: (__, values) => {
         return (
           <>
+          {values.state ? (
+            <div>
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<EditOutlined />}
+                style={{ marginRight: "5px" }}
+                onClick={() =>
+                  navigate(`/app/admin/clients/register/${values.id}?action=edit`)
+                }
+              />
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+                onClick={()=> disableClient(values.id)}
+              /> 
+            </div>
+          ) : (
             <Button
               type="primary"
-              shape="circle"
-              icon={<EditOutlined />}
-              style={{ marginRight: "5px" }}
-              onClick={() =>
-                navigate(`/app/admin/clients/register/${values.id}?action=edit`)
-              }
-            />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+              onClick={() => enableClient(values.id)}
+            >
+              Activar
+            </Button>
+          )}
           </>
         );
       },
@@ -88,7 +131,7 @@ const ClientTable = () => {
     ClientService.getAllClients().then((data) => {
       setClients(data);
     });
-  }, []);
+  }, [results]);
 
   const onSearch = (value) => {
     if (value) {
@@ -102,6 +145,7 @@ const ClientTable = () => {
 
   return (
     <div>
+      {contextHolder}
       <SearchInput onSearch={onSearch} placeholder={"Escriba para buscar un cliente"}/>
       {results.length === 0 ? (
         <Empty description={false} />
