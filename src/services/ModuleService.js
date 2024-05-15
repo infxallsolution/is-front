@@ -18,6 +18,17 @@ const ModuleService = {
     const data = await response.json();
     return data;
   },
+  getModuleByClient: async (id) => {
+    const response = await fetch(
+      `${ULR_BASE}/moduleclient/listbyclient?id=${id ? id : " "}`,
+      {
+        method: "get",
+        headers: authHeader(),
+      }
+    );
+    const data = await response.json()
+    return data;
+  }
 };
 
 export default ModuleService;

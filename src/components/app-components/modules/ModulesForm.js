@@ -7,6 +7,7 @@ import ModuleService from "services/ModuleService";
 const ModulesForm = () => {
   const [clients, setClients] = useState([]);
   const [modules, setModules] = useState([]);
+  const [clientModules, setClientModules] = useState([]);
   const { Option } = Select;
 
   useEffect(() => {
@@ -14,10 +15,15 @@ const ModulesForm = () => {
       setClients(response);
     });
     ModuleService.getAllModules().then((response) => {
-      console.log(response);
       setModules(response);
     });
   }, []);
+
+  const onChange = (value) => {
+    ModuleService.getModuleByClient(value).then((response) => {
+      console.log(response)
+    });
+  }
 
   const [form] = Form.useForm();
 
@@ -33,7 +39,7 @@ const ModulesForm = () => {
         }}
       >
         <Form.Item>
-          <Select placeholder={"Seleccione un cliente"}>
+          <Select placeholder={"Seleccione un cliente"} onChange={onChange}>
             {clients.map((client, index) => {
               return (
                 <Option key={index} value={client.id}>
