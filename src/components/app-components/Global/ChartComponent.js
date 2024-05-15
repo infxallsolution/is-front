@@ -1,12 +1,12 @@
 import { createChart, ColorType } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
-import generateLineData from "utils/generateLineData";
 
 export const ChartComponent = (props) => {
   const {
     data,
     type,
     series,
+
     colors: {
       backgroundColor = "white",
       lineColor = "#2962FF",
@@ -15,7 +15,6 @@ export const ChartComponent = (props) => {
       areaBottomColor = "rgba(41, 98, 255, 0.28)",
     } = {},
   } = props;
-
 
   const chartContainerRef = useRef();
 
@@ -42,7 +41,17 @@ export const ChartComponent = (props) => {
         case "bar":
           return chart.addBarSeries({ lineColor, topColor, bottomColor });
         case "line":
-          return chart.addLineSeries({ lineColor, topColor, bottomColor });
+          return chart.addLineSeries({
+            lineColor,
+            topColor,
+            bottomColor,
+            priceFormat: {
+              type: "custom",
+              formatter: (price) => (price.toLocaleString()),
+            },
+            axisLabelVisible: true,
+            title: "Kg",
+          });
         case "histogram":
           return chart.addHistogramSeries({ lineColor, topColor, bottomColor });
         case "area":
@@ -50,31 +59,26 @@ export const ChartComponent = (props) => {
         case "baseline":
           return chart.addBaselineSeries({ lineColor, topColor, bottomColor });
         case "candlestick":
-          return chart.addCandlestickSeries({ lineColor, topColor, bottomColor });
+          return chart.addCandlestickSeries({
+            lineColor,
+            topColor,
+            bottomColor,
+          });
         default:
           return chart.addLineSeries({ lineColor, topColor, bottomColor });
       }
     };
 
-    function generateRandomColor() {
-      let maxVal = 0xffffff; // 16777215
-      let randomNumber = Math.random() * maxVal;
-      randomNumber = Math.floor(randomNumber);
-      randomNumber = randomNumber.toString(16);
-      let randColor = randomNumber.padStart(6, 0);
-      return `#${randColor.toUpperCase()}`;
-    }
-
     let newSeries = null;
 
-    if (series === 0) {
-      newSeries = getChartTypeDefaultOptions(type, {
-        lineColor,
-        topColor: areaTopColor,
-        bottomColor: areaBottomColor,
-      });
-      newSeries.setData(data);
-    } else {
+    /* if (series === 0) { */
+    newSeries = getChartTypeDefaultOptions(type, {
+      lineColor,
+      topColor: areaTopColor,
+      bottomColor: areaBottomColor,
+    });
+    newSeries.setData(data);
+    /* } else {
       const lineSeriesOne = chart.addLineSeries({ color: generateRandomColor() });
       const lineSeriesTwo = chart.addLineSeries({ color: generateRandomColor() });
       const lineSeriesThree = chart.addLineSeries({
@@ -90,7 +94,7 @@ export const ChartComponent = (props) => {
         lineSeriesThree.setData(lineSeriesThreeData);
 
         chart.timeScale().fitContent();
-    }
+    } */
 
     window.addEventListener("resize", handleResize);
 
