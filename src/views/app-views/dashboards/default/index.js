@@ -1,23 +1,28 @@
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, Select } from "antd";
 import { ChartComponent } from "components/app-components/Global/ChartComponent";
 import AppHeader from "components/shared-components/AppHeader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { DashboardService } from "services/DashboardService";
-import generateLineData from "utils/generateLineData";
 
 export const DefaultDashboard = () => {
-  const [dataDashboard, setDataDashboard] = useState([]);
   const [allDashboardData, setAllDashboardData] = useState([]);
+  const [option, setOption] = useState("DAY");
+
+  const { Option } = Select;
 
   const clientId = useSelector((state) => state?.auth?.user?.clientId);
 
   useEffect(() => {
-    DashboardService.listDataByClient(clientId).then((response) => {
+    DashboardService.listDataByClient(clientId, option).then((response) => {
       setAllDashboardData(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [option]);
+
+  const onChange = (value) => {
+    setOption(value)
+  };
 
   return (
     <>
@@ -26,21 +31,29 @@ export const DefaultDashboard = () => {
         items={[{ title: "Home", link: "/app" }, { title: "Dashboard" }]}
       />
       <Row gutter={16} style={{ marginTop: "15px" }}>
-        {
-          allDashboardData?.map((item, index) => {
-            return (
-              <Col span={12} key={index}>
-                <Card title={item.name} className="mb-4">
-                  <ChartComponent
-                    type={"line"}
-                    data={item.dataDetails}
-                    series={2}
-                  ></ChartComponent>
-                </Card>
-              </Col>
-            );
-          })
-        }
+        <Select
+          style={{
+            width: 120,
+            paddingLeft: "8px"
+          }}
+          defaultValue={"DAY"}
+          onChange={onChange}
+        >
+          <Option value="DAY">Días</Option>
+          <Option value="MONTH">Meses</Option>
+          <Option value="YEAR">Años</Option>
+        </Select>
+      </Row>
+      <Row gutter={16} style={{ marginTop: "15px" }}>
+        {allDashboardData?.map((item, index) => {
+          return (
+            <Col span={12} key={index}>
+              <Card title={item.title} className="mb-4">
+                <ChartComponent type={"line"} data={item.data} series={index} />
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
     </>
   );

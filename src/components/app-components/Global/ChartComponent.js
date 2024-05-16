@@ -1,12 +1,12 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { generateRandomColor } from "utils/generateLineData";
 
 export const ChartComponent = (props) => {
   const {
     data,
     type,
     series,
-
     colors: {
       backgroundColor = "white",
       lineColor = "#2962FF",
@@ -18,6 +18,8 @@ export const ChartComponent = (props) => {
 
   const chartContainerRef = useRef();
 
+  const [legend, setLegend] = useState([]);
+
   useEffect(() => {
     const handleResize = () => {
       chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -28,6 +30,12 @@ export const ChartComponent = (props) => {
         background: { type: ColorType.Solid, color: backgroundColor },
         textColor,
       },
+      leftPriceScale: {
+        visible: true,
+      },
+      rightPriceScale: {
+        visible: false,
+      },
       width: chartContainerRef.current.clientWidth,
       height: 300,
     });
@@ -35,7 +43,7 @@ export const ChartComponent = (props) => {
 
     const getChartTypeDefaultOptions = (
       type,
-      { lineColor, topColor, bottomColor }
+      { lineColor, topColor, bottomColor, color }
     ) => {
       switch (type) {
         case "bar":
@@ -44,13 +52,14 @@ export const ChartComponent = (props) => {
           return chart.addLineSeries({
             lineColor,
             topColor,
+            color,
             bottomColor,
             priceFormat: {
               type: "custom",
-              formatter: (price) => (price.toLocaleString()),
+              formatter: (price) => price.toLocaleString(),
             },
             axisLabelVisible: true,
-            title: "Kg",
+            title: "TON",
           });
         case "histogram":
           return chart.addHistogramSeries({ lineColor, topColor, bottomColor });
@@ -69,38 +78,26 @@ export const ChartComponent = (props) => {
       }
     };
 
-    let newSeries = null;
+    const addSeriesAndLegend = (seriesData, seriesIndex) => {
+      const color = generateRandomColor();
+      const newSeries = getChartTypeDefaultOptions(type, { color });
+      newSeries.setData(seriesData.data);
+      setLegend((prevLegends) => [
+        ...prevLegends,
+        { color, text: seriesData.title },
+      ]);
+    };
 
-    /* if (series === 0) { */
-    newSeries = getChartTypeDefaultOptions(type, {
-      lineColor,
-      topColor: areaTopColor,
-      bottomColor: areaBottomColor,
+    // eslint-disable-next-line array-callback-return
+    data.map((seriesData, index) => {
+      addSeriesAndLegend(seriesData, index);
     });
-    newSeries.setData(data);
-    /* } else {
-      const lineSeriesOne = chart.addLineSeries({ color: generateRandomColor() });
-      const lineSeriesTwo = chart.addLineSeries({ color: generateRandomColor() });
-      const lineSeriesThree = chart.addLineSeries({
-        color: generateRandomColor(),
-      });
-
-      const lineSeriesOneData = generateLineData(250);
-      const lineSeriesTwoData = generateLineData(250);
-      const lineSeriesThreeData = generateLineData(250);
-
-        lineSeriesOne.setData(lineSeriesOneData);
-        lineSeriesTwo.setData(lineSeriesTwoData);
-        lineSeriesThree.setData(lineSeriesThreeData);
-
-        chart.timeScale().fitContent();
-    } */
 
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-
+      setLegend([]);
       chart.remove();
     };
   }, [
@@ -114,5 +111,16 @@ export const ChartComponent = (props) => {
     areaBottomColor,
   ]);
 
-  return <div ref={chartContainerRef} />;
+  return (
+    <div>
+      <div ref={chartContainerRef} />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {legend.map((legend, index) => (
+          <div key={index} style={{ color: legend.color, margin: "0 10px" }}>
+            <strong>{legend.text}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };

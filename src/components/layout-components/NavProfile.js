@@ -72,7 +72,9 @@ const items = [
 ];
 
 export const NavProfile = ({ mode }) => {
-  const { name, type } = useSelector((state) => state?.auth?.user);
+  const name  = useSelector((state) => state?.auth?.user?.name);
+
+  const type = useSelector((state) => state?.auth?.user?.type);
 
   return (
     <Dropdown placement="bottomRight" menu={{ items }} trigger={["click"]}>
@@ -85,8 +87,8 @@ export const NavProfile = ({ mode }) => {
             }}
           />
           <UserInfo className="profile-text">
-            <Name>{name}</Name>
-            <Title>{type}</Title>
+            <Name>{name || "Hola mundo"}</Name>
+            <Title>{type || "Palma"}</Title>
           </UserInfo>
         </Profile>
       </NavItem>

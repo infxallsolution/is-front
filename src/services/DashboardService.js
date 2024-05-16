@@ -11,8 +11,8 @@ export const DashboardService = {
         const data = await response.json();
         return data;
     },
-    listDataByClient: async (id) => {
-        const response = await fetch(`${URL_BASE}/dashboard/listbyclient/${id}`, {
+    listDataByClient: async (id, option) => {
+        const response = await fetch(`${URL_BASE}/dashboard/listbyclient/${id}?option=${option}`, {
             headers: authHeader(),
         });
         const data = await response.json();
