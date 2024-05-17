@@ -33,15 +33,15 @@ export const DefaultDashboard = () => {
       <Row gutter={16} style={{ marginTop: "15px" }}>
         <Select
           style={{
-            width: 120,
+            width: "auto",
             paddingLeft: "8px"
           }}
           defaultValue={"DAY"}
           onChange={onChange}
         >
-          <Option value="DAY">Días</Option>
-          <Option value="MONTH">Meses</Option>
-          <Option value="YEAR">Años</Option>
+          <Option value="DAY">Ver por Días</Option>
+          <Option value="MONTH">Ver por meses</Option>
+          <Option value="YEAR">Ver por años</Option>
         </Select>
       </Row>
       <Row gutter={16} style={{ marginTop: "15px" }}>
