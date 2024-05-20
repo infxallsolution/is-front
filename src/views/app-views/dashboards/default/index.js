@@ -49,7 +49,7 @@ export const DefaultDashboard = () => {
           return (
             <Col span={12} key={index}>
               <Card title={item.title} className="mb-4">
-                <ChartComponent type={"line"} data={item.data} series={index} />
+                <ChartComponent type={"histogram"} data={item.data} series={index} />
               </Card>
             </Col>
           );

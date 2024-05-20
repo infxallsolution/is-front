@@ -62,7 +62,18 @@ export const ChartComponent = (props) => {
             title: "TON",
           });
         case "histogram":
-          return chart.addHistogramSeries({ lineColor, topColor, bottomColor });
+          return chart.addHistogramSeries({
+            lineColor,
+            topColor,
+            color,
+            bottomColor,
+            priceFormat: {
+              type: "custom",
+              formatter: (price) => price.toLocaleString(),
+            },
+            axisLabelVisible: true,
+            title: "TON",
+          });
         case "area":
           return chart.addAreaSeries({ lineColor, topColor, bottomColor });
         case "baseline":
