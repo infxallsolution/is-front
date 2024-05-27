@@ -11,7 +11,6 @@ const ErrorOne = ({ module }) => {
 
   useEffect(() => {
     RedirectService.redirectModule(module).then((res) => {
-      console.log(res)
       setUrl(res.redirectTo)
     })
   }, [module])
