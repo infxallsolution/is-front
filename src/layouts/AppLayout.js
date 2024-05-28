@@ -13,6 +13,7 @@ import navigationConfig from 'configs/NavigationConfig';
 import { TEMPLATE, MEDIA_QUERIES } from 'constants/ThemeConstant';
 import styled from '@emotion/styled';
 import utils from 'utils';
+import ErrorOne from 'views/auth-views/errors/error-page-1';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -66,27 +67,36 @@ export const AppLayout = ({ navCollapsed, navType, direction, children }) => {
         return {paddingLeft: getLayoutGutter()}
     }
 
+    const url = window.location.pathname;
+
+    const moduleName = url.split("/")[3];
+
     return (
+      <Layout>
+        <HeaderNav isMobile={isMobile} />
+        {isNavTop && !isMobile ? <TopNav routeInfo={currentRouteInfo} /> : null}
         <Layout>
-            <HeaderNav isMobile={isMobile}/>
-            {(isNavTop && !isMobile) ? <TopNav routeInfo={currentRouteInfo}/> : null}
-            <Layout>
-                {(isNavSide && !isMobile) ? <SideNav routeInfo={currentRouteInfo}/> : null }
-                <Layout style={getLayoutDirectionGutter()}>
-                    <AppContent>
-                        <PageHeader display={currentRouteInfo?.breadcrumb} title={currentRouteInfo?.title} />
-                        <Content className="h-100">
-                            <Suspense fallback={<Loading cover="content"/>}>
-                                {children}
-                            </Suspense>
-                        </Content>
-                    </AppContent>
-                    <Footer />
-                </Layout>
-            </Layout>
-            {isMobile && <MobileNav />}
+          {isNavSide && !isMobile ? (
+            <SideNav routeInfo={currentRouteInfo} />
+          ) : null}
+          <Layout style={getLayoutDirectionGutter()}>
+            <AppContent>
+              <PageHeader
+                display={currentRouteInfo?.breadcrumb}
+                title={currentRouteInfo?.title}
+              />
+              <Content className="h-100">
+                <Suspense fallback={<Loading cover="content" />}>
+                  {url.includes("modules") ? <ErrorOne module={moduleName} /> : children}
+                </Suspense>
+              </Content>
+            </AppContent>
+            <Footer />
+          </Layout>
         </Layout>
-    )
+        {isMobile && <MobileNav />}
+      </Layout>
+    );
 }
 
 const mapStateToProps = ({ theme }) => {

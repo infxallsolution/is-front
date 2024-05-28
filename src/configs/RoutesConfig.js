@@ -53,7 +53,18 @@ export const protectedRoutes = [
   },
   {
     key: "modules",
-    path: `${APP_PREFIX_PATH}/admin/modules`,
-    component: React.lazy(() => import("views/app-views/admin/modules")),
+    path: `${APP_PREFIX_PATH}/admin/module`,
   },
+  {
+    key: "modules.admin",
+    path: `${APP_PREFIX_PATH}/modules/administracion`,
+  },
+  {
+    key: "modules.bascule",
+    path: `${APP_PREFIX_PATH}/modules/bascula`,
+  },
+  {
+    key: "modules.porteria",
+    path: `${APP_PREFIX_PATH}/modules/reception`,
+  }
 ];
