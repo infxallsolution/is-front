@@ -6,23 +6,22 @@ import ModuleService from "services/ModuleService";
 
 const ModulesForm = () => {
   const [clients, setClients] = useState([]);
-  const [modules, setModules] = useState([]);
-  const [clientModules, setClientModules] = useState([]);
+  const [clientModule, setClientModule] = useState("");
+  const [modules, setModules] = useState([]); // [1]
   const { Option } = Select;
 
   useEffect(() => {
     ClientService.getAllClients().then((response) => {
       setClients(response);
     });
-    ModuleService.getAllModules().then((response) => {
-      setModules(response);
-    });
-  }, []);
+  }, [clientModule]);
 
   const onChange = (value) => {
+    setClientModule(value)
     ModuleService.getModuleByClient(value).then((response) => {
-      console.log(response)
+      setModules(response)
     });
+
   }
 
   const [form] = Form.useForm();
@@ -50,7 +49,7 @@ const ModulesForm = () => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <ModulesTable dataSource={modules} />
+          <ModulesTable clientId={clientModule} dataSource={modules} />
         </Form.Item>
       </Form>
     </div>

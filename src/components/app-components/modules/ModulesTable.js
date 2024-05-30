@@ -1,17 +1,33 @@
 import { Checkbox, Table, Tag } from "antd";
 import React, { useMemo } from "react";
 
-const onChange = (e) => {
-  e.checked ? (e.checked = false) : (e.checked = true);
-  console.log(e);
-};
-
 const ModulesTable = ({ dataSource }) => {
+  
+  const onChange = (e) => {
+    e.checked ? (e.checked = false) : (e.checked = true);
+    console.log(e);
+  };
+
+  const data = dataSource.map((item) => {
+    console.log(item.module.name);
+    item.module.name === "logistic" ? item.module.name = "Logística" : item.module.name = item.module.name.charAt(0).toUpperCase() + item.module.name.slice(1); 
+    item.module.name === "Reception" ? item.module.name = "Porteria" : item.module.name = item.module.name.charAt(0).toUpperCase() + item.module.name.slice(1); 
+    return {
+      id: item.id,
+      clientId: item.clientId,
+      moduleName: item.module.name,
+      moduleStatus: item.module.status,
+      checked: item.state,
+      status: item.state,
+    };
+  });
+
+
   const columns = useMemo(
     () => [
       {
         title: "Nombre",
-        dataIndex: "name",
+        dataIndex: "moduleName",
         key: "name",
       },
       {
@@ -30,11 +46,14 @@ const ModulesTable = ({ dataSource }) => {
         title: "Acción",
         dataIndex: "action",
         render: (__, data) => (
-          <Checkbox
-            onChange={() => {
-              onChange(data);
-            }}
-          />
+          console.log(data),
+          (
+            <Checkbox
+              onChange={() => {
+                onChange(data);
+              }}
+            />
+          )
         ),
       },
     ],
@@ -44,7 +63,7 @@ const ModulesTable = ({ dataSource }) => {
   return (
     <div>
       <Table
-        dataSource={dataSource}
+        dataSource={data}
         columns={columns}
         bordered
         size="middle"
