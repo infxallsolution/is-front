@@ -1,74 +1,125 @@
-import { Checkbox, Table } from 'antd'
-import React from 'react'
+import { Checkbox, Table, Tag } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import ModuleService from "services/ModuleService";
 
-const columns = [
-  {
-    title: "Nombre",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Descripción",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Acción",
-    dataIndex: "action",
-    render: (__, data) => (
-      <Checkbox
-        onChange={() => {
-          onChange(data);
-        }}
-      />
-    ),
-  },
-];
+const ModulesTable = ({ clientId }) => {
 
-const onChange = (e) => {
-  e.checked ? (e.checked = false) : (e.checked = true);
-  console.log(e);
-};
+  const [modules, setModules] = useState([])
 
-const dataSource  = [
-  {
-    id: "1",
-    key: "1",
-    name: "Agro",
-    description: "Modulo de agronomico",
-  },
-  {
-    id: "2",
-    key: "2",
-    name: "Conta",
-    description: "Modulo de contabilidad",
-  },
-  {
-    id: "3",
-    key: "3",
-    name: "Admin",
-    description: "Modulo de administracion",
-  },
-  {
-    id: "4",
-    key: "4",
-    name: "Nomi",
-    description: "Modulo de nomina",
-  },
-];
+  useEffect(() => {
+    ModuleService.getModuleByClient(clientId).then((response) => {
+      setModules(
+        response.map((item) => {
+          item.module.name === "logistic"
+            ? (item.module.name = "Logística")
+            : (item.module.name =
+                item.module.name.charAt(0).toUpperCase() +
+                item.module.name.slice(1));
+          item.module.name === "Reception"
+            ? (item.module.name = "Porteria")
+            : (item.module.name =
+                item.module.name.charAt(0).toUpperCase() +
+                item.module.name.slice(1));
+          return {
+            id: item.id,
+            clientId: item.clientId,
+            moduleName: item.module.name,
+            moduleId: item.module.id,
+            moduleStatus: item.module.state,
+            checked: item.state,
+            status: item.state,
+          };
+        })
+      );
+    });
+  }, [clientId])
+  
+  const columns = useMemo(
+    () => [
+      {
+        title: "Nombre",
+        dataIndex: "moduleName",
+        key: "name",
+      },
+      {
+        title: "Modulo asociado",
+        dataIndex: "status",
+        key: "status",
+        render: (status) => {
+          return status ? (
+            <Tag color="green">Activo</Tag>
+          ) : (
+            <Tag color="red">Inactivo</Tag>
+          );
+        },
+      },
+      {
+        title: "Acción",
+        dataIndex: "action",
+        render: (__, data) => {
+          return (
+            <Checkbox
+              checked={data?.status}
+              onChange={() => {
+                if(data.status){
+                  ModuleService.deleteModuleClient({
+                    clientId: data.clientId,
+                    moduleId: data.moduleId,
+                    state: !data.status,
+                  }).then((response) => {
+                    setModules((prev) => {
+                      return prev.map((item) => {
+                        if (item.id === data.id) {
+                          return {
+                            ...item,
+                            status: !item.status,
+                          };
+                        }
+                        return item;
+                      });
+                    });
+                    console.log(response);
+                  })
+                }else{
+                  ModuleService.insertModuleClient({
+                    clientId: data.clientId,
+                    moduleId: data.moduleId,
+                    state: !data.status,
+                  }).then((response) => {
+                    setModules((prev) => {
+                      return prev.map((item) => {
+                        if (item.id === data.id) {
+                          return {
+                            ...item,
+                            status: !item.status,
+                          };
+                        }
+                        return item;
+                      });
+                    });
+                    console.log(response);
+                  });
+                }
+              }}
+            />
+          );
+        },
+      },
+    ],
+    [modules]
+  );
 
-const ModulesTable = () => {
   return (
     <div>
       <Table
-        dataSource={dataSource}
+        dataSource={modules}
         columns={columns}
         bordered
-        size='middle'
+        size="middle"
         pagination={false}
       />
     </div>
   );
-}
+};
 
-export default ModulesTable
+export default ModulesTable;
