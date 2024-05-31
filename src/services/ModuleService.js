@@ -28,6 +28,22 @@ const ModuleService = {
     );
     const data = await response.json()
     return data;
+  },
+  insertModuleClient: async (data) => {
+    const response = await fetch(`${ULR_BASE}/moduleclient/insert`, {
+      method: "post",
+      headers: authHeader(),
+      body: JSON.stringify(data),
+    });
+    return response;
+  },
+  deleteModuleClient: async (data) => {
+    const response = await fetch(`${ULR_BASE}/moduleclient/delete`, {
+      method: "delete",
+      headers: authHeader(),
+      body: JSON.stringify(data),
+    });
+    return response;
   }
 };
 

@@ -18,10 +18,6 @@ const ModulesForm = () => {
 
   const onChange = (value) => {
     setClientModule(value)
-    ModuleService.getModuleByClient(value).then((response) => {
-      setModules(response)
-    });
-
   }
 
   const [form] = Form.useForm();
@@ -49,7 +45,7 @@ const ModulesForm = () => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <ModulesTable clientId={clientModule} dataSource={modules} />
+          <ModulesTable clientId={clientModule} />
         </Form.Item>
       </Form>
     </div>
