@@ -27,4 +27,8 @@ function generateLineData(numberOfPoints) {
   return res;
 }
 
-export default generateLineData;
+const generateRandomColor = () => {
+  return "#" + Math.random().toString(16).slice(2, 8);
+}
+
+export {generateLineData, generateRandomColor};

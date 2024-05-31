@@ -1,13 +1,19 @@
-import { Button, Empty, Table, Tag } from "antd";
+import { Button, Empty, Table, Tag, message } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import SearchInput from "../Global/SearchInput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ClientService from "services/ClientService";
 import { useNavigate } from "react-router-dom";
+import { error, success } from "utils/notifications";
 
-const ClientTable = () => {
+const ClientTable = ({data, enableClient, disableClient}) => {
 
   const navigate = useNavigate()
+  const [messageApi, contextHolder] = message.useMessage();
+  const [results, setResults] = useState([]);
+
+  
+
 
   const columns = useMemo(()=>[
     {
@@ -44,13 +50,6 @@ const ClientTable = () => {
       key: "state",
       title: "Estado",
       dataIndex: "state",
-      render: (state) => {
-        return state ? (
-          <Tag color="green">Activo</Tag>
-        ) : (
-          <Tag color="red">Inactivo</Tag>
-        );
-      }
     },
     {
       key: "actions",
@@ -59,41 +58,48 @@ const ClientTable = () => {
       render: (__, values) => {
         return (
           <>
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<EditOutlined />}
-              style={{ marginRight: "5px" }}
-              onClick={() =>
-                navigate(`/app/admin/clients/register/${values.id}?action=edit`)
-              }
-            />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            {values.state.props.children === "Activo" ? (
+              <div>
+                <Button
+                  type="primary"
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  style={{ marginRight: "5px" }}
+                  onClick={() =>
+                    navigate(
+                      `/app/admin/clients/register/${values.id}?action=edit`
+                    )
+                  }
+                />
+                <Button
+                  type="primary"
+                  danger
+                  shape="circle"
+                  icon={<DeleteOutlined />}
+                  onClick={() => disableClient(values.id, messageApi)}
+                />
+              </div>
+            ) : (
+              <Button
+                type="primary"
+                onClick={() => enableClient(values.id, messageApi)}
+              >
+                Activar
+              </Button>
+            )}
           </>
         );
       },
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  ], [])
+  ], [data])
 
-  const [results, setResults] = useState([]);
-  const [clients, setClients] = useState([]);
 
-  useEffect(() => {
-    ClientService.getAllClients().then((data) => {
-      setClients(data);
-    });
-  }, []);
 
   const onSearch = (value) => {
     if (value) {
       setResults(
-        clients.filter((item) =>
+        data.filter((item) =>
           item.name.toLowerCase().includes(value.toLocaleLowerCase())
         )
       );
@@ -102,11 +108,12 @@ const ClientTable = () => {
 
   return (
     <div>
+      {contextHolder}
       <SearchInput onSearch={onSearch} placeholder={"Escriba para buscar un cliente"}/>
       {results.length === 0 ? (
         <Empty description={false} />
       ) : (
-        <Table columns={columns} dataSource={results} />
+        <Table columns={columns} dataSource={results} size="middle"/>
       )}
     </div>
   );

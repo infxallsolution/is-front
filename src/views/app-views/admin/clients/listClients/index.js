@@ -1,11 +1,61 @@
-import { Button, Card, message } from "antd";
+import { Button, Card, Tag, message } from "antd";
 import ClientTable from "components/app-components/clients/ClientTable";
 import AppHeader from "components/shared-components/AppHeader";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ClientService from "services/ClientService";
+import { error, success } from "utils/notifications";
 
 const Client = () => {
   const navigate = useNavigate();
+  const [clients, setClients] = useState([]);
+  const [rechargeData, setRechargeData] = useState(false);
+
+  const disableClient = (id, messageApi) => {
+    ClientService.disableClient(id).then((response) => {
+      if (response.status === 200) {
+        setRechargeData(!rechargeData)
+        success(messageApi, {
+          content: "Cliente deshabilitado correctamente",
+        });
+      }else{
+        error(messageApi, {
+          content: "Error al deshabilitar el cliente",
+        });
+      }
+    });
+  }
+
+  const enableClient = (id, messageApi) => {
+    ClientService.enableClient(id).then((response) => {
+      if (response.status === 200) {
+        setRechargeData(!rechargeData)
+        success(messageApi, {
+          content: "Cliente habilitado correctamente",
+        });
+      } else {
+        error(messageApi, {
+          content: "Error al habilitar el cliente",
+        });
+      }
+    });
+  };
+
+  useEffect(()=>{
+    ClientService.getAllClients().then((data) => {
+      setClients(
+        data.map((client) => ({
+          ...client,
+          state: client.state ? (
+            <Tag color="green">Activo</Tag>
+          ) : (
+            <Tag color="red">Inactivo</Tag>
+          ),
+        }))
+      );
+    });
+    setRechargeData(false);
+  },[rechargeData])
 
   return (
     <>
@@ -33,7 +83,11 @@ const Client = () => {
             Agregar Cliente
           </Button>
         </div>
-        <ClientTable />
+        <ClientTable
+          data={clients}
+          enableClient={enableClient}
+          disableClient={disableClient}
+        />
       </Card>
     </>
   );

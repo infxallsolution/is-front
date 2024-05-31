@@ -1,6 +1,6 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
-import generateLineData from "utils/generateLineData";
+import React, { useEffect, useRef, useState } from "react";
+import { generateRandomColor } from "utils/generateLineData";
 
 export const ChartComponent = (props) => {
   const {
@@ -16,8 +16,9 @@ export const ChartComponent = (props) => {
     } = {},
   } = props;
 
-
   const chartContainerRef = useRef();
+
+  const [legend, setLegend] = useState([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +30,12 @@ export const ChartComponent = (props) => {
         background: { type: ColorType.Solid, color: backgroundColor },
         textColor,
       },
+      leftPriceScale: {
+        visible: true,
+      },
+      rightPriceScale: {
+        visible: false,
+      },
       width: chartContainerRef.current.clientWidth,
       height: 300,
     });
@@ -36,67 +43,72 @@ export const ChartComponent = (props) => {
 
     const getChartTypeDefaultOptions = (
       type,
-      { lineColor, topColor, bottomColor }
+      { lineColor, topColor, bottomColor, color }
     ) => {
       switch (type) {
         case "bar":
           return chart.addBarSeries({ lineColor, topColor, bottomColor });
         case "line":
-          return chart.addLineSeries({ lineColor, topColor, bottomColor });
+          return chart.addLineSeries({
+            lineColor,
+            topColor,
+            color,
+            bottomColor,
+            priceFormat: {
+              type: "custom",
+              formatter: (price) => price.toLocaleString(),
+            },
+            axisLabelVisible: true,
+            title: "TON",
+          });
         case "histogram":
-          return chart.addHistogramSeries({ lineColor, topColor, bottomColor });
+          return chart.addHistogramSeries({
+            lineColor,
+            topColor,
+            color,
+            bottomColor,
+            priceFormat: {
+              type: "custom",
+              formatter: (price) => price.toLocaleString(),
+            },
+            axisLabelVisible: true,
+            title: "TON",
+          });
         case "area":
           return chart.addAreaSeries({ lineColor, topColor, bottomColor });
         case "baseline":
           return chart.addBaselineSeries({ lineColor, topColor, bottomColor });
         case "candlestick":
-          return chart.addCandlestickSeries({ lineColor, topColor, bottomColor });
+          return chart.addCandlestickSeries({
+            lineColor,
+            topColor,
+            bottomColor,
+          });
         default:
           return chart.addLineSeries({ lineColor, topColor, bottomColor });
       }
     };
 
-    function generateRandomColor() {
-      let maxVal = 0xffffff; // 16777215
-      let randomNumber = Math.random() * maxVal;
-      randomNumber = Math.floor(randomNumber);
-      randomNumber = randomNumber.toString(16);
-      let randColor = randomNumber.padStart(6, 0);
-      return `#${randColor.toUpperCase()}`;
-    }
+    const addSeriesAndLegend = (seriesData, seriesIndex) => {
+      const color = generateRandomColor();
+      const newSeries = getChartTypeDefaultOptions(type, { color });
+      newSeries.setData(seriesData.data);
+      setLegend((prevLegends) => [
+        ...prevLegends,
+        { color, text: seriesData.title },
+      ]);
+    };
 
-    let newSeries = null;
-
-    if (series === 0) {
-      newSeries = getChartTypeDefaultOptions(type, {
-        lineColor,
-        topColor: areaTopColor,
-        bottomColor: areaBottomColor,
-      });
-      newSeries.setData(data);
-    } else {
-      const lineSeriesOne = chart.addLineSeries({ color: generateRandomColor() });
-      const lineSeriesTwo = chart.addLineSeries({ color: generateRandomColor() });
-      const lineSeriesThree = chart.addLineSeries({
-        color: generateRandomColor(),
-      });
-
-      const lineSeriesOneData = generateLineData(250);
-      const lineSeriesTwoData = generateLineData(250);
-      const lineSeriesThreeData = generateLineData(250);
-
-        lineSeriesOne.setData(lineSeriesOneData);
-        lineSeriesTwo.setData(lineSeriesTwoData);
-        lineSeriesThree.setData(lineSeriesThreeData);
-
-        chart.timeScale().fitContent();
-    }
+    // eslint-disable-next-line array-callback-return
+    data.map((seriesData, index) => {
+      addSeriesAndLegend(seriesData, index);
+    });
 
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-
+      setLegend([]);
       chart.remove();
     };
   }, [
@@ -110,5 +122,16 @@ export const ChartComponent = (props) => {
     areaBottomColor,
   ]);
 
-  return <div ref={chartContainerRef} />;
+  return (
+    <div>
+      <div ref={chartContainerRef} />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {legend.map((legend, index) => (
+          <div key={index} style={{ color: legend.color, margin: "0 10px" }}>
+            <strong>{legend.text}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };

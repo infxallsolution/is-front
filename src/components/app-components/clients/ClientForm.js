@@ -16,8 +16,7 @@ import { useNavigate } from "react-router-dom";
 const ClientForm = () => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate()
-  const [client, setClient] = useState({});
+  const navigate = useNavigate();
   const urlId = window.location.pathname.split("/")[5];
   const edit = window.location.search.split("?")[1] === "action=edit";
 
@@ -61,7 +60,6 @@ const ClientForm = () => {
   useEffect(() => {
     if (edit) {
       ClientService.getClient(urlId).then((response) => {
-        setClient(response);
         form.setFieldsValue({
           identification: response.identification,
           name: response.name,
@@ -72,7 +70,7 @@ const ClientForm = () => {
         });
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlId, edit]);
 
   const [loading, setLoading] = useState(false);
@@ -125,7 +123,10 @@ const ClientForm = () => {
             rules={clientRules.email}
             hasFeedback
           >
-            <Input prefix={<MailOutlined className="text-primary" />} />
+            <Input
+              prefix={<MailOutlined className="text-primary" />}
+              disabled={edit}
+            />
           </Form.Item>
           <Form.Item
             name="address"
@@ -151,6 +152,7 @@ const ClientForm = () => {
             <Select
               placeholder="Seleccione Tipo de negocio"
               suffixIcon={<CaretDownOutlined className="text-primary" />}
+              disabled={edit}
             >
               <Select.Option value="PALMA">Palma</Select.Option>
               <Select.Option value="BANANO">Banano</Select.Option>

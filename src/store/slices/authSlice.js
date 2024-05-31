@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AUTH_TOKEN } from "constants/AuthConstant";
 import FirebaseService from "services/FirebaseService";
 import AuthService from "services/AuthService";
+import { tokenPayload } from "utils/decodeToken";
 
 export const initialState = {
   loading: false,
@@ -22,8 +23,12 @@ export const signIn = createAsyncThunk(
         password,
       });
       const token = response.token;
+      const user = tokenPayload(token);
       localStorage.setItem(AUTH_TOKEN, token);
-      return token;
+      return {
+        token,
+        user,
+      };
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Error");
     }
@@ -91,6 +96,7 @@ export const authSlice = createSlice({
         state.loading = false;
         state.redirect = "/";
         state.token = action.payload;
+        state.user= action.payload.user;
       })
       .addCase(signIn.rejected, (state, action) => {
         state.message = action.payload;
@@ -101,11 +107,13 @@ export const authSlice = createSlice({
         state.loading = false;
         state.token = null;
         state.redirect = "/";
+        state.user = null;
       })
       .addCase(signOut.rejected, (state) => {
         state.loading = false;
         state.token = null;
         state.redirect = "/";
+        state.user = null;
       })
       .addCase(signUp.pending, (state) => {
         state.loading = true;

@@ -29,12 +29,28 @@ export const ClientService = {
   },
   updateClient: async (data, id) => {
     const response = await fetch(`${URL_BASE}/client/update/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: authHeader(),
       body: JSON.stringify(data),
     });
     const responseData = await response.json();
     return responseData;
+  },
+  enableClient: async (id) => {
+    const response = await fetch(`${URL_BASE}/client/enableClient/${id}`, {
+      method: "PUT",
+      headers: authHeader(),
+    });
+    const data = await response.json();
+    return data;
+  },
+  disableClient: async (id) => {
+    const response = await fetch(`${URL_BASE}/client/disableclient/${id}`, {
+      method: "DELETE",
+      headers: authHeader(),
+    });
+    const data = await response.json();
+    return data;
   },
 };
 
