@@ -4,7 +4,7 @@ const dev = {
 };
 
 const prod = {
-  API_ENDPOINT_URL: '/api'
+  API_ENDPOINT_URL: 'http://staging-core-is.infxsolution.com/api'
 };
 
 const test = {
