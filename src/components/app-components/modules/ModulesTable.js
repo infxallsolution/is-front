@@ -78,7 +78,6 @@ const ModulesTable = ({ clientId }) => {
                         return item;
                       });
                     });
-                    console.log(response);
                   })
                 }else{
                   ModuleService.insertModuleClient({
@@ -97,7 +96,7 @@ const ModulesTable = ({ clientId }) => {
                         return item;
                       });
                     });
-                    console.log(response);
+                    
                   });
                 }
               }}

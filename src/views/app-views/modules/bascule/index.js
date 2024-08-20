@@ -15,7 +15,6 @@ const Bascule = () => {
     
     useEffect(()=>{
       RedirectService.redirectModule('nomina').then((response) => {
-        console.log(response)
         setUrl(response.redirectTo)
       })
       dispatch(setModule(module))

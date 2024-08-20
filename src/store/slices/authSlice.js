@@ -1,14 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AUTH_TOKEN } from "constants/AuthConstant";
+import { COMPANY_SESION } from "constants/AuthConstant";
 import FirebaseService from "services/FirebaseService";
 import AuthService from "services/AuthService";
 import { tokenPayload } from "utils/decodeToken";
+
+
 
 export const initialState = {
   loading: false,
   message: "",
   showMessage: false,
   user: JSON.parse(localStorage.getItem("user")) || null,
+  company: JSON.parse(localStorage.getItem("company")) || null,
   redirect: "",
   token: localStorage.getItem(AUTH_TOKEN) || null,
 };
@@ -23,9 +27,13 @@ export const signIn = createAsyncThunk(
         identification,
         password,
       });
+
+      //console.log(response)
       const token = response.token;
+      const company = response.company;
       const user = tokenPayload(token);
       localStorage.setItem(AUTH_TOKEN, token);
+      localStorage.setItem(COMPANY_SESION, company);
       localStorage.setItem("user", JSON.stringify(user));
       return {
         token,
@@ -57,6 +65,13 @@ export const signOut = createAsyncThunk("auth/logout", async () => {
   localStorage.removeItem(AUTH_TOKEN);
   return response.data;
 });
+
+export const changeCompanyMethod =  () => {
+  console.log("evento al cambiar compañia en el slice")
+};
+
+
+
 
 export const authSlice = createSlice({
   name: "auth",
