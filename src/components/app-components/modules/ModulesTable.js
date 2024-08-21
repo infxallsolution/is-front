@@ -10,7 +10,7 @@ const ModulesTable = ({ clientId }) => {
     ModuleService.getModuleByClient(clientId).then((response) => {
       setModules(
         response.map((item) => {
-          item.module.name === "logistic"
+          /*item.module.name === "logistic"
             ? (item.module.name = "Logística")
             : (item.module.name =
                 item.module.name.charAt(0).toUpperCase() +
@@ -19,11 +19,11 @@ const ModulesTable = ({ clientId }) => {
             ? (item.module.name = "Porteria")
             : (item.module.name =
                 item.module.name.charAt(0).toUpperCase() +
-                item.module.name.slice(1));
+                item.module.name.slice(1));*/
           return {
             id: item.id,
             clientId: item.clientId,
-            moduleName: item.module.name,
+            moduleName: item.module.description,
             moduleId: item.module.id,
             moduleStatus: item.module.state,
             checked: item.state,
