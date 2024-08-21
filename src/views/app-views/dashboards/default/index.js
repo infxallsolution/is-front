@@ -12,15 +12,16 @@ export const DefaultDashboard = () => {
   const { Option } = Select;
 
   const clientId = useSelector((state) => state?.auth?.user?.clientId);
-  const company = useSelector((state) => state?.auth?.user?.company);
-  console.log(">>>la company:"+company)
+  //const company = useSelector((state) => state?.auth?.user?.company);
+  const company = useSelector((state) => state?.companySlice?.company);
+
 
   useEffect(() => {
     DashboardService.listDataByClient(clientId, option,company).then((response) => {
       setAllDashboardData(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [option]);
+  }, [option,company]);
 
   const onChange = (value) => {
     setOption(value)
