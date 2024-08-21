@@ -6,6 +6,9 @@ import RedirectService from 'services/RedirectService';
 import { useSelector } from 'react-redux';
 
 const ErrorOne = ({ module }) => {
+
+  const company = useSelector((state) => state?.companySlice?.company);
+  
   const theme = useSelector((state) => state.theme.currentTheme);
   const [url, setUrl] = useState("")
 
@@ -13,7 +16,7 @@ const ErrorOne = ({ module }) => {
     RedirectService.redirectModule(module).then((res) => {
       setUrl(res.redirectTo)
     })
-  }, [module])
+  }, [module,company])
 
   return (
     <div className={`h-100 ${theme === "light" ? "bg-white" : ""}`}>

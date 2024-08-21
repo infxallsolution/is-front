@@ -1,18 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 
-/*
-
-
-   const initialState = {
-    name:JSON.parse(localStorage.getItem("company")) || null,
-    company: JSON.parse(localStorage.getItem("companyName")) || null,
-    clientId:JSON.parse(localStorage.getItem("clientId")) || null,
-  }
-
-
-
-*/
 const initialState = {
     name:localStorage.getItem("companyName") || null,
     company: localStorage.getItem("company") || null,
@@ -32,7 +20,6 @@ export const companySlice = createSlice({
         },
   
         changeCompany:(state,action)=>{
-            console.log("cambiara la compañia en el company slice:"+action.payload.company)
             state.company= action.payload.company;
             state.name= action.payload.name;
             state.clientId= action.payload.clientId;

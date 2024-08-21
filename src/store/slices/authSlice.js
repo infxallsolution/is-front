@@ -66,11 +66,6 @@ export const signOut = createAsyncThunk("auth/logout", async () => {
   return response.data;
 });
 
-export const changeCompanyMethod =  () => {
-  console.log("evento al cambiar compañia en el slice")
-};
-
-
 
 
 export const authSlice = createSlice({

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Dropdown, Avatar } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { UserOutlined, LogoutOutlined, SelectOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, SelectOutlined,HomeOutlined } from "@ant-design/icons";
 import NavItem from "./NavItem";
 import Flex from "components/shared-components/Flex";
-import {  changeCompanyMethod, signOut } from "store/slices/authSlice";
+import {  signOut } from "store/slices/authSlice";
 import {changeCompany} from "store/slices/companySlice"
 import CompanyService from "services/CompanyService";
 import styled from "@emotion/styled";
@@ -67,7 +67,7 @@ const MenuItem = (props) => {
 return (
   <div onClick={handleChangeCompany}>
     <Flex as="a" href={props.path} alignItems="center" gap={SPACER[2]}>
-      <Icon><SelectOutlined /></Icon>
+      <Icon><HomeOutlined /></Icon>
       <span>{props.label}</span>
     </Flex>
   </div >
@@ -89,10 +89,6 @@ const MenuItemSignOut = (props) => {
 
   const handleSignOut = () => {
     dispatch(signOut());
-  };
-
-  const handleChangeCompany = () => {
-    dispatch(changeCompanyMethod());
   };
 
   return (
