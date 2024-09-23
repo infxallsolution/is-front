@@ -1,10 +1,10 @@
 const dev = {
-  API_ENDPOINT_URL: 'https://staging-core-is.infxsolution.com/api'
+  API_ENDPOINT_URL: 'http://localhost:8000/api'
   // API_ENDPOINT_URL: '/api'
 };
 
 const prod = {
-  API_ENDPOINT_URL: 'https://staging-core-is.infxsolution.com/api'
+  API_ENDPOINT_URL: 'https://staging-core-is.infxsolution.comhttps://staging-core-is.infxsolution.com/api'
 };
 
 const test = {

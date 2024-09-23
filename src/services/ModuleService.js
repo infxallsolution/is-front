@@ -19,25 +19,25 @@ const ModuleService = {
     return data;
   },
   getModuleByClient: async (id) => {
-    const response = await fetch(
-      `${ULR_BASE}/moduleclient/listbyclient?id=${id ? id : " "}`,
-      {
-        method: "get",
-        headers: authHeader(),
-      }
-    );
-    const data = await response.json()
+    // const response = await fetch(
+    //   `${ULR_BASE}/moduleclient/listbyclient?id=${id ? id : " "}`,
+    //   {
+    //     method: "get",
+    //     headers: authHeader(),
+    //   }
+    // );
+    const data = [] // await response.json()
     return data;
   },
   getModuleActiveByClient: async (id) => {
-    const response = await fetch(
-      `${ULR_BASE}/moduleclient/activeModules?id=${id ? id : " "}`,
-      {
-        method: "get",
-        headers: authHeader(),
-      }
-    );
-    const data = await response.json()
+    // const response = await fetch(
+    //   `${ULR_BASE}/moduleclient/activeModules?id=${id ? id : " "}`,
+    //   {
+    //     method: "get",
+    //     headers: authHeader(),
+    //   }
+    // );
+    const data = []// await response.json()
     return data;
   },
   insertModuleClient: async (data) => {

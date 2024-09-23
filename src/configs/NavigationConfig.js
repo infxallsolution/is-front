@@ -11,7 +11,8 @@ import {
   DeploymentUnitOutlined,
   GoldOutlined,
   CarOutlined,
-  HeatMapOutlined
+  HeatMapOutlined,
+  InfoCircleOutlined
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -53,28 +54,38 @@ const getModules = async () => {
       submenu: [],
     }
 
+    let ieconfiguration = {
+      key: "ie-configuration",
+      path: `${APP_PREFIX_PATH}/payroll/i-e-configuration`,
+      title: "Ingreso y retención",
+      icon: InfoCircleOutlined,
+      breadcrumb: false,
+      submenu: [],
+    }
 
-    if (user.user == 'rgomez') {
+    // console.log('user')
+    // if (user.user == 'rgomez') {
       modulos.push(clientes)
       modulos.push(modules)
-    }
-    modulos.push(dashboard)
+      modulos.push(ieconfiguration)
+    // }
+    // modulos.push(dashboard)
 
 
 
-    data.map(item => {
-        let icono = selectIcon(item.module.icon)
-          let modulo = {
-            key: `${item.module.name}`,
-            path: `${APP_PREFIX_PATH}/modules/${item.module.name}`,
-            title: item.module.description,
-            icon: icono,
-            breadcrumb: false,
-            submenu: [],
-          }
-        modulos.push(modulo)
-      }
-    )
+    // data.map(item => {
+    //     let icono = selectIcon(item.module.icon)
+    //       let modulo = {
+    //         key: `${item.module.name}`,
+    //         path: `${APP_PREFIX_PATH}/modules/${item.module.name}`,
+    //         title: item.module.description,
+    //         icon: icono,
+    //         breadcrumb: false,
+    //         submenu: [],
+    //       }
+    //     modulos.push(modulo)
+    //   }
+    // )
     return modulos
   }
 

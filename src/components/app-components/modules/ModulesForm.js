@@ -45,7 +45,7 @@ const ModulesForm = () => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <ModulesTable clientId={clientModule} />
+          {/* <ModulesTable clientId={clientModule} /> */}
         </Form.Item>
       </Form>
     </div>

@@ -18,18 +18,21 @@ export const signIn = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     const { username, identification, password } = data;
     try {
-      const response = await AuthService.login({
-        username,
-        identification,
-        password,
-      });
-      const token = response.token;
-      const user = tokenPayload(token);
+      // const response = await AuthService.login({
+      //   username,
+      //   identification,
+      //   password,
+      // });
+      // const token = response.token;
+      
+      const token = `${Math.random().toString(36).substr(2)}`;
+      //const user = tokenPayload(token);
       localStorage.setItem(AUTH_TOKEN, token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify("user:'rgomez'"));
+      console.log('entro'+ token)
       return {
         token,
-        user,
+        //user,
       };
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Error");

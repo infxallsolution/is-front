@@ -16,7 +16,8 @@ export const publicRoutes = [
         key: 'forgot-password',
         path: `${AUTH_PREFIX_PATH}/forgot-password`,
         component: React.lazy(() => import('views/auth-views/authentication/forgot-password')),
-    }
+    },
+   
 ]
 
 export const protectedRoutes = [
@@ -67,5 +68,10 @@ export const protectedRoutes = [
   {
     key: "modules.porteria",
     path: `${APP_PREFIX_PATH}/modules/reception`,
+  } ,
+  {
+      key: 'ie-configuration',
+      path: `${APP_PREFIX_PATH}/payroll/i-e-configuration`,
+      component: React.lazy(() => import('views/app-views/payroll/i-e-configuration')),
   }
 ];
