@@ -3,13 +3,35 @@ import { Form, Input, Button, Table } from "antd";
 import IEService from "services/IEService";
 import SelectComponet from "components/app-components/Global/SelectComponent";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import LinkStatus from "components/app-components/Global/StatusComponent";
 
-const IEConfigurationFieldStep1 = ({onCancelHandle, editingRecord, handleFinish, data,setdata, handleStep })=>{
+const IEConfigurationFieldStep1 = ({onCancelHandle, editingRecord, handleFinish, data,setData, handleNextStep })=>{
 
     const [form] = Form.useForm();
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [formatName, setFormatName] = useState(true);
+    const [statusLink, setStatusLink] = useState([])
+    const [DataConfiguration, setDataConfiguration] = useState([])
 
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await IEService.GetDetailIEFormat(data.ieformat);
+          setTableData(response.data)
+          setFormatName(data.ieformats.find(y=>y.id== data.ieformat).name)
+          setData({...data, formatName : data.ieformats.find(y=>y.id== data.ieformat).name,  configuration: response.data})
+
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
     const columns = [
       {
         title: 'Name',
@@ -25,40 +47,30 @@ const IEConfigurationFieldStep1 = ({onCancelHandle, editingRecord, handleFinish,
         title: 'Asignar conceptos',
         key: 'addconcept',
         render: (text, record) => (
-            <Button
-                type="primary"
-                shape="circle"
-                icon={<PlusCircleOutlined />}
-                style={{ marginRight: "5px" }}
-              onClick={() => console.log(`Action on item ${record.key}`)}
-            >
-            </Button>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<PlusCircleOutlined />}
+            onClick={() => {  
+              setData({ ...data, ieformatdetailid: record.id, ieformatdetailidName: record.name });
+              handleNextStep();
+            }}
+          />
+            <LinkStatus status={record.status} module={'irformat'}
+          /> 
+        </div>
         )
       }
     ];
-
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await IEService.GetDetailIEFormat(data.ieformat);
-          setTableData(response.data)
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, []);
-  
     return (
       <div>
-        {/* Table for dynamic data */}
+        <div style={{display: 'flex',  justifyContent:'left', alignItems:'left', marginBottom:'20px'}} >El formato que elegiste fue:  * <b> {formatName}</b></div>
         <Table
           columns={columns}
           dataSource={tableData}
           pagination={false}
-          rowKey="key"
+          rowKey="id"
         />
       </div>
     );

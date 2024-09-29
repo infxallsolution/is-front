@@ -6,6 +6,8 @@ import { NavLink } from "react-router-dom";
 import IEConfigurationForm from "components/app-components/payroll/i-e-configuration/IEConfigurationForm";
 
 const IEConfiguration =()=>{
+  
+
     return (
         <>
           <AppHeader
@@ -24,13 +26,10 @@ const IEConfiguration =()=>{
                 marginBottom: "20px",
               }}
             >
-              <NavLink to={"/"}>
-                <ArrowLeftOutlined /> Regresar
-              </NavLink>
              
             </div>
             <div>
-            <IEConfigurationForm/>
+            <IEConfigurationForm />
             </div>
           </Card>
         </>

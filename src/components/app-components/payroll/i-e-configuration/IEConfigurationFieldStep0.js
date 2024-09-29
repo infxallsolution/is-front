@@ -13,15 +13,17 @@ const IEConfigurationFieldStep0 = ({onCancelHandle, editingRecord,handleSelectCh
     const [loading, setLoading] = useState(true);
     
     const handleSelect =(value)=>{
-      setData({
-           ieformat : value
+      setData({...data,
+           ieformat : value,
       })
+
     }
     useEffect(() => {
       const fetchData = async () => {
         try {
           const response = await IEService.GetIEFormats();
           setSelectData(response.data.rows)
+          setData({ieformats :response.data.rows })
          
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -39,9 +41,6 @@ const IEConfigurationFieldStep0 = ({onCancelHandle, editingRecord,handleSelectCh
           <Form.Item>
             <Button type="primary" htmlType="submit" onClick={handleNextStep} >
              Siguiente
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={() => { onCancelHandle() }}>
-              Cancel
             </Button>
           </Form.Item>
         </Form>

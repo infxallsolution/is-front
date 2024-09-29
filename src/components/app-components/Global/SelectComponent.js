@@ -16,7 +16,7 @@ const SelectComponet = ({data, id, label, loading, handleSelect}) =>{
       >
         {data.map((item) => (
           <Option key={item.id} value={item.id}>
-            {item.name} {/* Customize this based on your data */}
+            {item.name} 
           </Option>
         ))}
       </Select>
