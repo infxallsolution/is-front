@@ -24,8 +24,6 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import { env } from "configs/EnvironmentConfig";
 const ULR_BASE = env.API_ENDPOINT_URL;
-import { env } from "configs/EnvironmentConfig";
-const ULR_BASE = env.API_ENDPOINT_URL;
 
 const PlanoNomina = ({ module }) => {
 
