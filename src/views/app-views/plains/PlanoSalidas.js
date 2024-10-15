@@ -79,7 +79,7 @@ const PlanoSalidas = ({ module }) => {
       console.log("va por aca")
 
       try {
-        const response = await axios.delete(`${ULR_BASE}/api/plain/delete/${file}`);
+        const response = await axios.delete(`${ULR_BASE}/plain/delete/${file}`);
         if (response.data.status === 'success') {
           console.log('Archivo eliminado exitosamente.');
           setFile("")
@@ -137,7 +137,7 @@ const PlanoSalidas = ({ module }) => {
     console.log(params)
 
 
-    axios.post(ULR_BASE+'/api/plain/plainsalida', {
+    axios.post(ULR_BASE+'/plain/plainsalida', {
       ...params
     })
       .then((response) => {
