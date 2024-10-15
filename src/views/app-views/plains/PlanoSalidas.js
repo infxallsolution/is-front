@@ -137,7 +137,7 @@ const PlanoSalidas = ({ module }) => {
     console.log(params)
 
 
-    axios.post(ULR_BASE'/api/plain/plainsalida', {
+    axios.post(ULR_BASE+'/api/plain/plainsalida', {
       ...params
     })
       .then((response) => {
