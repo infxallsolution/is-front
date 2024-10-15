@@ -22,6 +22,8 @@ import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import { env } from "configs/EnvironmentConfig";
+const ULR_BASE = env.API_ENDPOINT_URL;
 
 const PlanoNomina = ({ module }) => {
 
@@ -47,7 +49,7 @@ const PlanoNomina = ({ module }) => {
     fileList: fileList,
     accept: ".xlsx",
     maxCount: 1,
-    action: 'http://localhost:7000/api/plain/upload',
+    action: ULR_BASE+'/plain/upload',
 
     onChange(info) {
       const { status } = info.file;
