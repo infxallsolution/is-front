@@ -131,25 +131,20 @@ const PlanoNomina = ({ module }) => {
     console.log(acceptedFiles[0])
     const params = {
       ...values,
-      file: file
+      file: file,
+      moduleId: 1
     }
 
     console.log(params)
-
 
     axios.post(ULR_BASE+'/plain/plainnomina', {
       ...params
     })
       .then((response) => {
-        // Crear un enlace para la descarga del archivo
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        const plainName = file.replace(".xlsx", '.txt')
-        link.setAttribute('download', plainName); // Nombre del archivo a descargar
-        document.body.appendChild(link);
-        link.click(); // Ejecutar la descarga
-        link.remove();
+        console.log(response.data)
+        let filename = response.data.filename;
+        console.log()
+        downloadFile("files",filename)
         setLoading(false);
         setFileList([]);
       })
@@ -158,6 +153,34 @@ const PlanoNomina = ({ module }) => {
         console.error(error);
         setLoading(false);
       });
+  }
+
+
+  const downloadFile = async (folder,filename) =>{
+
+    try {
+      const response = await axios({
+        url: ULR_BASE+'/plain/download', // Endpoint de descarga
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+          folder,
+          filename
+        }
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download',filename); // Nombre del archivo a descargar
+      document.body.appendChild(link);
+      link.click(); 
+      link.remove();       
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+      setLoading(false);
+    }
   }
 
 

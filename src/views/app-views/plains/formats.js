@@ -1,27 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { Button, Row, Col, Input, Typography, Form, InputNumber, Select, DatePicker } from "antd";
-import {
-  LockOutlined,
-  UserOutlined,
-  NumberOutlined,
-  CaretDownOutlined,
-  MailOutlined,
-  CalendarOutlined,
-  FileTextOutlined,
-  BankOutlined
-} from "@ant-design/icons";
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Button, Row, Col, Form, Select } from "antd";
+
 import { useSelector } from 'react-redux';
-import { useDropzone } from 'react-dropzone'
-import { App } from 'antd';
-import ClientService from "services/ClientService";
-import { error, success } from "utils/notifications";
 import axios from 'axios';
-import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
-import moment from 'moment';
-import dayjs from 'dayjs';
+import { message } from 'antd';
 import { env } from "configs/EnvironmentConfig";
 const ULR_BASE = env.API_ENDPOINT_URL;
 
@@ -29,89 +11,15 @@ const ULR_BASE = env.API_ENDPOINT_URL;
 const PlanoSalidas = ({ module }) => {
 
 
-
-  const dateFormat = 'YYYY-MM-DD';
-  const { Dragger } = Upload;
   const [form] = Form.useForm();
-  const [file, setFile] = useState("NOK")
-  const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const [fileList, setFileList] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
-
-  let nameModule = "Plano de salidas";
-
-
-
-  const props: UploadProps = {
-    name: 'file',
-    multiple: false,
-    fileList: fileList,
-    accept: ".xlsx",
-    maxCount: 1,
-    action: ULR_BASE+'/plain/upload',
-
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        const response = info.file.response;
-        if (response && response.status === 'success') {
-          // Procesa los datos del archivo subido
-          const { originalname, filename, path, size } = response.file;
-          message.success(`${originalname} subido exitosamente.`);
-          setFile(filename)
-        } else {
-          message.error('Error en la respuesta del servidor.');
-        }
-        // message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-
-
-      setFileList(info.fileList);
-
-    },
-    onRemove: async (e) => {
-      console.log("va por aca")
-
-      try {
-        const response = await axios.delete(`${ULR_BASE}/api/plain/delete/${file}`);
-        if (response.data.status === 'success') {
-          console.log('Archivo eliminado exitosamente.');
-          setFile("")
-        } else {
-          console.error('Error al eliminar el archivo:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error en la solicitud:', error);
-      }
-
-    },
-  };
-
-
-
-
-
-
-
-  const onDrop = useCallback(acceptedFiles => {
-    console.log(acceptedFiles[0])
-  }, [])
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ onDrop })
-
-
+  
+  let nameModule = "Descargar formatos";
 
 
   const company = useSelector((state) => state?.companySlice?.company);
 
   const theme = useSelector((state) => state.theme.currentTheme);
-  const [url, setUrl] = useState("")
 
   useEffect(() => {
 
@@ -119,69 +27,49 @@ const PlanoSalidas = ({ module }) => {
 
 
 
-
-  const handleSubmit = (values) => {
-
-    setLoading(true);
-    if (file == "NOK") {
-      message.error('Debe seleccionar un archivo.');
-      setLoading(false);
-      return
-    }
-
-    console.log(acceptedFiles[0])
-    const params = {
-      ...values,
-      file: file
-    }
-
-    console.log(params)
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
 
 
-    axios.post(ULR_BASE+'/api/plain/plainsalida', {
-      ...params
-    })
-      .then((response) => {
-        // Crear un enlace para la descarga del archivo
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        const plainName = file.replace(".xlsx", '.txt')
-        link.setAttribute('download', plainName); // Nombre del archivo a descargar
-        document.body.appendChild(link);
-        link.click(); // Ejecutar la descarga
-        link.remove();
-        setLoading(false);
-        setFileList([]);
-      })
-      .catch((error) => {
-        message.error('Error al descargar el archivo.');
-        console.error(error);
-        setLoading(false);
-      });
+
+
+  const handleSubmit = async (values) => {
+    const filename = values.format+".xlsx";
+    const folder = "excel"  
+    downloadFile(folder,filename)
   }
 
 
 
-  const onFinish = (values) => {
-    setLoading(true);
-    ClientService.updateClient(values, "idplano").then((response) => {
-      if (response.status === 200) {
-        success(messageApi, {
-          content: "Cliente actualizado correctamente",
-        });
-        setLoading(false);
-        form.resetFields();
-        navigate("/app/admin/clients/list");
-      } else {
-        error(messageApi, {
-          content: "Error al actualizar el cliente",
-        });
-        setLoading(false);
-      }
-    });
-    return;
-  };
+  
+  const downloadFile = async (folder,filename) =>{
+
+    try {
+      const response = await axios({
+        url: ULR_BASE+'/plain/download', // Endpoint de descarga
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+          folder,
+          filename
+        }
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download',filename); // Nombre del archivo a descargar
+      document.body.appendChild(link);
+      link.click(); 
+      link.remove();       
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+      setLoading(false);
+    }
+  }
+
 
   return (
     <div className={`h-100 ${theme === "light" ? "bg-white" : ""}`}>
@@ -208,75 +96,30 @@ const PlanoSalidas = ({ module }) => {
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 14 }}
                 initialValues={{
-                  numero: "20",
-                  notas: "SALIDA DE INSUMOS - ",
-                  company: "001",
-                  fecha: dayjs(selectedDate, dateFormat),
-                  type: "SAL"
+                  format: "nomina"
                 }}
               >
 
 
                 <Form.Item
-                  name="fecha"
-                  label="Fecha"
+                  wrapperCol={{
+                    span: 10,
+                  }}
+                  name="format"
+                  label="Formato:"
                   hasFeedback
-                  rules={[{ required: true, message: 'Seleccione una fecha' }]}
                 >
-                  <DatePicker />
-                </Form.Item>
-
-                <Form.Item
-                  name="numero"
-                  label="Consecutivo"
-                  hasFeedback
-                  rules={[{ required: true, message: 'Dato requerido' }, { max: 8, message: 'Maximo 8 caracteres' }]}
-                >
-                  <Input
-                    prefix={<NumberOutlined className="text-primary" />}
-                    placeholder={
-                      "Consecutivo del documento"
-                    }
+                  <Select
+                    defaultValue="nomina"
+                    onChange={handleChange}
+                    options={[
+                      { value: 'nomina', label: 'Plano para nomina' },
+                      { value: 'salida', label: 'Plano para salida de insumos' },
+                    ]}
                   />
                 </Form.Item>
 
 
-
-
-                <Form.Item
-                  name="notas"
-                  label="Notas"
-                  rules={[{ required: true, message: 'Dato requerido' }, { max: 255, message: 'Maximo 255 caracteres' }]}
-                  hasFeedback
-                >
-                  <Input
-                    prefix={<FileTextOutlined className="text-primary" />}
-                  />
-                </Form.Item>
-
-                <Form.Item
-                  hidden={true}
-                  name="company"
-                  label="Company"
-                  hasFeedback
-                >
-                  <Input
-                    prefix={<BankOutlined className="text-primary" />}
-                  />
-                </Form.Item>
-
-
-
-                <Form.Item
-                  name="type"
-                  label="Documento"
-                  rules={[{ required: true, message: 'Dato requerido' }, { max: 3, message: 'Maximo 3 caracteres' }]}
-                  hasFeedback
-                >
-                  <Input
-                    prefix={<FileTextOutlined className="text-primary" />}
-                  />
-                </Form.Item>
 
 
 
@@ -287,7 +130,7 @@ const PlanoSalidas = ({ module }) => {
                   }}
                 >
                   <Button type="primary" htmlType="submit" block loading={loading}>
-                    Convertir archivo
+                    Descargar
                   </Button>
                 </Form.Item>
 
