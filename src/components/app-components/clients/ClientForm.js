@@ -154,9 +154,7 @@ const ClientForm = () => {
               suffixIcon={<CaretDownOutlined className="text-primary" />}
               disabled={edit}
             >
-              <Select.Option value="PALMA">Palma</Select.Option>
-              <Select.Option value="BANANO">Banano</Select.Option>
-              <Select.Option value="EXTRACTORA">Extractora</Select.Option>
+              <Select.Option value="PLANOS">Planos</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item

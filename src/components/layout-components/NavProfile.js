@@ -108,7 +108,7 @@ const MenuItemSignOut = (props) => {
 
 const items = [];
 
-const data = await CompanyService.getCompanies('23fd6d18-927a-470e-8d71-f2959a174d2')
+/*const data = await CompanyService.getCompanies('23fd6d18-927a-470e-8d71-f2959a174d2')
 if (data) {
   data.map(item => {
     let company = {
@@ -117,7 +117,7 @@ if (data) {
     }
     items.push(company)
   })
-}
+}*/
 
 items.push({
   key: "Sign Out",
@@ -143,7 +143,7 @@ export const NavProfile = ({ mode }) => {
           />
           <UserInfo className="profile-text">
             <Name>{name || "Hola mundo"}</Name>
-            <Title>{type || "Palma"}</Title>
+            <Title>{type || "Planos"}</Title>
           </UserInfo>
         </Profile>
       </NavItem>

@@ -42,6 +42,9 @@ const PlanoSalidas = ({ module }) => {
   let nameModule = "Plano de salida de insumos";
 
 
+  console.log("renderiza nomina")
+
+
 
   const props: UploadProps = {
     name: 'file',

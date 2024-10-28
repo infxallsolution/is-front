@@ -28,6 +28,10 @@ const ULR_BASE = env.API_ENDPOINT_URL;
 const PlanoNomina = ({ module }) => {
 
 
+  console.log("renderiza nomina")
+  
+
+
 
   const dateFormat = 'YYYY-MM-DD';
   const { Dragger } = Upload;
@@ -108,7 +112,6 @@ const PlanoNomina = ({ module }) => {
 
 
   const company = useSelector((state) => state?.companySlice?.company);
-
   const theme = useSelector((state) => state.theme.currentTheme);
   const [url, setUrl] = useState("")
 
@@ -135,17 +138,24 @@ const PlanoNomina = ({ module }) => {
       moduleId: 1
     }
 
+    let company = localStorage.getItem("COMPANY_NUMBER")
+    let clientId = localStorage.getItem("CLIENT_ID")
+    let userId = localStorage.getItem("USER_ID")
+
+    console.log("clientId",clientId)
+    console.log("clientId",clientId)
+  
     console.log(params)
 
     axios.post(ULR_BASE+'/plain/plainnomina', {
-      ...params
+      ...params,company,clientId,userId
     })
       .then((response) => {
         console.log(response.data)
         let filename = response.data.filename;
         console.log()
-        downloadFile("files",filename)
         setLoading(false);
+        downloadFile("files",filename)
         setFileList([]);
       })
       .catch((error) => {
@@ -246,7 +256,6 @@ const PlanoNomina = ({ module }) => {
                   numero: "20",
                   notas: "PLANO NOMINA - ",
                   fecha: dayjs(selectedDate, dateFormat),
-                  company: "001",
                   type: "WNM"
                 }}
               >
@@ -290,18 +299,6 @@ const PlanoNomina = ({ module }) => {
                     prefix={<FileTextOutlined className="text-primary" />}
                   />
                 </Form.Item>
-
-                <Form.Item
-                  hidden={true}
-                  name="company"
-                  label="Company"
-                  hasFeedback
-                >
-                  <Input
-                    prefix={<BankOutlined className="text-primary" />}
-                  />
-                </Form.Item>
-
 
 
                 <Form.Item

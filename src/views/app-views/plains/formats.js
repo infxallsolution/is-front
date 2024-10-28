@@ -110,7 +110,6 @@ const PlanoSalidas = ({ module }) => {
                   hasFeedback
                 >
                   <Select
-                    defaultValue="nomina"
                     onChange={handleChange}
                     options={[
                       { value: 'nomina', label: 'Plano para nomina' },

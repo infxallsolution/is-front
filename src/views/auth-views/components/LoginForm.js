@@ -31,7 +31,7 @@ export const LoginForm = (props) => {
   } = props;
 
   const initialCredential = {
-    identification: "100",
+    identification: "001",
     username: "",
     password: "",
   };
@@ -72,7 +72,7 @@ export const LoginForm = (props) => {
       >
         <Form.Item
           name="identification"
-          label="Nit"
+          label="Company"
           rules={loginRules.identification}
         >
           <Input

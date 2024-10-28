@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AUTH_TOKEN } from "constants/AuthConstant";
 import { COMPANY_SESION } from "constants/AuthConstant";
+import { IDENTIFICATION } from "constants/AuthConstant";
 import FirebaseService from "services/FirebaseService";
 import AuthService from "services/AuthService";
 import { tokenPayload } from "utils/decodeToken";
@@ -33,7 +34,9 @@ export const signIn = createAsyncThunk(
       const company = response.company;
       const user = tokenPayload(token);
       localStorage.setItem(AUTH_TOKEN, token);
-      localStorage.setItem(COMPANY_SESION, company);
+      localStorage.setItem("COMPANY_NUMBER", identification);
+      localStorage.setItem("CLIENT_ID",  response.clientId);
+      localStorage.setItem("USER_ID", user.id);
       localStorage.setItem("user", JSON.stringify(user));
       return {
         token,
