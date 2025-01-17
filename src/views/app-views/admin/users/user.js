@@ -1,9 +1,11 @@
 // src/components/UserForm.js
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Checkbox, Table, Popconfirm } from 'antd';
+import { Form, Input, Button, Checkbox, Table, Popconfirm, Select } from 'antd';
 import DynamicTable from 'components/app-components/Custom/table';
 import { UserService } from 'services/UserService';
+import { RolesService } from 'services/RolesService';
 import { current } from '@reduxjs/toolkit';
+const { Option } = Select;
 // import { fetchUsers, createUser, updateUser, deleteUser } from '../api';
 
 const UserForm = () => {
@@ -11,7 +13,9 @@ const UserForm = () => {
     const [users, setUsers] = useState([]);
     const [editingUser, setEditingUser] = useState(null);
     const [creatingUser, setCreatingUser] = useState(null);
-
+    const [roles, setRoles] = useState([]);
+    const [selectValue, setSelectValue] = useState(null);
+    const [showClientId, setShowClientId] = useState(null);
     const fetchData = async () => {
         const users = await UserService.getUsers(true);
         return { data: users, current: 1, pageSize: 10, total: 10 }
@@ -19,10 +23,20 @@ const UserForm = () => {
     };
 
     useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const roles = await   RolesService.getRoles()
+                 setRoles(roles)
+            } catch (error) {
+                console.error('Failed to fetch roles:', error);
+            }
+        };
+        fetchRoles();
+
     }, []);
 
     const handleSubmit = async () => {
-        // const values = await form.validateFields();
+        const values = await form.validateFields();
 
         // if (editingUser) {
         //   await updateUser(editingUser.id, values);
@@ -36,8 +50,9 @@ const UserForm = () => {
     };
 
     const handleEdit = (user) => {
-        // form.setFieldsValue(user);
-        // setEditingUser(user);
+        form.setFieldsValue(user);
+        setEditingUser(user);
+        setCreatingUser(true);
     };
 
     const handleDelete = async (id) => {
@@ -45,10 +60,22 @@ const UserForm = () => {
         // setUsers(await fetchUsers());
     };
 
+    const handleOnChangeSelect = async (event) =>{
+        setSelectValue(event);
+        if(event!="SuperAdministrador")
+        {
+            setShowClientId(true)
+        }
+        else
+        {
+            setShowClientId(null)
+        }
+    }
+
     const handleCancel = () => {
-         form.resetFields();
-         setEditingUser(null);
-         setCreatingUser(false)
+        form.resetFields();
+        setEditingUser(null);
+        setCreatingUser(false)
     };
 
 
@@ -58,9 +85,9 @@ const UserForm = () => {
 
     const columns = [
         { title: 'Username', dataIndex: 'username' },
-        { title: 'Name', dataIndex: 'name' },
+        { title: 'Nombre', dataIndex: 'name' },
         { title: 'Email', dataIndex: 'email' },
-        { title: 'State', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
+        { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
         {
             title: 'Actions',
             render: (_, record) => (
@@ -91,16 +118,29 @@ const UserForm = () => {
                     onFinish={handleSubmit}
                 >
                     <Form.Item
+                        name="role"
+                        label="Role"
+                        rules={[{ required: true, message: 'Por favor seleccione un rol!' }]}
+                    >
+                        <Select placeholder="Seleccione un rol" onChange={handleOnChangeSelect} >
+                            {roles.map((role) => (
+                                <Option key={role.id} value={role.name}>
+                                    {role.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
                         name="username"
                         label="Username"
-                        rules={[{ required: true, message: 'Please input the username!' }]}
+                        rules={[{ required: true, message: 'Por favor ingrese el usuario' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="name"
-                        label="Name"
-                        rules={[{ required: true, message: 'Please input the name!' }]}
+                        label="Nombre"
+                        rules={[{ required: true, message: 'Por favor ingrese el nombre del usuario!' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -116,7 +156,7 @@ const UserForm = () => {
                     </Form.Item>
                     <Form.Item
                         name="state"
-                        label=""
+                        label="Activo"
                         valuePropName="checked"
                         rules={[{ required: true, message: 'Please check the state!' }]}
                     >
