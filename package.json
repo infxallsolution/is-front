@@ -63,6 +63,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
+    "start:local": "cross-env NODE_ENV=local react-scripts start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
@@ -89,12 +90,14 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.4",
+    "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-csso": "^4.0.1",
     "gulp-debug": "^4.0.0",
     "gulp-less": "^4.0.1",
     "gulp-postcss": "^8.0.0",
     "less-plugin-npm-import": "^2.1.0",
+    "nodemon": "^3.1.9",
     "react-app-rewired": "^2.2.1"
   }
 }

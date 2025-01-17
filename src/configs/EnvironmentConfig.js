@@ -1,6 +1,5 @@
 const dev = {
-  API_ENDPOINT_URL: 'https://staging-core-is.infxsolution.com/api'
-  // API_ENDPOINT_URL: '/api'
+    API_ENDPOINT_URL: 'http://localhost:5000/api'
 };
 
 const prod = {
@@ -11,6 +10,10 @@ const test = {
   API_ENDPOINT_URL: '/api'
 };
 
+const local = {
+	  API_ENDPOINT_URL: 'http://localhost:3000/api'
+}
+
 const getEnv = () => {
 	switch (process.env.NODE_ENV) {
 		case 'development':
@@ -19,6 +22,8 @@ const getEnv = () => {
 			return prod
 		case 'test':
 			return test
+		case 'local':
+				return local
 		default:
 			break;
 	}

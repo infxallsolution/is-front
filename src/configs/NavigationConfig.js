@@ -11,95 +11,53 @@ import {
   DeploymentUnitOutlined,
   GoldOutlined,
   CarOutlined,
-  HeatMapOutlined
+  HeatMapOutlined,
+  UserSwitchOutlined,
+  ToolOutlined,
+  BarcodeOutlined
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
 
 
-
-const modulos = []
-
-const getModules = async () => {
-  
-  const data = await ModuleService.getModuleActiveByClient('23fd6d18-927a-470e-8d71-f2959a174d1')
-  let user = JSON.parse(localStorage.getItem("user"))
-
-  if (data) {
-    let dashboard = {
-      key: "dashboards-default",
-      path: `${APP_PREFIX_PATH}/dashboards/default`,
-      title: "Dashboard",
-      icon: DashboardOutlined,
-      breadcrumb: false,
-      submenu: [],
-    }
-
-    let clientes = {
-      key: "clients",
-      path: `${APP_PREFIX_PATH}/admin/clients/list`,
-      title: "Clientes",
-      icon: UsergroupAddOutlined,
-      breadcrumb: false,
-      submenu: [],
-    }
-
-    let modules = {
-      key: "modules",
-      path: `${APP_PREFIX_PATH}/admin/module`,
-      title: "Modulos",
-      icon: UnorderedListOutlined,
-      breadcrumb: false,
-      submenu: [],
-    }
-
-
-    if (user.user == 'rgomez') {
-      modulos.push(clientes)
-      modulos.push(modules)
-    }
-    modulos.push(dashboard)
-
-
-
-    data.map(item => {
-        let icono = selectIcon(item.module.icon)
-          let modulo = {
-            key: `${item.module.name}`,
-            path: `${APP_PREFIX_PATH}/modules/${item.module.name}`,
-            title: item.module.description,
-            icon: icono,
-            breadcrumb: false,
-            submenu: [],
-          }
-        modulos.push(modulo)
+let navigationTree = [
+  {
+    key: "dashboard-default",
+    path: `${APP_PREFIX_PATH}/dashboards/default`,
+    title: "Dashboard",
+    icon: DashboardOutlined,
+    breadcrumb: false,
+    submenu: [],
+  },
+  {
+    key: "administration",
+    title: "Administración",
+    icon: ToolOutlined,
+    breadcrumb: false,
+    submenu: [ // Array of submenu items
+      {
+        key: "user-administration", // Unique identifier for the submenu item
+        path: `${APP_PREFIX_PATH}/users`,
+        title: "Usuarios",
+        icon: UserSwitchOutlined, // Optional icon for the submenu item
+        breadcrumb: true,
+        submenu: [
+        ] // Nested submenus (if any)
       }
-    )
-    return modulos
-  }
+    ]
+  },
+  {
+    key: "inventory",
+    title: "Inventarios",
+    icon: BarcodeOutlined,
+    breadcrumb: false,
+    submenu: [ // Array of submenu items
+    ]
+  },
 
-}
-
-
-const selectIcon = (textIcon) => {
-  let icono = CarOutlined
-
-  switch (textIcon) {
-    case 'DeploymentUnitOutlined':icono = DeploymentUnitOutlined; break;
-    case 'ExperimentOutlined':icono = ExperimentOutlined; break;
-    case 'GoldOutlined':icono = GoldOutlined;break;
-    case 'IdcardOutlined':icono = IdcardOutlined; break;
-    case 'ColumnHeightOutlined':icono = ColumnHeightOutlined ;break;
-    case 'CreditCardOutlined':icono = CreditCardOutlined; break;
-    case 'HeatMapOutlined':icono = HeatMapOutlined; break;
-    case 'CarOutlined':icono = CarOutlined; break;
-    default:icono = CarOutlined; break;
-  }
-  return icono
-}
+]
 
 
-
-const navigationConfig = await getModules();
+const navigationConfig = navigationTree;
 
 export default navigationConfig;

@@ -14,9 +14,9 @@ export const DefaultDashboard = () => {
   const clientId = useSelector((state) => state?.auth?.user?.clientId);
 
   useEffect(() => {
-    DashboardService.listDataByClient(clientId, option).then((response) => {
-      setAllDashboardData(response);
-    });
+    // DashboardService.listDataByClient(clientId, option).then((response) => {
+    //   setAllDashboardData(response);
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option]);
 
@@ -31,7 +31,7 @@ export const DefaultDashboard = () => {
         items={[{ title: "Home", link: "/app" }, { title: "Dashboard" }]}
       />
       <Row gutter={16} style={{ marginTop: "15px" }}>
-        <Select
+        {/* <Select
           style={{
             width: "auto",
             paddingLeft: "8px"
@@ -42,7 +42,7 @@ export const DefaultDashboard = () => {
           <Option value="DAY">Ver por Días</Option>
           <Option value="MONTH">Ver por meses</Option>
           <Option value="YEAR">Ver por años</Option>
-        </Select>
+        </Select> */}
       </Row>
       <Row gutter={16} style={{ marginTop: "15px" }}>
         {allDashboardData?.map((item, index) => {

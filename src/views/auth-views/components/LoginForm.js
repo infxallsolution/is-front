@@ -31,9 +31,9 @@ export const LoginForm = (props) => {
   } = props;
 
   const initialCredential = {
-    identification: "100",
+    identification: "901666902",
     username: "rgomez",
-    password: "rags",
+    password: "Acpatic2013",
   };
 
   const onLogin = (values) => {
