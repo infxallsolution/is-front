@@ -14,7 +14,8 @@ import {
   HeatMapOutlined,
   UserSwitchOutlined,
   ToolOutlined,
-  BarcodeOutlined
+  BarcodeOutlined,
+  ToolFilled
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -37,7 +38,7 @@ let navigationTree = [
     submenu: [ // Array of submenu items
       {
         key: "user-administration", // Unique identifier for the submenu item
-        path: `${APP_PREFIX_PATH}/users`,
+        path: `${APP_PREFIX_PATH}/administration/users`,
         title: "Usuarios",
         icon: UserSwitchOutlined, // Optional icon for the submenu item
         breadcrumb: true,
@@ -52,6 +53,33 @@ let navigationTree = [
     icon: BarcodeOutlined,
     breadcrumb: false,
     submenu: [ // Array of submenu items
+      {
+        key: "warehouse-inventory", // Unique identifier for the submenu item
+        path: `${APP_PREFIX_PATH}/inventory/warehouse`,
+        title: "Bodegas",
+        icon: ToolFilled, // Optional icon for the submenu item
+        breadcrumb: true,
+        submenu: [
+        ] // Nested submenus (if any)
+      },
+      {
+        key: "product-inventory", // Unique identifier for the submenu item
+        path: `${APP_PREFIX_PATH}/inventory/product`,
+        title: "Productos",
+        icon: ToolFilled, // Optional icon for the submenu item
+        breadcrumb: true,
+        submenu: [
+        ] // Nested submenus (if any)
+      },
+      {
+        key: "movements-inventory", // Unique identifier for the submenu item
+        path: `${APP_PREFIX_PATH}/inventory/movements`,
+        title: "Movimientos",
+        icon: ToolFilled, // Optional icon for the submenu item
+        breadcrumb: true,
+        submenu: [
+        ] // Nested submenus (if any)
+      }
     ]
   },
 

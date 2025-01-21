@@ -26,15 +26,25 @@ export const protectedRoutes = [
     component: React.lazy(() => import("views/app-views/dashboards/default")),
   },
   {
-    key: "users.users",
-    path: `${APP_PREFIX_PATH}/users`,
+    key: "users.admin",
+    path: `${APP_PREFIX_PATH}/administration/users`,
     component: React.lazy(() => import("views/app-views/admin/users/user")),
   },
-  // {
-  //   key: "dashboard.default",
-  //   path: `${APP_PREFIX_PATH}/dashboards/default`,
-  //   component: React.lazy(() => import("views/app-views/dashboards/default")),
-  // },
+  {
+    key: "product.inventory",
+    path: `${APP_PREFIX_PATH}/inventory/product`,
+    component: React.lazy(() => import("views/app-views/inventory/product")),
+  },
+  {
+    key: "warehouse.inventory",
+    path: `${APP_PREFIX_PATH}/inventory/warehouse`,
+    component: React.lazy(() => import("views/app-views/inventory/warehouse")),
+  },
+  {
+    key: "movements.inventory",
+    path: `${APP_PREFIX_PATH}/inventory/movements`,
+    component: React.lazy(() => import("views/app-views/inventory/movements")),
+  },
   // {
   //   key: "dashboard.analytics",
   //   path: `${APP_PREFIX_PATH}/dashboards/analytics`,

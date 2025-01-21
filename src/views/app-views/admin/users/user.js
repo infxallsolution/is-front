@@ -1,6 +1,6 @@
 // src/components/UserForm.js
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Checkbox, Table, Popconfirm, Select } from 'antd';
+import { Form, Input, Button, Checkbox, Table, Popconfirm, Select, message } from 'antd';
 import DynamicTable from 'components/app-components/Custom/table';
 import { UserService } from 'services/UserService';
 import { RolesService } from 'services/RolesService';
@@ -25,8 +25,8 @@ const UserForm = () => {
     useEffect(() => {
         const fetchRoles = async () => {
             try {
-                const roles = await   RolesService.getRoles()
-                 setRoles(roles)
+                const roles = await RolesService.getRoles(true)
+                setRoles(roles)
             } catch (error) {
                 console.error('Failed to fetch roles:', error);
             }
@@ -35,41 +35,49 @@ const UserForm = () => {
 
     }, []);
 
+    const createUser = async (user) => {
+        return await UserService.createUser(user);
+
+    }
+
+    const updateUser = async (userId, user) => {
+        return await UserService.updateUser(userId, user)
+    }
+
+    const deleteUser = async (userId) => {
+        return await UserService.deleteUser(userId)
+    }
+
     const handleSubmit = async () => {
         const values = await form.validateFields();
 
-        // if (editingUser) {
-        //   await updateUser(editingUser.id, values);
-        // } else {
-        //   await createUser(values);
-        // }
+        if (editingUser) {
+            await updateUser(editingUser.id, values);
+        } else {
+            await createUser(values);
+        }
 
-        // setUsers(await fetchUsers());
-        // form.resetFields();
-        // setEditingUser(null);
+        message.success(`usuario ${editingUser ? 'actualizado' : 'creado'} con exito`)
+        setUsers(await fetchData());
+        handleCancel();
+
     };
 
-    const handleEdit = (user) => {
+    const handleEdit = async (user) => {
         form.setFieldsValue(user);
         setEditingUser(user);
         setCreatingUser(true);
     };
 
-    const handleDelete = async (id) => {
-        // await deleteUser(id);
-        // setUsers(await fetchUsers());
+    const handleDelete = async (user) => {
+        await deleteUser(user);
+        setUsers(await fetchData());
+        message.success(`usuario eliminado con exito`)
     };
 
-    const handleOnChangeSelect = async (event) =>{
+    const handleOnChangeSelect = async (event) => {
         setSelectValue(event);
-        if(event!="SuperAdministrador")
-        {
-            setShowClientId(true)
-        }
-        else
-        {
-            setShowClientId(null)
-        }
+        console.log('eventt select', event)
     }
 
     const handleCancel = () => {
@@ -80,6 +88,7 @@ const UserForm = () => {
 
 
     const handleCreate = () => {
+        handleCancel();
         setCreatingUser(true)
     };
 
@@ -87,17 +96,19 @@ const UserForm = () => {
         { title: 'Username', dataIndex: 'username' },
         { title: 'Nombre', dataIndex: 'name' },
         { title: 'Email', dataIndex: 'email' },
+        { title: 'Rol', dataIndex: 'roleName' },
         { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
         {
-            title: 'Actions',
+            title: 'Acciones',
             render: (_, record) => (
                 <span>
-                    <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>
+                    <Button disabled={record.static ? true : false} onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>
                         Editar
                     </Button>
                     <Popconfirm
                         title="Estas seguro de eliminar?"
-                        onConfirm={() => handleDelete(record.id)}
+                        disabled={record.static ? true : false}
+                        onConfirm={() => handleDelete(record)}
                     >
                         <Button type="danger">Eliminar</Button>
                     </Popconfirm>
@@ -105,7 +116,6 @@ const UserForm = () => {
             ),
         },
     ];
-
     return (
         creatingUser ? (
             <div>
@@ -118,13 +128,18 @@ const UserForm = () => {
                     onFinish={handleSubmit}
                 >
                     <Form.Item
-                        name="role"
+                        name="id"
+                    >
+                        <Input type='hidden' />
+                    </Form.Item>
+                    <Form.Item
+                        name="roleId"
                         label="Role"
                         rules={[{ required: true, message: 'Por favor seleccione un rol!' }]}
                     >
                         <Select placeholder="Seleccione un rol" onChange={handleOnChangeSelect} >
                             {roles.map((role) => (
-                                <Option key={role.id} value={role.name}>
+                                <Option key={role.id} value={role.id}>
                                     {role.name}
                                 </Option>
                             ))}
@@ -155,10 +170,19 @@ const UserForm = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[
+                            { required: true, message: 'Ingrese un password' },
+                            { type: 'password', message: 'Ingrese un passwordl!' },
+                        ]}
+                    >
+                        <Input type='password' />
+                    </Form.Item>
+                    <Form.Item
                         name="state"
                         label="Activo"
                         valuePropName="checked"
-                        rules={[{ required: true, message: 'Please check the state!' }]}
                     >
                         <Checkbox>Active</Checkbox>
                     </Form.Item>

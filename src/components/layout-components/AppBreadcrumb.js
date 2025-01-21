@@ -29,7 +29,7 @@ const BreadcrumbRoute = props => {
 	const breadcrumbItems = pathSnippets.map((_, index) => {
 		const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
 		return {
-			title: <Link to={url}>{breadcrumbData[url]}</Link>
+			title:  <Link to={url}>{breadcrumbData[url]}</Link>
 		}
 	});
   
