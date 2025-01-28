@@ -15,7 +15,8 @@ import {
   UserSwitchOutlined,
   ToolOutlined,
   BarcodeOutlined,
-  ToolFilled
+  ToolFilled,
+  BoxPlotFilled
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -54,23 +55,33 @@ let navigationTree = [
     breadcrumb: false,
     submenu: [ // Array of submenu items
       {
-        key: "warehouse-inventory", // Unique identifier for the submenu item
-        path: `${APP_PREFIX_PATH}/inventory/warehouse`,
-        title: "Bodegas",
+        key: "inventory-parameters", // Unique identifier for the submenu item
+        title: "Parámetros",
         icon: ToolFilled, // Optional icon for the submenu item
-        breadcrumb: true,
+        breadcrumb: false,
         submenu: [
-        ] // Nested submenus (if any)
+          {
+            key: "product-inventory", // Unique identifier for the submenu item
+            path: `${APP_PREFIX_PATH}/inventory/parameters/product`,
+            title: "Productos",
+            icon: ToolFilled, // Optional icon for the submenu item
+            breadcrumb: true,
+            submenu: [
+            ] 
+          },
+          {
+            key: "warehouse-inventory", // Unique identifier for the submenu item
+            path: `${APP_PREFIX_PATH}/inventory/parameters/warehouse`,
+            title: "Bodegas",
+            icon: BoxPlotFilled, // Optional icon for the submenu item
+            breadcrumb: false,
+            submenu: [
+            ] 
+          },
+        ] 
       },
-      {
-        key: "product-inventory", // Unique identifier for the submenu item
-        path: `${APP_PREFIX_PATH}/inventory/product`,
-        title: "Productos",
-        icon: ToolFilled, // Optional icon for the submenu item
-        breadcrumb: true,
-        submenu: [
-        ] // Nested submenus (if any)
-      },
+      
+      
       {
         key: "movements-inventory", // Unique identifier for the submenu item
         path: `${APP_PREFIX_PATH}/inventory/movements`,

@@ -10,12 +10,23 @@ const ProductModal = ({ visible, onCancel, onOk, form, products, warehouses, sel
     onCancel={onCancel}
     onOk={() => {
       form
-        .validateFields(['product', 'quantity', 'warehouse'])
+        .validateFields(['product', 'quantity', 'price', 'warehouse','totalValue'])
         .then(onOk)
         .catch(() => {});
     }}
   >
-    <Form layout="vertical" form={form}>
+    <Form
+      layout="vertical"
+      form={form}
+      onValuesChange={(_, values) => {
+        const { quantity, price } = values;
+        if (quantity && price) {
+          form.setFieldsValue({
+            totalValue: quantity * price,
+          });
+        }
+      }}
+    >
       <Form.Item
         name="product"
         label="Producto"
@@ -48,6 +59,19 @@ const ProductModal = ({ visible, onCancel, onOk, form, products, warehouses, sel
         rules={[{ required: true, message: 'Ingrese la cantidad' }]}
       >
         <Input type="number" placeholder="Cantidad" />
+      </Form.Item>
+      <Form.Item
+        name="price"
+        label="Precio Unitario"
+        rules={[{ required: true, message: 'Ingrese el precio unitario' }]}
+      >
+        <Input type="number" placeholder="Precio Unitario" />
+      </Form.Item>
+      <Form.Item
+        name="totalValue"
+        label="Valor Total"
+      >
+        <Input type="number" placeholder="Valor Total" disabled />
       </Form.Item>
     </Form>
   </Modal>

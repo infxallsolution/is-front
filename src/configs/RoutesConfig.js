@@ -32,18 +32,18 @@ export const protectedRoutes = [
   },
   {
     key: "product.inventory",
-    path: `${APP_PREFIX_PATH}/inventory/product`,
-    component: React.lazy(() => import("views/app-views/inventory/product")),
+    path: `${APP_PREFIX_PATH}/inventory/parameters/product`,
+    component: React.lazy(() => import("views/app-views/inventory/parameters/product")),
   },
   {
     key: "warehouse.inventory",
-    path: `${APP_PREFIX_PATH}/inventory/warehouse`,
-    component: React.lazy(() => import("views/app-views/inventory/warehouse")),
+    path: `${APP_PREFIX_PATH}/inventory/parameters/warehouse`,
+    component: React.lazy(() => import("views/app-views/inventory/parameters/warehouse")),
   },
   {
     key: "movements.inventory",
     path: `${APP_PREFIX_PATH}/inventory/movements`,
-    component: React.lazy(() => import("views/app-views/inventory/movements")),
+    component: React.lazy(() => import("views/app-views/inventory/movements/movements")),
   },
   // {
   //   key: "dashboard.analytics",

@@ -6,7 +6,7 @@ const user = GetUserFromStorage()
 
 export const MeasurementUnitService = {
   get: async () => {
-    const response = await fetch(`${URL_BASE}/measures/get-measurement`, {
+    const response = await fetch(`${URL_BASE}/unitofmeasure`, {
       headers: authHeader(),
     });
     const data = await response.json();

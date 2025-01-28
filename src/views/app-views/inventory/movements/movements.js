@@ -55,7 +55,7 @@ const InventoryMovementForm = () => {
   };
 
   const addOrUpdateProduct = (values) => {
-    const { product, quantity, warehouse } = values;
+    const { product, quantity, warehouse, price, totalValue } = values;
     const productData = products.find((p) => p.id === product);
     const warehouseData = warehouses.find((w) => w.id === warehouse);
 
@@ -63,14 +63,18 @@ const InventoryMovementForm = () => {
       setProductList((prev) =>
         prev.map((item) =>
           item.key === selectedProduct.key
-            ? { key: selectedProduct.key, product: productData.name, warehouse: warehouseData.name, quantity }
+            ? { key: selectedProduct.key, product: productData.name, warehouse: warehouseData.name, quantity,
+              price, totalValue
+             }
             : item
         )
       );
     } else {
       setProductList((prev) => [
         ...prev,
-        { key: productList.length + 1, product: productData.name, warehouse: warehouseData.name, quantity },
+        { key: productList.length + 1, product: productData.name, warehouse: warehouseData.name, quantity,
+          price, totalValue
+         },
       ]);
     }
     setModalVisible(false);
@@ -90,7 +94,7 @@ const InventoryMovementForm = () => {
         productList={productList}
         onEdit={(item) => {
           setSelectedProduct(item);
-          form.setFieldsValue({ product: item.product, warehouse: item.warehouse, quantity: item.quantity });
+          form.setFieldsValue({ product: item.product, warehouse: item.warehouse, quantity: item.quantity, price: item.price, totalValue : item.totalValue });
           setModalVisible(true);
         }}
         onDelete={(key) => setProductList((prev) => prev.filter((item) => item.key !== key))}

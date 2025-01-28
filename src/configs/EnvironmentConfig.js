@@ -14,6 +14,8 @@ const local = {
 	  API_ENDPOINT_URL: 'http://localhost:3000/api'
 }
 
+console.log('node env', process.env.NODE_ENV)
+
 const getEnv = () => {
 	switch (process.env.NODE_ENV) {
 		case 'development':

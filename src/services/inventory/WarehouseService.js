@@ -6,14 +6,14 @@ const user = GetUserFromStorage()
 
 export const WarehouseService = {
   get: async () => {
-    const response = await fetch(`${URL_BASE}/warehouse/get-warehouse?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/warehouse?clientId=${user.clientId}`, {
       headers: authHeader(),
     });
     const data = await response.json();
     return data;
   },
   createWarehouse: async (data) => {
-    const response = await fetch(`${URL_BASE}/warehouse/create-warehouse?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/warehouse?clientId=${user.clientId}`, {
       method: "POST",
       headers: authHeader(),
       body: JSON.stringify(data),

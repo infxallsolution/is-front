@@ -20,6 +20,16 @@ const ProductList = ({ productList, onEdit, onDelete, onAdd }) => {
       key: "quantity",
     },
     {
+      title: "Precio",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Total",
+      dataIndex: "totalValue",
+      key: "totalValue",
+    },
+    {
       title: "Acciones",
       key: "actions",
       render: (_, record) => (

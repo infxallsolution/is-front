@@ -37,13 +37,22 @@ const WarehouseForm = () => {
 
     const handleSubmit = async () => {
         const values = await form.validateFields();
+        let response = null;
+
         if (editingWarehouse) {
-            await updateWarehouse(editingWarehouse.id, values);
+            response = await updateWarehouse(editingWarehouse.id, values);
         } else {
-            await createWarehouse(values);
+            response = await createWarehouse(values);
+        }
+        console.log('response warehouse', response)
+        if (response.data.success) {
+            await message.success(`Bodega ${editingWarehouse ? 'actualizada' : 'creada'} con éxito`);
+        }
+        else {
+            await message.error(`Algo no funciono bien, intentelo mas tarde`);
         }
 
-        await message.success(`Bodega ${editingWarehouse ? 'actualizada' : 'creada'} con éxito`);
+
         setWarehouses(await fetchData());
         handleCancel();
     };
