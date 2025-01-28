@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/21.9ac7de21.chunk.js","mappings":"oIAQA,UANkB,WAChB,OACE,sCAEH,C","sources":["views/app-views/analytics/index.js"],"sourcesContent":["import React from 'react'\n\nconst Analytics = () => {\n  return (\n    <div>Analytics</div>\n  )\n}\n\nexport default Analytics"],"names":[],"sourceRoot":""}

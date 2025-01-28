@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkemilus=self.webpackChunkemilus||[]).push([[468],{23468:function(u,n,e){e.r(n),e.d(n,{AuthLayout:function(){return c}});e(72791);var t=e(84236),r=e(80184),i=t.Z.div((function(){return{height:"100vh"}})),c=function(u){var n=u.children;return(0,r.jsx)(i,{children:n})};n.default=c}}]);
+//# sourceMappingURL=468.9809bc55.chunk.js.map
