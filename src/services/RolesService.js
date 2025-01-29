@@ -7,7 +7,7 @@ const user = GetUserFromStorage()
 console.log('userfromstorage', user)
 export const RolesService = {
   getRoles: async (withstatic) => {
-    const response = await fetch(`${URL_BASE}/roles/get-roles?withstatic=${user.superadmin}`, {
+    const response = await fetch(`${URL_BASE}/roles?withstatic=${user.static}`, {
       headers: authHeader(),
     });
     const data = await response.json();
