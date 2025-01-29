@@ -28,8 +28,6 @@ const BreadcrumbRoute = props => {
 	const pathSnippets = location.pathname.split('/').filter(i => i);
 	const breadcrumbItems = pathSnippets.map((_, index) => {
 		const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-		console.log('url info', url)
-		console.log('breadcrumbData', breadcrumbData)
 		return {
 			title:  <Link to={url}>{breadcrumbData[url]}</Link>
 		}

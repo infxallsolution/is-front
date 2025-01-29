@@ -10,7 +10,6 @@ export const redirectSlice = createSlice({
     initialState,
     reducers: {
         setModule: (state, action) => {
-            console.log(action)
             state.module = action.payload
         }
     }

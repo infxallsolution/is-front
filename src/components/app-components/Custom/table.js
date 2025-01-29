@@ -18,7 +18,6 @@ const DynamicTable = ({ columns: initialColumns, fetchData }) => {
     setLoading(true);
     try {
       const response = await fetchData({ page, pageSize });
-      console.log('data table', response)
       setData(response.data);
       setPagination({
         current: response.current,

@@ -6,14 +6,14 @@ const user = GetUserFromStorage()
 
 export const ProductService = {
   getProducts: async (withstatic) => {
-    const response = await fetch(`${URL_BASE}/product?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/product?client_system_id=${user.client_system_id}`, {
       headers: authHeader(),
     });
     const data = await response.json();
     return data;
   },
   createProduct: async (data) => {
-    const response = await fetch(`${URL_BASE}/product?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/product?client_system_id=${user.client_system_id}`, {
       method: "POST",
       headers: authHeader(),
       body: JSON.stringify(data),
@@ -22,7 +22,7 @@ export const ProductService = {
     return responseData;
   },
   updateProduct: async (productId, data) => {
-    const response = await fetch(`${URL_BASE}/product?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/product?client_system_id=${user.client_system_id}`, {
       method: "PUT",
       headers: authHeader(),
       body: JSON.stringify(data),
@@ -31,7 +31,7 @@ export const ProductService = {
     return responseData;
   },
   deleteProduct: async (productdelete) => {
-    const response = await fetch(`${URL_BASE}/product?clientId=${user.clientId}`, {
+    const response = await fetch(`${URL_BASE}/product?client_system_id=${user.client_system_id}`, {
       method: "DELETE",
       headers: authHeader(),
       body: JSON.stringify({id:productdelete}),

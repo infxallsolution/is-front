@@ -28,7 +28,6 @@ const SearchResultTitle = styled.div(({mode}) => ({
 
 
 function getOptionList (navigationTree, optionTree) {
-	console.log(navigationTree)
 	optionTree = optionTree ? optionTree : [];
 	for ( const navItem of navigationTree ) {
 		if(navItem.submenu.length === 0) {

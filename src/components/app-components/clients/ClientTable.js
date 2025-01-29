@@ -102,7 +102,6 @@ const ClientTable = ({data, enableClient, disableClient}) => {
 
 
   const onSearch = (value) => {
-    console.log("CARGAra los clientes")
       setResults(
         data.filter((item) =>
           item.name.toLowerCase().includes(value.toLocaleLowerCase())

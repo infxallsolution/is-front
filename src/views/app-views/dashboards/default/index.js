@@ -11,10 +11,10 @@ export const DefaultDashboard = () => {
 
   const { Option } = Select;
 
-  const clientId = useSelector((state) => state?.auth?.user?.clientId);
+  const client_system_id = useSelector((state) => state?.auth?.user?.client_system_id);
 
   useEffect(() => {
-    // DashboardService.listDataByClient(clientId, option).then((response) => {
+    // DashboardService.listDataByClient(client_system_id, option).then((response) => {
     //   setAllDashboardData(response);
     // });
     // eslint-disable-next-line react-hooks/exhaustive-deps

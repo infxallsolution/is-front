@@ -2,12 +2,12 @@ import { Checkbox, Table, Tag } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import ModuleService from "services/ModuleService";
 
-const ModulesTable = ({ clientId }) => {
+const ModulesTable = ({ client_system_id }) => {
 
   const [modules, setModules] = useState([])
 
   useEffect(() => {
-    ModuleService.getModuleByClient(clientId).then((response) => {
+    ModuleService.getModuleByClient(client_system_id).then((response) => {
       setModules(
         response.map((item) => {
           item.module.name === "logistic"
@@ -22,7 +22,7 @@ const ModulesTable = ({ clientId }) => {
                 item.module.name.slice(1));
           return {
             id: item.id,
-            clientId: item.clientId,
+            client_system_id: item.client_system_id,
             moduleName: item.module.name,
             moduleId: item.module.id,
             moduleStatus: item.module.state,
@@ -32,7 +32,7 @@ const ModulesTable = ({ clientId }) => {
         })
       );
     });
-  }, [clientId])
+  }, [client_system_id])
   
   const columns = useMemo(
     () => [
@@ -63,7 +63,7 @@ const ModulesTable = ({ clientId }) => {
               onChange={() => {
                 if(data.status){
                   ModuleService.deleteModuleClient({
-                    clientId: data.clientId,
+                    client_system_id: data.client_system_id,
                     moduleId: data.moduleId,
                     state: !data.status,
                   }).then((response) => {
@@ -78,11 +78,10 @@ const ModulesTable = ({ clientId }) => {
                         return item;
                       });
                     });
-                    console.log(response);
                   })
                 }else{
                   ModuleService.insertModuleClient({
-                    clientId: data.clientId,
+                    client_system_id: data.client_system_id,
                     moduleId: data.moduleId,
                     state: !data.status,
                   }).then((response) => {
@@ -97,7 +96,6 @@ const ModulesTable = ({ clientId }) => {
                         return item;
                       });
                     });
-                    console.log(response);
                   });
                 }
               }}

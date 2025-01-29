@@ -13,7 +13,7 @@ export const MeasurementUnitService = {
     return data;
   },
   // createProduct: async (data) => {
-  //   const response = await fetch(`${URL_BASE}/product/create-products?clientId=${user.clientId}`, {
+  //   const response = await fetch(`${URL_BASE}/product/create-products?client_system_id=${user.client_system_id}`, {
   //     method: "POST",
   //     headers: authHeader(),
   //     body: JSON.stringify(data),
@@ -22,7 +22,7 @@ export const MeasurementUnitService = {
   //   return responseData;
   // },
   // updateProduct: async (productId, data) => {
-  //   const response = await fetch(`${URL_BASE}/product/update-products?clientId=${user.clientId}`, {
+  //   const response = await fetch(`${URL_BASE}/product/update-products?client_system_id=${user.client_system_id}`, {
   //     method: "PUT",
   //     headers: authHeader(),
   //     body: JSON.stringify(data),
@@ -31,7 +31,7 @@ export const MeasurementUnitService = {
   //   return responseData;
   // },
   // deleteProduct: async (productdelete) => {
-  //   const response = await fetch(`${URL_BASE}/product/delete-products?clientId=${user.clientId}`, {
+  //   const response = await fetch(`${URL_BASE}/product/delete-products?client_system_id=${user.client_system_id}`, {
   //     method: "DELETE",
   //     headers: authHeader(),
   //     body: JSON.stringify(productdelete),

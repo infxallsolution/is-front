@@ -67,10 +67,9 @@ const ProductForm = () => {
             } else {
              response =    await createProduct(values);
             }
-            if(response.data.success==200)
+            
             await message.success(`Producto ${editingProduct ? 'actualizado' : 'creado'} con éxito`);
-            else
-            await message.error(`Algo no funciono bien, intentelo mas tarde`);
+
 
 
 

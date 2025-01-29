@@ -16,7 +16,9 @@ import {
   ToolOutlined,
   BarcodeOutlined,
   ToolFilled,
-  BoxPlotFilled
+  BoxPlotFilled,
+  ContactsFilled,
+  IconProvider
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -45,7 +47,16 @@ let navigationTree = [
         breadcrumb: true,
         submenu: [
         ] // Nested submenus (if any)
-      }
+      },
+      {
+        key: "thirdpart-administration", // Unique identifier for the submenu item
+        path: `${APP_PREFIX_PATH}/administration/thirdparty`,
+        title: "Terceros",
+        icon: ContactsFilled, // Optional icon for the submenu item
+        breadcrumb: true,
+        submenu: [
+        ] // Nested submenus (if any)
+      },
     ]
   },
   {
@@ -60,6 +71,15 @@ let navigationTree = [
         icon: ToolFilled, // Optional icon for the submenu item
         breadcrumb: false,
         submenu: [
+          // {
+          //   key: "supplier-inventory", // Unique identifier for the submenu item
+          //   path: `${APP_PREFIX_PATH}/inventory/parameters/supplier`,
+          //   title: "Proveedores",
+          //   icon: IconProvider, // Optional icon for the submenu item
+          //   breadcrumb: true,
+          //   submenu: [
+          //   ] 
+          // },
           {
             key: "product-inventory", // Unique identifier for the submenu item
             path: `${APP_PREFIX_PATH}/inventory/parameters/product`,

@@ -29,7 +29,6 @@ function generateLineData(numberOfPoints) {
 
 const generateRandomColor = () => {
   let color = "#" + Math.random().toString(16).slice(2, 8);
-  console.log(color)
   return color
 }
 

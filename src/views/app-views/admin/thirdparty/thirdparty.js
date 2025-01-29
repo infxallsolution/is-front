@@ -1,78 +1,77 @@
-// src/components/UserForm.js
+// src/components/Form.js
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Checkbox, Table, Popconfirm, Select, message } from 'antd';
 import DynamicTable from 'components/app-components/Custom/table';
-import { UserService } from 'services/UserService';
-import { RolesService } from 'services/RolesService';
-import { current } from '@reduxjs/toolkit';
+import { ThirdPartyService } from 'services/admin/ThirdPartyService';
 const { Option } = Select;
-// import { fetchUsers, createUser, updateUser, deleteUser } from '../api';
 
-const UserForm = () => {
+
+const ThirPartForm = () => {
     const [form] = Form.useForm();
-    const [users, setUsers] = useState([]);
-    const [editingUser, setEditingUser] = useState(null);
-    const [creatingUser, setCreatingUser] = useState(null);
+    const [s, sets] = useState([]);
+    const [editing, setEditing] = useState(null);
+    const [creating, setCreating] = useState(null);
     const [roles, setRoles] = useState([]);
     const [selectValue, setSelectValue] = useState(null);
     const [showclient_system_id, setShowclient_system_id] = useState(null);
+    const [showdv, setshowdv] = useState(false)
     const fetchData = async () => {
-        const users = await UserService.getUsers(true);
-        return { data: users, current: 1, pageSize: 10, total: 10 }
+        const data = await ThirdPartyService.get()
+        return { data: data, current: 1, pageSize: 10, total: 10 }
 
     };
 
     useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const roles = await RolesService.getRoles(true)
-                setRoles(roles)
-            } catch (error) {
-                console.error('Failed to fetch roles:', error);
-            }
+        const fetchData = async () => {
+           await ThirdPartyService.get();
         };
-        fetchRoles();
+        fetchData();
 
     }, []);
 
-    const createUser = async (user) => {
-        return await UserService.createUser(user);
-
+    const create = async (values) => {
+        await ThirdPartyService.create(values)
     }
 
-    const updateUser = async (userId, user) => {
-        return await UserService.updateUser(userId, user)
+    const update = async (Id,) => {
     }
 
-    const deleteUser = async (userId) => {
-        return await UserService.deleteUser(userId)
+    const handleClass = async (value) => {
+        if(value =='juridica')
+        {
+            setshowdv(true)
+        }
+        else{
+            setshowdv(false)
+        }
+
     }
 
     const handleSubmit = async () => {
         const values = await form.validateFields();
 
-        if (editingUser) {
-            await updateUser(editingUser.id, values);
+        if (editing) {
+            await update(editing.id, values);
         } else {
-            await createUser(values);
+            await create(values);
         }
 
-        message.success(`usuario ${editingUser ? 'actualizado' : 'creado'} con exito`)
-        setUsers(await fetchData());
+        message.success(`Tercero ${editing ? 'actualizado' : 'creado'} con exito`)
+        sets(await fetchData());
         handleCancel();
 
     };
 
-    const handleEdit = async (user) => {
-        form.setFieldsValue(user);
-        setEditingUser(user);
-        setCreatingUser(true);
+    const handleEdit = async () => {
+        form.setFieldsValue();
+        setEditing();
+        setCreating(true);
     };
 
-    const handleDelete = async (user) => {
-        await deleteUser(user);
-        setUsers(await fetchData());
-        message.success(`usuario eliminado con exito`)
+    const handleDelete = async () => {
+        // await delete();
+        sets(await fetchData());
+        message.success(`Tercero eliminado con exito`)
     };
 
     const handleOnChangeSelect = async (event) => {
@@ -81,21 +80,22 @@ const UserForm = () => {
 
     const handleCancel = () => {
         form.resetFields();
-        setEditingUser(null);
-        setCreatingUser(false)
+        setEditing(null);
+        setCreating(false)
     };
 
 
     const handleCreate = () => {
         handleCancel();
-        setCreatingUser(true)
+        setCreating(true)
     };
 
     const columns = [
-        { title: 'Username', dataIndex: 'username' },
+        { title: 'Identificación', dataIndex: 'identification' },
         { title: 'Nombre', dataIndex: 'name' },
         { title: 'Email', dataIndex: 'email' },
-        { title: 'Rol', dataIndex: 'rolename' },
+        { title: 'Teléfono', dataIndex: 'phone' },
+        { title: 'Dirección', dataIndex: 'address' },
         { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
         {
             title: 'Acciones',
@@ -116,14 +116,14 @@ const UserForm = () => {
         },
     ];
     return (
-        creatingUser ? (
+        creating ? (
             <div>
-                <h1>{editingUser ? 'Editar Usuarios' : 'Crear Usuarios'}</h1>
+                <h1>{editing ? 'Editar Terceros' : 'Crear Terceros'}</h1>
                 <Form
                     form={form}
                     layout="vertical"
-                    name="user_form"
-                    initialValues={editingUser}
+                    name="_form"
+                    initialValues={editing}
                     onFinish={handleSubmit}
                 >
                     <Form.Item
@@ -132,29 +132,43 @@ const UserForm = () => {
                         <Input type='hidden' />
                     </Form.Item>
                     <Form.Item
-                        name="roleid"
-                        label="Rol"
-                        rules={[{ required: true, message: 'Por favor seleccione un rol!' }]}
+                        label="Tipo de persona"
+                        name="class"
+                        rules={[{ required: true, message: 'Seleccione un tipo de persona' }]}
                     >
-                        <Select placeholder="Seleccione un rol" onChange={handleOnChangeSelect} >
-                            {roles.map((role) => (
-                                <Option key={role.id} value={role.id}>
-                                    {role.name}
-                                </Option>
-                            ))}
+                        <Select placeholder="Seleccione un proveedor" onChange={ handleClass} >
+                            <Option value="natural">Persona Natural</Option>
+                            <Option value="juridica">Persona Jurídica</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        name="username"
-                        label="Username"
-                        rules={[{ required: true, message: 'Por favor ingrese el usuario' }]}
+                        name="identification"
+                        label="Identificación"
+                        rules={[{ required: true, message: 'Por favor ingrese la identificación!' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         name="name"
                         label="Nombre"
-                        rules={[{ required: true, message: 'Por favor ingrese el nombre del usuario!' }]}
+                        rules={[{ required: true, message: 'Por favor ingrese un nombre' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    {showdv && (<Form.Item
+                        name="dv"
+                        label="Dígito de verificación"
+                        rules={[{ required: true, message: 'Por favor ingrese el dígito de verificación!' }]}
+                    >
+                        <Input />
+                    </Form.Item>)
+                    }
+                    <Form.Item
+                        name="phone"
+                        label="Télefono"
+                        rules={[
+                            { required: true, message: 'Por favor ingrese un número de télefono!' },
+                        ]}
                     >
                         <Input />
                     </Form.Item>
@@ -162,32 +176,31 @@ const UserForm = () => {
                         name="email"
                         label="Email"
                         rules={[
-                            { required: true, message: 'Please input the email!' },
-                            { type: 'email', message: 'Please input a valid email!' },
+                            { required: true, message: 'Por favor ingrese un email!' },
+                            { type: 'email', message: 'Por favor ingrese un email!' },
                         ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="password"
-                        label="Password"
+                        name="address"
+                        label="Dirección"
                         rules={[
-                            { required: true, message: 'Ingrese un password' },
-                            { type: 'password', message: 'Ingrese un passwordl!' },
+                            { required: true, message: 'Por favor ingrese una dirección!' },
                         ]}
                     >
-                        <Input type='password' />
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         name="state"
-                        label="Activo"
+                        label=""
                         valuePropName="checked"
                     >
-                        <Checkbox>Active</Checkbox>
+                        <Checkbox>Activo</Checkbox>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
-                            {editingUser ? 'Update' : 'Create'}
+                            {editing ? 'Update' : 'Create'}
                         </Button>
                         <Button onClick={handleCancel} style={{ marginLeft: 10 }}>
                             Cancel
@@ -199,7 +212,7 @@ const UserForm = () => {
             (<div>
                 <div>
                     <Button onClick={handleCreate}>
-                        Crear usuario
+                        Crear Tercero
                     </Button>
                 </div>
                 <div>
@@ -209,4 +222,4 @@ const UserForm = () => {
     );
 };
 
-export default UserForm;
+export default ThirPartForm;

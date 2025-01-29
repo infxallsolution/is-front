@@ -45,7 +45,7 @@ const ModulesForm = () => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <ModulesTable clientId={clientModule} />
+          <ModulesTable client_system_id={clientModule} />
         </Form.Item>
       </Form>
     </div>
