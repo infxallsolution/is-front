@@ -10,11 +10,9 @@ const Administration = () => {
 
   const module = window.location.pathname.split("/")[3];
 
-  console.log(module);
 
   useEffect(() => {
     RedirectService.redirectModule(module).then((response) => {
-      console.log(response);
       setUrl(response.redirectTo);
     });
     dispatch(setModule(module));

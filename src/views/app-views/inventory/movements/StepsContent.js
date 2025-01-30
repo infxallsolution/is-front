@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Select } from 'antd';
+import { Form, Select, Typography, Card, Table } from 'antd';
 import ProductList from './productList';
 import { InventoryDocumentTypeService } from 'services/inventory/InventoryDocumentService';
-
+import { SupplierService } from 'services/inventory/SupplierService';
 const { Option } = Select;
-
+const { Title } = Typography
 const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd }) => {
   const [movementType, setMovementType] = useState('');
   const [documentTypeList, setDocumentTypeList] = useState([])
   const [showProvider, setShowProveider] = useState(false)
-
+  const [suppliers, setSuppliers] = useState([])
+  const [dataSelected, setDataSelected] = useState(null)
+  const [movementSelected, setMovementSeleted] = useState(null)
+  const [supplierSelected, setSupplierSelected] = useState(null)
   const handleMovementTypeChange = (value) => {
     const typeselected = documentTypeList.filter(w => w.id == value)
+    setMovementSeleted(typeselected[0])
     if (typeselected != null && typeselected[0].class == "entrada") {
       setShowProveider(true)
     }
@@ -19,16 +23,52 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
       setShowProveider(false)
   };
 
+  const handleSupplierSelected = (value) => {
+    const supplierSelectedform = suppliers.filter(w => w.id == value)
+    setSupplierSelected(supplierSelectedform[0])
+  };
 
 
   useEffect(() => {
-    const documentTypes = async () => {
+
+    const data = async () => {
       const data = await InventoryDocumentTypeService.get()
       setDocumentTypeList(data)
+      const suppliersData = await SupplierService.get();
+      setSuppliers(suppliersData.data)
     };
-    documentTypes();
+    data();
+
   }, []);
 
+
+  const columns = [
+   
+    {
+      title: "Producto",
+      dataIndex: "product",
+      key: "product",
+      align: "left",
+    },
+    {
+      title: "Bodega",
+      dataIndex: "warehouse",
+      key: "warehouse",
+      align: "left",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "right",
+    },
+    {
+      title: "Valor Total",
+      dataIndex: "totalValue",
+      key: "totalValue",
+      align: "right",
+    },
+  ];
 
   const steps = [
     {
@@ -51,13 +91,15 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
           {showProvider && (
             <Form.Item
               label="Proveedor"
-              name="provider"
+              name="supplier"
               rules={[{ required: true, message: 'Seleccione el proveedor' }]}
             >
-              <Select placeholder="Seleccione un proveedor">
-                <Option value="provider1">Proveedor 1</Option>
-                <Option value="provider2">Proveedor 2</Option>
-                <Option value="provider3">Proveedor 3</Option>
+              <Select placeholder="Seleccione un proveedor" onChange={handleSupplierSelected}  >
+                {suppliers.map((dt) => (
+                  <Option key={dt.id} value={dt.id}>
+                    {dt.companyName}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           )}
@@ -67,7 +109,28 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
     {
       title: 'Detalles del Movimiento',
       content: (
-        <ProductList productList={productList} onEdit={onEdit} onDelete={onDelete} onAdd={onAdd} />
+        <div>
+          {movementSelected && (
+            <Card style={{ marginBottom: 16, borderRadius: 10 }}>
+              <Title level={3} style={{ margin: 0 }}>
+                Tipo de movimiento: {movementSelected.name}
+              </Title>
+            </Card>
+          )}
+
+          {supplierSelected && (
+            <Card style={{ borderRadius: 10 }}>
+              <Title level={4} style={{ margin: 0 }}>
+                Proveedor: {supplierSelected.thirdPartyIdentification} - {supplierSelected.thirdPartyName}
+              </Title>
+            </Card>
+          )}
+          <div>
+            <ProductList productList={productList} onEdit={onEdit} onDelete={onDelete} onAdd={onAdd}
+              movementData={dataSelected} // Pasar el proveedor seleccionado desde formData
+            />
+          </div>
+        </div>
       ),
     },
     {
@@ -75,14 +138,30 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
       content: (
         <div>
           <h3>Resumen del Movimiento</h3>
-          <h3>{movementType}</h3>
-          <ul>
-            {productList.map((item) => (
-              <li key={item.key}>
-                {item.quantity} x {item.product} (Bodega: {item.warehouse})
-              </li>
-            ))}
-          </ul>
+          {movementSelected && (
+            <Card style={{ marginBottom: 16, borderRadius: 10 }}>
+              <Title level={3} style={{ margin: 0 }}>
+                Tipo de movimiento: {movementSelected.name}
+              </Title>
+            </Card>
+          )}
+
+          {supplierSelected && (
+            <Card style={{ borderRadius: 10 }}>
+              <Title level={4} style={{ margin: 0 }}>
+                Proveedor: {supplierSelected.thirdPartyIdentification} - {supplierSelected.thirdPartyName}
+              </Title>
+            </Card>
+          )}
+          <Card style={{ borderRadius: 10, padding: 16 }}>
+
+            <Table
+              dataSource={productList}
+              columns={columns}
+              pagination={false}
+              bordered
+            />
+          </Card>
         </div>
       ),
     },

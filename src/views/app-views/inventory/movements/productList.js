@@ -1,8 +1,8 @@
 import React from "react";
-import { Table, Button, Tooltip } from "antd";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-
-const ProductList = ({ productList, onEdit, onDelete, onAdd }) => {
+import { Table, Button, Tooltip, Typography } from "antd";
+import { PlusOutlined, DeleteOutlined, EditOutlined, ConsoleSqlOutlined } from "@ant-design/icons";
+const { Title } = Typography;
+const ProductList = ({ productList, onEdit, onDelete, onAdd, movementData }) => {
   const columns = [
     {
       title: "Producto",
@@ -56,6 +56,16 @@ const ProductList = ({ productList, onEdit, onDelete, onAdd }) => {
 
   return (
     <div>
+      <div>
+      <Title level={3}>
+        { movementData?.documentSelected && 
+          ( `Documento: ${movementData.documentSelected.name}`)
+        }
+        { movementData?.supplier && 
+          ( `Proveedor: ${movementData.supplierSelected.name}`)
+        }
+      </Title>
+      </div>
       <Button
         type="dashed"
         icon={<PlusOutlined />}

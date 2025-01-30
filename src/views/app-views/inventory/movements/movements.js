@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Steps, message } from 'antd';
 import StepsContent from './StepsContent';
 import ProductModal from './productModal';
-
+import { WarehouseService } from 'services/inventory/WarehouseService';
+import { ProductService } from 'services/ProductService';
 const { Step } = Steps;
 
 const InventoryMovementForm = () => {
@@ -13,25 +14,28 @@ const InventoryMovementForm = () => {
   const [products, setProducts] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [formValues, setFormValues] = useState(null)  
 
   useEffect(() => {
     // Simular datos para productos y bodegas
-    setWarehouses([
-      { id: '1', name: 'Bodega Central' },
-      { id: '2', name: 'Bodega Secundaria' },
-    ]);
-    setProducts([
-      { id: '1', name: 'Producto A' },
-      { id: '2', name: 'Producto B' },
-      { id: '3', name: 'Producto C' },
-    ]);
+    const cargarData = async()=>{
+      const warehouseData = await WarehouseService.get()
+      const productData = await ProductService.getProducts()
+      setWarehouses(
+        warehouseData.data
+    );
+      setProducts(productData.data);
+    }
+
+    cargarData()
+   
   }, []);
 
   const handleNext = async () => {
     try {
       if (currentStep === 0) {
-        // Validar el tipo de movimiento en el primer paso
         await form.validateFields(['movementType']);
+     
       }
       if (currentStep === 1 && productList.length === 0) {
         // Validar que haya al menos un producto en el segundo paso
@@ -47,7 +51,6 @@ const InventoryMovementForm = () => {
   const handlePrevious = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = () => {
-    console.log({ products: productList });
     message.success('Movimiento registrado con éxito.');
     form.resetFields();
     setProductList([]);
@@ -102,6 +105,7 @@ const InventoryMovementForm = () => {
           form.resetFields();
           setModalVisible(true);
         }}
+        
       />
       <div style={{ marginTop: '20px' }}>
         {currentStep > 0 && <Button onClick={handlePrevious}>Anterior</Button>}
