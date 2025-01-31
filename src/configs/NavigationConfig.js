@@ -20,6 +20,7 @@ import {
   ContactsFilled,
   IconProvider,
   ShopOutlined,
+ FileAddOutlined
 
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
@@ -74,11 +75,20 @@ let navigationTree = [
         breadcrumb: false,
         submenu: [
           {
+            key: "document-inventory", // Unique identifier for the submenu item
+            path: `${APP_PREFIX_PATH}/inventory/parameters/document-type`,
+            title: "Documentos",
+            icon: ShopOutlined, // Optional icon for the submenu item
+            breadcrumb: false,
+            submenu: [
+            ] 
+          },
+          {
             key: "supplier-inventory", // Unique identifier for the submenu item
             path: `${APP_PREFIX_PATH}/inventory/parameters/supplier`,
             title: "Proveedores",
             icon: ShopOutlined, // Optional icon for the submenu item
-            breadcrumb: true,
+            breadcrumb: false,
             submenu: [
             ] 
           },
@@ -87,7 +97,7 @@ let navigationTree = [
             path: `${APP_PREFIX_PATH}/inventory/parameters/product`,
             title: "Productos",
             icon: ToolFilled, // Optional icon for the submenu item
-            breadcrumb: true,
+            breadcrumb: false,
             submenu: [
             ] 
           },
@@ -109,7 +119,7 @@ let navigationTree = [
         path: `${APP_PREFIX_PATH}/inventory/movements`,
         title: "Movimientos",
         icon: ToolFilled, // Optional icon for the submenu item
-        breadcrumb: true,
+        breadcrumb: false,
         submenu: [
         ] // Nested submenus (if any)
       }

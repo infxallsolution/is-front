@@ -36,6 +36,11 @@ export const protectedRoutes = [
     component: React.lazy(() => import("views/app-views/admin/thirdparty/thirdparty")),
   },
   {
+    key: "document-type.inventory",
+    path: `${APP_PREFIX_PATH}/inventory/parameters/document-type`,
+    component: React.lazy(() => import("views/app-views/inventory/parameters/inventoryDocument")),
+  },
+  {
     key: "supplier.inventory",
     path: `${APP_PREFIX_PATH}/inventory/parameters/supplier`,
     component: React.lazy(() => import("views/app-views/inventory/parameters/supplier")),

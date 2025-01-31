@@ -8,26 +8,31 @@ const ProductList = ({ productList, onEdit, onDelete, onAdd, movementData }) => 
       title: "Producto",
       dataIndex: "product",
       key: "product",
+      aling: "left"
     },
     {
       title: "Bodega",
       dataIndex: "warehouse",
       key: "warehouse",
+      aling: "left"
     },
     {
       title: "Cantidad",
       dataIndex: "quantity",
       key: "quantity",
+      align: "right",
     },
     {
       title: "Precio",
       dataIndex: "price",
       key: "price",
+      align: "right",
     },
     {
       title: "Total",
       dataIndex: "totalValue",
       key: "totalValue",
+      align: "right",
     },
     {
       title: "Acciones",
@@ -57,14 +62,14 @@ const ProductList = ({ productList, onEdit, onDelete, onAdd, movementData }) => 
   return (
     <div>
       <div>
-      <Title level={3}>
-        { movementData?.documentSelected && 
-          ( `Documento: ${movementData.documentSelected.name}`)
-        }
-        { movementData?.supplier && 
-          ( `Proveedor: ${movementData.supplierSelected.name}`)
-        }
-      </Title>
+        <Title level={3}>
+          {movementData?.documentSelected &&
+            (`Documento: ${movementData.documentSelected.name}`)
+          }
+          {movementData?.supplier &&
+            (`Proveedor: ${movementData.supplierSelected.name}`)
+          }
+        </Title>
       </div>
       <Button
         type="dashed"

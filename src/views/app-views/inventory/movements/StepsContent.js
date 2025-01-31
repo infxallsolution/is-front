@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Select, Typography, Card, Table } from 'antd';
+import { Form, Select, Typography, Card, Table, Button } from 'antd';
 import ProductList from './productList';
 import { InventoryDocumentTypeService } from 'services/inventory/InventoryDocumentService';
 import { SupplierService } from 'services/inventory/SupplierService';
+import { APP_PREFIX_PATH } from 'configs/AppConfig';
+import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
 const { Title } = Typography
-const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd }) => {
+const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd, setDocumentTypeModalVisible }) => {
   const [movementType, setMovementType] = useState('');
   const [documentTypeList, setDocumentTypeList] = useState([])
   const [showProvider, setShowProveider] = useState(false)
@@ -13,7 +15,9 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
   const [dataSelected, setDataSelected] = useState(null)
   const [movementSelected, setMovementSeleted] = useState(null)
   const [supplierSelected, setSupplierSelected] = useState(null)
+  const navigate = useNavigate(); // useNavigate hook for navigation
   const handleMovementTypeChange = (value) => {
+    form.setFieldsValue({ movementType: value });
     const typeselected = documentTypeList.filter(w => w.id == value)
     setMovementSeleted(typeselected[0])
     if (typeselected != null && typeselected[0].class == "entrada") {
@@ -28,6 +32,13 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
     setSupplierSelected(supplierSelectedform[0])
   };
 
+  const handleCreateDocumentType = () => {
+    navigate(`${APP_PREFIX_PATH}/inventory/parameters/document-type`); // Redirige a la página de creación de tipo de documento
+  };
+
+  const handleNavigateSupplier = () => {
+    navigate(`${APP_PREFIX_PATH}/inventory/parameters/supplier`); // Redirige a la página de creación de tipo de documento
+  };
 
   useEffect(() => {
 
@@ -87,7 +98,14 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
                 </Option>
               ))}
             </Select>
+            <Button
+              type="link"
+              onClick={handleCreateDocumentType}
+            >
+              + Crear Tipo de documento
+            </Button>
           </Form.Item>
+         
           {showProvider && (
             <Form.Item
               label="Proveedor"
@@ -101,6 +119,12 @@ const StepsContent = ({ currentStep, form, productList, onEdit, onDelete, onAdd 
                   </Option>
                 ))}
               </Select>
+              <Button
+              type="link"
+              onClick={handleNavigateSupplier}
+            >
+              + Crear Proveedor
+            </Button>
             </Form.Item>
           )}
         </Form>

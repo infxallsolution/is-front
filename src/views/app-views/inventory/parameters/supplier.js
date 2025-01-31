@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox, Table, Popconfirm, Select, message } fro
 import DynamicTable from 'components/app-components/Custom/table';
 import { SupplierService } from 'services/inventory/SupplierService';
 import { ThirdPartyService } from 'services/admin/ThirdPartyService';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 const { Option } = Select;
 
 const SupplierForm = () => {
@@ -12,6 +12,9 @@ const SupplierForm = () => {
     const [editing, setEditing] = useState(null);
     const [creating, setCreating] = useState(false);
     const [thirdParties, setThirdParties] = useState([]);
+     const navigate = useNavigate(); // useNavigate hook for navigation
+        const location = useLocation(); // Nos da la ubicación actual de la ruta
+        const lastVisited = location.pathname;
 
      const fetchData = async () => {
             const data = await SupplierService.get(); // Adjust the service call accordingly
@@ -91,6 +94,9 @@ const SupplierForm = () => {
         },
     ];
 
+    const handleGoBack = () => {
+        navigate(-1); // Redirige a la página anterior
+    };
     return (
         creating ? (
             <div>
@@ -121,6 +127,9 @@ const SupplierForm = () => {
             </div>
         ) : (
             <div>
+                 <div>
+                                < Button type="link" onClick={handleGoBack} > Regresar </Button>
+                </div>
                 <Button onClick={handleCreate}>Crear Proveedor</Button>
                 <DynamicTable columns={columns} fetchData={fetchData}/>
             </div>

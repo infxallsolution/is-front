@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Checkbox, message, Popconfirm } from 'antd';
-import { InventoryDocumentTypeService } from 'services/InventoryDocumentTypeService';  // Servicio para gestionar los tipos de documentos de inventario
+import { InventoryDocumentTypeService } from 'services/inventory/InventoryDocumentService';  // Servicio para gestionar los tipos de documentos de inventario
+import DynamicTable from 'components/app-components/Custom/table';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -9,11 +11,18 @@ const InventoryDocumentTypeForm = () => {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [editingDocumentType, setEditingDocumentType] = useState(null);
     const [creatingDocumentType, setCreatingDocumentType] = useState(false);
+    const navigate = useNavigate(); // useNavigate hook for navigation
+    const location = useLocation(); // Nos da la ubicación actual de la ruta
+    const lastVisited = location.pathname;
 
     const fetchData = async () => {
-        const data = await InventoryDocumentTypeService.getDocumentTypes();
+        const data = await InventoryDocumentTypeService.get();
         setDocumentTypes(data);
         return { data, total: data.length };  // Puedes ajustar esto según el formato de la respuesta de tu API
+    };
+
+    const handleGoBack = () => {
+        navigate(-1); // Redirige a la página anterior
     };
 
     const createDocumentType = async (documentType) => {
@@ -31,7 +40,12 @@ const InventoryDocumentTypeForm = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        const loadData = async () => {
+            await fetchData();
+        }
+
+        loadData()
+
     }, []);
 
     const handleSubmit = async () => {
@@ -66,12 +80,14 @@ const InventoryDocumentTypeForm = () => {
         handleCancel();
     };
 
+    const handleDelete = () => {
+    };
+
     const columns = [
         { title: 'Nombre', dataIndex: 'name' },
         { title: 'Descripción', dataIndex: 'description' },
         { title: 'Clase', dataIndex: 'class' },
-        { title: 'Estado Estático', dataIndex: 'static', render: (status) => (status ? 'Sí' : 'No') },
-        { title: 'Firma', dataIndex: 'sign' },
+        { title: 'Signo', dataIndex: 'sign' },
         {
             title: 'Acciones',
             render: (_, record) => (
@@ -86,9 +102,13 @@ const InventoryDocumentTypeForm = () => {
     ];
 
     return (
+
+
         creatingDocumentType ? (
             <div>
                 <h1>{editingDocumentType ? 'Editar Tipo de Documento' : 'Crear Tipo de Documento'}</h1>
+
+
                 <Form
                     form={form}
                     layout="vertical"
@@ -144,8 +164,11 @@ const InventoryDocumentTypeForm = () => {
             </div>
         ) : (
             <div>
+                < Button type="link" onClick={handleGoBack} > Regresar </Button>
+                <div>
                 <Button onClick={handleCreate}>Crear Tipo de Documento</Button>
-                <Table columns={columns} dataSource={documentTypes} rowKey="id" />
+                <DynamicTable columns={columns} fetchData={fetchData} />
+                </div>
             </div>
         )
     );
