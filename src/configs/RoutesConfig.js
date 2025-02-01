@@ -31,6 +31,11 @@ export const protectedRoutes = [
     component: React.lazy(() => import("views/app-views/admin/users/user")),
   },
   {
+    key: "users.list.admin",
+    path: `${APP_PREFIX_PATH}/administration/userList`,
+    component: React.lazy(() => import("views/app-views/admin/users/userList")),
+  },
+  {
     key: "thirdpart.admin",
     path: `${APP_PREFIX_PATH}/administration/thirdparty`,
     component: React.lazy(() => import("views/app-views/admin/thirdparty/thirdparty")),

@@ -95,26 +95,8 @@ const DynamicTable = ({ columns: initialColumns, fetchData }) => {
           pageSize: pagination.pageSize,
           total: pagination.total,
         }}
-        onChange={handleTableChange}
-        scroll={{ x: 1500, y: 300 }}
+        bordered size="middle"
       />
-      <Modal
-        title="Edit Record"
-        visible={isModalVisible}
-        onOk={handleSave}
-        onCancel={handleCancel}
-      >
-        {Object.keys(form).map((key) => (
-          <Input
-            key={key}
-            placeholder={key}
-            name={key}
-            value={form[key]}
-            onChange={handleInputChange}
-            style={{ marginBottom: '10px' }}
-          />
-        ))}
-      </Modal>
     </>
   );
 };

@@ -1,27 +1,14 @@
 import {
   DashboardOutlined,
-  YuqueOutlined,
   UsergroupAddOutlined,
-  UnorderedListOutlined,
-  ColumnHeightOutlined,
-  CreditCardOutlined,
-  IdcardOutlined,
-  DesktopOutlined,
-  ExperimentOutlined,
-  DeploymentUnitOutlined,
-  GoldOutlined,
-  CarOutlined,
-  HeatMapOutlined,
   UserSwitchOutlined,
   ToolOutlined,
   BarcodeOutlined,
   ToolFilled,
   BoxPlotFilled,
-  ContactsFilled,
-  IconProvider,
   ShopOutlined,
- FileAddOutlined
-
+  UsergroupDeleteOutlined,
+  UserAddOutlined
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -44,10 +31,10 @@ let navigationTree = [
     submenu: [ // Array of submenu items
       {
         key: "user-administration", // Unique identifier for the submenu item
-        path: `${APP_PREFIX_PATH}/administration/users`,
+        path: `${APP_PREFIX_PATH}/administration/userList`,
         title: "Usuarios",
         icon: UserSwitchOutlined, // Optional icon for the submenu item
-        breadcrumb: true,
+        breadcrumb: false,
         submenu: [
         ] // Nested submenus (if any)
       },
@@ -56,7 +43,7 @@ let navigationTree = [
         path: `${APP_PREFIX_PATH}/administration/thirdparty`,
         title: "Terceros",
         icon: UsergroupAddOutlined, // Optional icon for the submenu item
-        breadcrumb: true,
+        breadcrumb: false,
         submenu: [
         ] // Nested submenus (if any)
       },

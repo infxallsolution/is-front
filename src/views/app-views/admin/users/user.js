@@ -5,7 +5,15 @@ import DynamicTable from 'components/app-components/Custom/table';
 import { UserService } from 'services/UserService';
 import { RolesService } from 'services/RolesService';
 import { current } from '@reduxjs/toolkit';
+import ActionsColumn from 'components/app-components/Custom/actions';
+import HeaderCustom from 'components/app-components/Custom/header';
+import ResponsiveCard from 'components/app-components/Custom/card';
+import RowCustom from 'components/util-components/FormStyles/RowCustom';
+import ColCustom from 'components/util-components/FormStyles/ColCustom';
+import ButtomCustom from 'components/util-components/Buttons/ButtonCustom';
+import {ArrowLeftOutlined} from "@ant-design/icons";
 const { Option } = Select;
+
 // import { fetchUsers, createUser, updateUser, deleteUser } from '../api';
 
 const UserForm = () => {
@@ -100,112 +108,118 @@ const UserForm = () => {
         {
             title: 'Acciones',
             render: (_, record) => (
-                <span>
-                    <Button disabled={record.static ? true : false} onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>
-                        Editar
-                    </Button>
-                    <Popconfirm
-                        title="Estas seguro de eliminar?"
-                        disabled={record.static ? true : false}
-                        onConfirm={() => handleDelete(record)}
-                    >
-                        <Button type="danger">Eliminar</Button>
-                    </Popconfirm>
-                </span>
+                <ActionsColumn record={record} onEdit={handleEdit} onDelete={handleDelete} ></ActionsColumn>
             ),
         },
     ];
     return (
-        creatingUser ? (
-            <div>
-                <h1>{editingUser ? 'Editar Usuarios' : 'Crear Usuarios'}</h1>
-                <Form
-                    form={form}
-                    layout="vertical"
-                    name="user_form"
-                    initialValues={editingUser}
-                    onFinish={handleSubmit}
-                >
-                    <Form.Item
-                        name="id"
-                    >
-                        <Input type='hidden' />
-                    </Form.Item>
-                    <Form.Item
-                        name="roleid"
-                        label="Rol"
-                        rules={[{ required: true, message: 'Por favor seleccione un rol!' }]}
-                    >
-                        <Select placeholder="Seleccione un rol" onChange={handleOnChangeSelect} >
-                            {roles.map((role) => (
-                                <Option key={role.id} value={role.id}>
-                                    {role.name}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        name="username"
-                        label="Username"
-                        rules={[{ required: true, message: 'Por favor ingrese el usuario' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="name"
-                        label="Nombre"
-                        rules={[{ required: true, message: 'Por favor ingrese el nombre del usuario!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="email"
-                        label="Email"
-                        rules={[
-                            { required: true, message: 'Please input the email!' },
-                            { type: 'email', message: 'Please input a valid email!' },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="password"
-                        label="Password"
-                        rules={[
-                            { required: true, message: 'Ingrese un password' },
-                            { type: 'password', message: 'Ingrese un passwordl!' },
-                        ]}
-                    >
-                        <Input type='password' />
-                    </Form.Item>
-                    <Form.Item
-                        name="state"
-                        label="Activo"
-                        valuePropName="checked"
-                    >
-                        <Checkbox>Active</Checkbox>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            {editingUser ? 'Update' : 'Create'}
-                        </Button>
-                        <Button onClick={handleCancel} style={{ marginLeft: 10 }}>
-                            Cancel
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </div>
-        ) :
-            (<div>
+        <>
+            <HeaderCustom title={"Registar usuario"} ></HeaderCustom>
+            <ResponsiveCard>
                 <div>
-                    <Button onClick={handleCreate}>
-                        Crear usuario
-                    </Button>
+                    <ButtomCustom route={'/administration/userlist'} icon={<ArrowLeftOutlined/>} title={'Volver'} >
+                    </ButtomCustom>
                 </div>
                 <div>
-                    <DynamicTable columns={columns} fetchData={fetchData} />
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        name="user_form"
+                        initialValues={editingUser}
+                        onFinish={handleSubmit}
+                    >
+                        <Form.Item
+                            name="id"
+                            style={{ display: 'none' }}
+                        >
+                            <Input type='hidden' />
+                        </Form.Item>
+                        <RowCustom>
+                            <ColCustom>
+
+                                <Form.Item
+                                    name="roleid"
+                                    label="Rol"
+                                    rules={[{ required: true, message: 'Por favor seleccione un rol!' }]}
+                                >
+                                    <Select placeholder="Seleccione un rol" onChange={handleOnChangeSelect} >
+                                        {roles.map((role) => (
+                                            <Option key={role.id} value={role.id}>
+                                                {role.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </ColCustom>
+                            <ColCustom>
+                                <Form.Item
+                                    name="username"
+                                    label="Username"
+                                    rules={[{ required: true, message: 'Por favor ingrese el usuario' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </ColCustom>
+                        </RowCustom>
+                        <RowCustom>
+                            <ColCustom>
+                                <Form.Item
+                                    name="name"
+                                    label="Nombre"
+                                    rules={[{ required: true, message: 'Por favor ingrese el nombre del usuario!' }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </ColCustom>
+                            <ColCustom>
+                                <Form.Item
+                                    name="email"
+                                    label="Email"
+                                    rules={[
+                                        { required: true, message: 'Ingrese un email!' },
+                                        { type: 'email', message: 'Ingrese un email!' },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </ColCustom>
+                        </RowCustom>
+                        <RowCustom>
+                            <ColCustom>
+                                <Form.Item
+                                    name="password"
+                                    label="Password"
+                                    rules={[
+                                        { required: true, message: 'Ingrese una contraseña' },
+                                        { type: 'password', message: 'Ingrese un contraseña!' },
+                                    ]}
+                                >
+                                    <Input type='password' />
+                                </Form.Item>
+                            </ColCustom>
+                            <ColCustom>
+                                <Form.Item
+                                    name="state"
+                                    label="Activo"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {  },
+                                    ]}
+                                >
+                                    <Checkbox    ></Checkbox>
+                                </Form.Item>
+                            </ColCustom>
+                        </RowCustom>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                {editingUser ? 'Update' : 'Create'}
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 </div>
-            </div>)
+
+            </ResponsiveCard>
+        </>
     );
 };
 
