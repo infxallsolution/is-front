@@ -1,41 +1,65 @@
 import { env } from "configs/EnvironmentConfig";
 import { authHeader } from "./AuthHeader";
-import { GetUserFromStorage } from "./UserFromStorage";
+import { GetUserFromStorage, BodyWithClient } from "./UserFromStorage";
 const URL_BASE = env.API_ENDPOINT_URL;
 const user = GetUserFromStorage()
 export const UserService = {
-  getUsers: async (withstatic) => {
-    const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
-      headers: authHeader(),
-    });
-    const data = await response.json();
-    return data;
+  get: async () => {
+    try {
+      const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
+        headers: authHeader(),
+      });
+      const data = await response.json();
+      return data;
+    } catch (ex) {
+      throw ex
+    }
   },
-   createUser: async (data) => {
-     const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
-       method: "POST",
-       headers: authHeader(),
-       body: JSON.stringify(data),
-     });
-     const responseData = await response.json();
-     return responseData;
-   },
-   updateUser: async ( userId,data) => {
-    const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
-      method: "PUT",
-      headers: authHeader(),
-      body: JSON.stringify(data),
-    });
-    const responseData = await response.json();
-    return responseData;
+  create: async (data) => {
+    try {
+        const body = await BodyWithClient(data)
+        const response = await fetch(`${URL_BASE}/user`, {
+        method: "POST",
+        headers: authHeader(),
+        body: JSON.stringify(body),
+      });
+      const responseData = await response.json();
+      if(!response.ok)
+      {
+        throw new Error(`Error ${response.status}: ${responseData.message}`);
+      }
+    
+      return responseData;
+    } catch (ex) {
+      throw ex
+    }
   },
-  deleteUser: async (userdelete) => {
-    const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
-      method: "DELETE",
-      headers: authHeader(),
-      body: JSON.stringify(userdelete),
-    });
-    const responseData = await response.json();
-    return responseData;
+  update: async (userId, data) => {
+    try {
+      const body = await BodyWithClient(data)
+      const response = await fetch(`${URL_BASE}/user/${userId}`, {
+        method: "PUT",
+        headers: authHeader(),
+        body: JSON.stringify(body),
+      });
+      const responseData = await response.json();
+      return responseData;
+    } catch (ex) {
+      throw ex
+    }
+  },
+  delete: async (data) => {
+    try {
+      const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
+        method: "DELETE",
+        headers: authHeader(),
+        body: JSON.stringify(data),
+      });
+      const responseData = await response.json();
+      return responseData;
+    } catch (ex) {
+      throw ex
+    }
   },
 }
+

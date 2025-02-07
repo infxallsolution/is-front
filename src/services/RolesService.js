@@ -5,7 +5,7 @@ import { GetUserFromStorage } from "./UserFromStorage";
 const URL_BASE = env.API_ENDPOINT_URL;
 const user = GetUserFromStorage()
 export const RolesService = {
-  getRoles: async (withstatic) => {
+  get: async (withstatic) => {
     const response = await fetch(`${URL_BASE}/roles?withstatic=${user.static}`, {
       headers: authHeader(),
     });

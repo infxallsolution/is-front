@@ -28,6 +28,7 @@ let navigationTree = [
     title: "Administración",
     icon: ToolOutlined,
     breadcrumb: false,
+    isGroupTitle: true,
     submenu: [ // Array of submenu items
       {
         key: "user-administration", // Unique identifier for the submenu item
@@ -54,6 +55,7 @@ let navigationTree = [
     title: "Inventarios",
     icon: BarcodeOutlined,
     breadcrumb: false,
+    isGroupTitle: true,
     submenu: [ // Array of submenu items
       {
         key: "inventory-parameters", // Unique identifier for the submenu item

@@ -9,5 +9,13 @@ const GetUserFromStorage = () => {
   }
 };
 
+const   BodyWithClient = async(data) =>{
+  var body = data;
+  const user = JSON.parse(localStorage.getItem("user"));
+  body.client_system_id = user.client_system_id;
+  return body
+}
 
-export { GetUserFromStorage };
+
+
+export { GetUserFromStorage, BodyWithClient };

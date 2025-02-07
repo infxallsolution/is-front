@@ -4,126 +4,129 @@ import { Form, Input, Button, Checkbox, Table, Popconfirm, Select, message } fro
 import DynamicTable from 'components/app-components/Custom/table';
 import { UserService } from 'services/UserService';
 import { RolesService } from 'services/RolesService';
-import { current } from '@reduxjs/toolkit';
 import ActionsColumn from 'components/app-components/Custom/actions';
 import HeaderCustom from 'components/app-components/Custom/header';
 import ResponsiveCard from 'components/app-components/Custom/card';
 import ButtomCustom from 'components/util-components/Buttons/ButtonCustom';
-import {UserAddOutlined} from "@ant-design/icons";
+import { UserAddOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import UserForm from './user';
+import MessageConstant from 'constants/MessageConstant';
+import { Modal } from "antd";
+
 const { Option } = Select;
-// import { fetchUsers, createUser, updateUser, deleteUser } from '../api';
 
 const UserListForm = () => {
     const [form] = Form.useForm();
-    const [users, setUsers] = useState([]);
-    const [editingUser, setEditingUser] = useState(null);
-    const [creatingUser, setCreatingUser] = useState(null);
     const [roles, setRoles] = useState([]);
-    const [selectValue, setSelectValue] = useState(null);
-    const [showclient_system_id, setShowclient_system_id] = useState(null);
+    const [creating, setCreating] = useState(null)
+    const [editData, setEditData] = useState(null)
+
     const fetchData = async () => {
-        const users = await UserService.getUsers(true);
+        const users = await UserService.get();
         return { data: users, current: 1, pageSize: 10, total: 10 }
 
     };
 
-    useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const roles = await RolesService.getRoles(true)
-                setRoles(roles)
-            } catch (error) {
-                console.error('Failed to fetch roles:', error);
-            }
-        };
-        fetchRoles();
+    const fetchRoles = async () => {
+        try {
+            const roles = await RolesService.get()
+            setRoles(roles)
+        } catch (error) {
+            console.error('Failed to fetch roles:', error);
+        }
+    };
 
+    useEffect(() => {
+        fetchRoles();
+        fetchData();
     }, []);
 
-    const createUser = async (user) => {
-        return await UserService.createUser(user);
+    //define columns
+    const columns = [
+        { title: 'Usuario', dataIndex: 'username' },
+        { title: 'Nombre', dataIndex: 'name' },
+        { title: 'Correo eléctronico', dataIndex: 'email' },
+        { title: 'Rol', dataIndex: 'rolename' },
+        { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
 
-    }
+    ];
 
-    const updateUser = async (userId, user) => {
-        return await UserService.updateUser(userId, user)
-    }
+    const handleCreating = () => {
+        setCreating(true)
+    };
 
-    const deleteUser = async (userId) => {
-        return await UserService.deleteUser(userId)
-    }
+    const handleCancel = (form) => {
+        form.resetFields();
+        setCreating(null)
+        setEditData(null)
+    };
 
-    const handleSubmit = async () => {
+
+    const handleSubmit = async (form) => {
         const values = await form.validateFields();
+        try {
+            Modal.confirm({
+                title: "¿Estás seguro?",
+                content: `Confirma que deseas ${editData ? 'Actualizar' : 'Crear'} los datos.`,
+                okText: "Sí, enviar",
+                cancelText: "Cancelar",
+                onOk: async () => {
 
-        if (editingUser) {
-            await updateUser(editingUser.id, values);
-        } else {
-            await createUser(values);
+                    if (editData) {
+                        await UserService.update(editData.id, values);
+                        message.success(MessageConstant.get("EXITO-GENERAL-ACTUALIZADO"))
+                    } else {
+                        await UserService.create(values);
+                        message.success(MessageConstant.get("EXITO-GENERAL-CREADO"))
+                    }
+                  
+                    await form.resetFields();
+                    setCreating(null)
+                    setEditData(null)
+                }
+
+            })
         }
 
-        message.success(`usuario ${editingUser ? 'actualizado' : 'creado'} con exito`)
-        setUsers(await fetchData());
-        handleCancel();
-
+        catch (ex) {
+            message.error(MessageConstant.get("ERROR-GENERAL"))
+            message.info(MessageConstant.get("INFO-NOMBRE-USUARIO"))
+        }
     };
 
     const handleEdit = async (user) => {
-        form.setFieldsValue(user);
-        setEditingUser(user);
-        setCreatingUser(true);
+        setEditData(user);
     };
 
-    const handleDelete = async (user) => {
-        await deleteUser(user);
-        setUsers(await fetchData());
-        message.success(`usuario eliminado con exito`)
-    };
-
-    const handleOnChangeSelect = async (event) => {
-        setSelectValue(event);
-    }
-
-    const handleCancel = () => {
-        form.resetFields();
-        setEditingUser(null);
-        setCreatingUser(false)
-    };
+    // const handleDelete = async (user) => {
+    //     // await deleteUser(user);
+    //     // setUsers(await fetchData());
+    //     // message.success(`usuario eliminado con exito`)
+    // };
 
 
-    const handleCreate = () => {
-        handleCancel();
-        setCreatingUser(true)
-    };
-
-    const columns = [
-        { title: 'Username', dataIndex: 'username' },
-        { title: 'Nombre', dataIndex: 'name' },
-        { title: 'Email', dataIndex: 'email' },
-        { title: 'Rol', dataIndex: 'rolename' },
-        { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
-        {
-            title: 'Acciones',
-            render: (_, record) => (
-                <ActionsColumn record={record} onEdit={handleEdit} onDelete={handleDelete} ></ActionsColumn>
-            ),
-        },
-    ];
     return (<>
-        <HeaderCustom title={"Usuarios"} ></HeaderCustom>
         <ResponsiveCard>
-        <div>
             <div>
-                
-                <ButtomCustom  icon={<UserAddOutlined/>} title={'Crear Usuario'}
-                route = {'/administration/users'}
-                onClick={handleCreate}>
-                </ButtomCustom>
+                {
+                    (creating || editData) ? <>
+
+                        <UserForm
+                            handleCancel={handleCancel}
+                            roles={roles}
+                            handleSubmit={handleSubmit}
+                            editData={editData}
+                        />  </> :
+                        <>
+                            <HeaderCustom title={"Usuarios"} ></HeaderCustom>
+                            <ButtomCustom icon={<UserAddOutlined />} title={'Crear Usuario'}
+                                onClick={handleCreating}>
+                            </ButtomCustom>
+                            <DynamicTable columns={columns} fetchData={fetchData} handleEdit={handleEdit} />
+                        </>
+
+                }
             </div>
-            <div>
-                <DynamicTable columns={columns} fetchData={fetchData} />
-            </div>
-        </div>
         </ResponsiveCard>
     </>
     );

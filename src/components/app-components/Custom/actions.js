@@ -15,7 +15,7 @@ const ActionsColumn = ({ disableEdit, disabledDelete, record, onEdit, onDelete }
                 disabled={disableEdit}
                 size="small"
                 icon={<EditOutlined />}
-                onClick={() => onEdit(record)}
+                onClick={()=>{onEdit(record) }}
             >
             </Button>
             </Tooltip>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Modal, Input, message } from 'antd';
+import ActionsColumn from './actions';
 
-const DynamicTable = ({ columns: initialColumns, fetchData }) => {
+const DynamicTable = ({ columns: initialColumns, fetchData, handleEdit, handleDelete }) => {
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -35,33 +36,6 @@ const DynamicTable = ({ columns: initialColumns, fetchData }) => {
     loadData(pagination.current, pagination.pageSize);
   }, [pagination.current, pagination.pageSize]);
 
-  const handleEdit = (record) => {
-    setEditingRecord(record);
-    setForm(record);
-    setIsModalVisible(true);
-  };
-
-  const handleDelete = async (key) => {
-    try {
-      await fetchData({ action: 'delete', key });
-      loadData(pagination.current, pagination.pageSize);
-      message.success('Registro eliminado exitosamente');
-    } catch {
-      message.error('Error al eliminar el registro');
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      await fetchData({ action: 'update', record: { ...editingRecord, ...form } });
-      loadData(pagination.current, pagination.pageSize);
-      message.success('Registro actualizado exitosamente');
-      setIsModalVisible(false);
-      setEditingRecord(null);
-    } catch {
-      message.error('Error al guardar los cambios');
-    }
-  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -83,11 +57,29 @@ const DynamicTable = ({ columns: initialColumns, fetchData }) => {
     loadData(current, pageSize); // Llamada al endpoint con la nueva paginación
   };
 
+  const columns = [
+    ...initialColumns.map((col) => ({
+      ...col,
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
+    })),
+    {
+      title: 'Acciones',
+      fixed: "right",
+      width: 100,
+      key: "actions",
+      responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
+
+      render: (_, record) => (
+        <ActionsColumn record={record} onEdit={() => { handleEdit(record) }} onDelete={''} ></ActionsColumn>
+      ),
+    }
+  ]
+
 
   return (
     <>
       <Table
-        columns={initialColumns}
+        columns={columns}
         dataSource={data}
         loading={loading}
         pagination={{
@@ -95,7 +87,9 @@ const DynamicTable = ({ columns: initialColumns, fetchData }) => {
           pageSize: pagination.pageSize,
           total: pagination.total,
         }}
-        bordered size="middle"
+        bordered
+        size="middle"
+        scroll={{ x: 'max-content' }} 
       />
     </>
   );
