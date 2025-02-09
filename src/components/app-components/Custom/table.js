@@ -24,6 +24,8 @@ const DynamicTable = ({ columns: initialColumns, response, handleEdit, handleDel
     }
   ]
 
+  console.log('pagination--->', pagination)
+  console.log('datasource--->', response?.data)
 
   return (
     <>

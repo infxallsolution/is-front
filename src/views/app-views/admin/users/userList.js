@@ -10,7 +10,11 @@ import ButtomCustom from 'components/util-components/Buttons/ButtonCustom';
 import { UserAddOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import UserForm from './user';
 import MessageConstant from 'constants/MessageConstant';
+import SearchBar from 'components/app-components/Global/SearchBar';
+
 import { Modal } from "antd";
+import RowCustom from 'components/util-components/FormStyles/RowCustom';
+import ColCustom from 'components/util-components/FormStyles/ColCustom';
 
 const { Option } = Select;
 
@@ -23,32 +27,33 @@ const UserListForm = () => {
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 10,
+        pageSize: 5,
         total: 0,
-        showSizeChanger: false,
+        showSizeChanger: true,
         pageSizeOptions: ["5", "10", "20", "50"],
         showTotal: (total) => `Total: ${total} registros`,
     });
-
+    const [filters, setFilters] = useState({});
     const fetchData = async (page, pageSize, filters) => {
         return await UserService.get(page, pageSize, filters);
     };
 
-    const loadTableData = async (page, pageSize) => {
+    const loadTableData = async (page, pageSize, filters) => {
         setLoading(true);
         try {
-          const response = await fetchData(page, pageSize);
-          setResponse(response);
-          setPagination({ ...pagination, total: response.total, current: page, pageSize,
-            
-           });
+            const response = await fetchData(page, pageSize, filters);
+            setResponse(response);
+            setPagination({
+                ...pagination,
+                total: response.total,  // Asegúrate de tener el total de registros
+            });
         } catch (error) {
-          console.error("Error al obtener datos:", error);
+            console.error("Error al obtener datos:", error);
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
-   
+    };
+
 
     const fetchRoles = async () => {
         try {
@@ -59,10 +64,10 @@ const UserListForm = () => {
         }
     };
 
-    useEffect( () => {
-         fetchRoles();
-         loadTableData(pagination.current, pagination.pageSize);
-      }, [pagination.current, pagination.pageSize]);
+    useEffect(() => {
+        fetchRoles();
+        loadTableData(pagination.current, pagination.pageSize);
+    }, [pagination.current, pagination.pageSize]);
 
 
     //define columns
@@ -74,6 +79,8 @@ const UserListForm = () => {
         { title: 'Estado', dataIndex: 'state', render: (state) => (state ? 'Active' : 'Inactive') },
 
     ];
+
+
 
     const handleCreating = () => {
         setCreating(true)
@@ -119,13 +126,14 @@ const UserListForm = () => {
     };
 
     const handleTableChange = async (newpagination) => {
-        const {current, page, pageSize} = newpagination
+        const { current, pageSize } = newpagination
         setPagination({
             ...pagination,
             current: current,
             pageSize: pageSize,
-            page: current
-        })
+            total: pagination.total,  // Asegúrate de tener el total actualizado en la paginación
+            showTotal: (total) => `Total: ${total} registros`
+        });
     };
 
     const handleEdit = async (user) => {
@@ -143,6 +151,27 @@ const UserListForm = () => {
         }
     };
 
+    // Configuración de los campos de búsqueda
+    const searchFields = [
+        {
+            name: 'username',
+            label: 'Usuario',
+            type: 'input',
+        },
+        {
+            name: 'rolename',
+            label: 'Rol',
+            type: 'select',
+            options: roles.map(role => ({
+                value: role.name,
+                label: role.name
+            })),
+        },
+    ];
+
+    const handleSearch = (newFilters) => {
+        setFilters(newFilters); // Actualiza los filtros con los valores seleccionados
+    };
 
     return (<>
         <ResponsiveCard>
@@ -158,9 +187,14 @@ const UserListForm = () => {
                         />  </> :
                         <>
                             <HeaderCustom title={"Usuarios"} ></HeaderCustom>
-                            <ButtomCustom icon={<UserAddOutlined />} title={'Crear Usuario'}
-                                onClick={handleCreating}>
-                            </ButtomCustom>
+                            <SearchBar onSearch={handleSearch} />
+                            <RowCustom>
+                                <ColCustom>
+                                    <ButtomCustom icon={<UserAddOutlined />} title={'Crear Usuario'}
+                                        onClick={handleCreating}>
+                                    </ButtomCustom>
+                                </ColCustom>
+                            </RowCustom>
                             <DynamicTable columns={columns} response={response} handleEdit={handleEdit}
                                 handleDelete={handleDelete}
                                 handleTableChange={handleTableChange}
