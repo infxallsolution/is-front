@@ -4,9 +4,16 @@ import { GetUserFromStorage, BodyWithClient } from "./UserFromStorage";
 const URL_BASE = env.API_ENDPOINT_URL;
 const user = GetUserFromStorage()
 export const UserService = {
-  get: async () => {
+  get: async (page, pageSize, filters) => {
     try {
-      const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
+       const queryParams = new URLSearchParams({
+                  page: page.toString(),
+                  pageSize: pageSize.toString(),
+                  // ...filters, // Agregar filtros dinámicos,<
+                  client_system_id:user.client_system_id.toString()
+                }).toString();
+
+      const response = await fetch(`${URL_BASE}/user?${queryParams}`, {
         headers: authHeader(),
       });
       const data = await response.json();
@@ -48,12 +55,11 @@ export const UserService = {
       throw ex
     }
   },
-  delete: async (data) => {
+  delete: async (userId) => {
     try {
-      const response = await fetch(`${URL_BASE}/user?client_system_id=${user.client_system_id}`, {
+      const response = await fetch(`${URL_BASE}/user/${userId}`, {
         method: "DELETE",
         headers: authHeader(),
-        body: JSON.stringify(data),
       });
       const responseData = await response.json();
       return responseData;

@@ -4,7 +4,6 @@ import { Form, Input, Button, Checkbox, Table, Popconfirm, Select, message } fro
 import DynamicTable from 'components/app-components/Custom/table';
 import { UserService } from 'services/UserService';
 import { RolesService } from 'services/RolesService';
-import ActionsColumn from 'components/app-components/Custom/actions';
 import HeaderCustom from 'components/app-components/Custom/header';
 import ResponsiveCard from 'components/app-components/Custom/card';
 import ButtomCustom from 'components/util-components/Buttons/ButtonCustom';
@@ -20,12 +19,36 @@ const UserListForm = () => {
     const [roles, setRoles] = useState([]);
     const [creating, setCreating] = useState(null)
     const [editData, setEditData] = useState(null)
+    const [response, setResponse] = useState(null)
+    const [loading, setLoading] = useState(false);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+        showSizeChanger: false,
+        pageSizeOptions: ["5", "10", "20", "50"],
+        showTotal: (total) => `Total: ${total} registros`,
+    });
 
-    const fetchData = async () => {
-        const users = await UserService.get();
-        return { data: users, current: 1, pageSize: 10, total: 10 }
-
+    const fetchData = async (page, pageSize, filters) => {
+        return await UserService.get(page, pageSize, filters);
     };
+
+    const loadTableData = async (page, pageSize) => {
+        setLoading(true);
+        try {
+          const response = await fetchData(page, pageSize);
+          setResponse(response);
+          setPagination({ ...pagination, total: response.total, current: page, pageSize,
+            
+           });
+        } catch (error) {
+          console.error("Error al obtener datos:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+   
 
     const fetchRoles = async () => {
         try {
@@ -36,10 +59,11 @@ const UserListForm = () => {
         }
     };
 
-    useEffect(() => {
-        fetchRoles();
-        fetchData();
-    }, []);
+    useEffect( () => {
+         fetchRoles();
+         loadTableData(pagination.current, pagination.pageSize);
+      }, [pagination.current, pagination.pageSize]);
+
 
     //define columns
     const columns = [
@@ -61,17 +85,16 @@ const UserListForm = () => {
         setEditData(null)
     };
 
-
     const handleSubmit = async (form) => {
         const values = await form.validateFields();
-        try {
-            Modal.confirm({
-                title: "¿Estás seguro?",
-                content: `Confirma que deseas ${editData ? 'Actualizar' : 'Crear'} los datos.`,
-                okText: "Sí, enviar",
-                cancelText: "Cancelar",
-                onOk: async () => {
 
+        Modal.confirm({
+            title: "¿Estás seguro?",
+            content: `Confirma que deseas ${editData ? 'Actualizar' : 'Crear'} los datos.`,
+            okText: "Sí, enviar",
+            cancelText: "Cancelar",
+            onOk: async () => {
+                try {
                     if (editData) {
                         await UserService.update(editData.id, values);
                         message.success(MessageConstant.get("EXITO-GENERAL-ACTUALIZADO"))
@@ -79,30 +102,46 @@ const UserListForm = () => {
                         await UserService.create(values);
                         message.success(MessageConstant.get("EXITO-GENERAL-CREADO"))
                     }
-                  
+
                     await form.resetFields();
                     setCreating(null)
                     setEditData(null)
                 }
 
-            })
-        }
+                catch (ex) {
+                    message.error(MessageConstant.get("ERROR-GENERAL"))
+                    message.info(MessageConstant.get("INFO-NOMBRE-USUARIO"))
+                }
+            }
 
-        catch (ex) {
-            message.error(MessageConstant.get("ERROR-GENERAL"))
-            message.info(MessageConstant.get("INFO-NOMBRE-USUARIO"))
-        }
+        })
+
+    };
+
+    const handleTableChange = async (newpagination) => {
+        const {current, page, pageSize} = newpagination
+        setPagination({
+            ...pagination,
+            current: current,
+            pageSize: pageSize,
+            page: current
+        })
     };
 
     const handleEdit = async (user) => {
         setEditData(user);
     };
 
-    // const handleDelete = async (user) => {
-    //     // await deleteUser(user);
-    //     // setUsers(await fetchData());
-    //     // message.success(`usuario eliminado con exito`)
-    // };
+    const handleDelete = async (userId) => {
+
+        try {
+            await UserService.delete(userId)
+            message.success(MessageConstant.get("EXITO-GENERAL-ELIMINADO"))
+        }
+        catch (ex) {
+            message.error(MessageConstant.get("ERROR-GENERAL"))
+        }
+    };
 
 
     return (<>
@@ -122,7 +161,12 @@ const UserListForm = () => {
                             <ButtomCustom icon={<UserAddOutlined />} title={'Crear Usuario'}
                                 onClick={handleCreating}>
                             </ButtomCustom>
-                            <DynamicTable columns={columns} fetchData={fetchData} handleEdit={handleEdit} />
+                            <DynamicTable columns={columns} response={response} handleEdit={handleEdit}
+                                handleDelete={handleDelete}
+                                handleTableChange={handleTableChange}
+                                pagination={pagination}
+                                setPagination={setPagination}
+                            />
                         </>
 
                 }

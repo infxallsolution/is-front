@@ -17,7 +17,11 @@ const errosMessages = [
     {
         errorId: "INFO-NOMBRE-USUARIO",
         message: "Verifique si el usuario no esta creado"
-    }
+    },
+    {
+        errorId: "EXITO-GENERAL-ELIMINADO",
+        message:"Su registro ha sido eliminado con exito"
+    },
 ]
 
 class MessageConstant {
