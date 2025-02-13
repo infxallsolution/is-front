@@ -1,75 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Card, Divider, Select, Form, Checkbox, Input, Modal, Descriptions } from 'antd';
-import { useSelector } from 'react-redux';
-import { DatePicker, Space } from 'antd';
-import { DeleteOutlined, NumberOutlined, ClockCircleOutlined , PlusSquareOutlined, SearchOutlined, CalendarOutlined } from '@ant-design/icons';
-import { icon_responsable } from '../../../img/responsable.png'
-import { icon_admin } from '../../../img/admin.png'
-import { icon_solicitante } from '../../../img/solicitante.png'
-import axios from "axios";
-import moment from 'moment';
-import dayjs from 'dayjs';
+import { Row, Col, Button, Card, Divider, Select, Form, Input, Modal, Spin } from 'antd';
+import { DatePicker } from 'antd';
+import { DeleteOutlined,  ClockCircleOutlined, PlusSquareOutlined, CalendarOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
+import { message } from 'antd';
 
-import { UploadOutlined } from '@ant-design/icons';
-import { message, Upload } from 'antd';
-
-import { ROW_GUTTER } from 'constants/ThemeConstant';
-import { useNavigate, useParams } from "react-router-dom";
-import { Avatar, List } from 'antd';
-import fileDownload from 'js-file-download'
-import Swal from 'sweetalert2'
-
+import lotService from "services/lot-service";
+import machineService from "services/machine-service";
+import activityService from "services/activity-service";
+import movementService from "services/movement-service";
+import dayjs from "dayjs";
 
 export const InternalMovement = () => {
 
-  const server = process.env.REACT_APP_SERVER;
-
-
-  const [file, setFile] = useState(null);
-  const [id, setId] = useState(0);
-  const [estado, setEstado] = useState(0);
-
-
-  const navigate = useNavigate();
-  const paramsURL = useParams();
+  const [startDate, setStartDate] = useState(dayjs());
   const [form] = Form.useForm();
-  const [formMachine] = Form.useForm();
-  const fechaActual = moment().format("YYYY-MM-DD")
-  const dateFormat = 'YYYY-MM-DD';
+  const [formActivity] = Form.useForm();
+  const [movementId,setMovementId] = useState("")
+  const [productId,setProductId] = useState(1)
+  const [actualDays,setActualDays] = useState(0)
+  const [actualBalance,setActualBalance] = useState(0)
+  const [loading,setLoading] = useState(false)
+
+
+
+  
+
+  const [lotList, setLotList] = useState([]);
+  const [machineList, setMachineList] = useState([]);
+  const [activityList, setActivityList] = useState([]);
+
+
 
   const [detailsList, setDetailsList] = useState([])
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-
-
-  const machineList = [
-    { value: 1, label: 'KUBOTA - SENCILLA' },
-    { value: 2, label: 'KUBOTA - CARGADOR' },
-    { value: 3, label: 'MASSEY' },
-    { value: 4, label: 'MENAR' },
-    { value: 5, label: 'CARGADOR' },
-    { value: 6, label: 'AIREADORA PEQ' },
-    { value: 7, label: 'SIDE DUMP' }
-  ]
-  const lotList = [
-    { value: 1, label: 'TUNEL 1 - LOTE 1' },
-    { value: 2, label: 'TUNEL 2 - LOTE 1' },
-    { value: 3, label: 'TUNEL 3 - LOTE 1' },
-    { value: 4, label: 'TUNEL 4 - LOTE 1' },
-    { value: 5, label: 'TUNEL 5 - LOTE 1' },
-    { value: 6, label: 'TUNEL 6 - LOTE 1' },
-    { value: 7, label: 'TUNEL 7 - LOTE 1' }
-  ]
-
-  const productList = [
-    { value: 1, label: 'RAQUIS' },
-    { value: 2, label: 'COMPOST' },
-    { value: 3, label: 'LODO' },
-    { value: 4, label: 'CENIZA' }
-  ]
-
-
 
 
   const showModal = () => {
@@ -88,12 +52,19 @@ export const InternalMovement = () => {
     setOpen(false);
   };
 
-  
 
-  const removeDetail = (id) => {        
+
+  const clearForm = ()=>{
+      form.resetFields()
+      setDetailsList([])  
+  }
+
+
+  const removeDetail = (id) => {
     const details = detailsList.filter((machine) => machine.id !== id);
     const newList = [...details];
     setDetailsList(newList)
+    console.log(newList)
     message.info('Actividad de maquina removida');
   };
 
@@ -103,15 +74,21 @@ export const InternalMovement = () => {
 
 
   const addMachine = (values) => {
+
+    let userId = localStorage.getItem("USER_ID")
+    
     message.success('Actividad de maquina agregada');
-    const machine = machineList.find((machine) => machine.value === values.machine);
+    const machine = machineList.find((machine) => machine.id === values.machine);
     const uuid = uuidv4()
     const newDetail = {
       id: uuid,
-      machineId: values.machineId,
-      machineName: machine.label,
+      movementId,
+      machineId: values.machine,
+      machineName: machine.name,
       time: values.time,
-      description: values.activityDescription,
+      description: values.description,
+      userId,
+      state:true
     };
     const updatedList = [...detailsList, newDetail];
     setDetailsList(updatedList)
@@ -119,7 +96,7 @@ export const InternalMovement = () => {
   };
 
 
- 
+
   const { TextArea } = Input;
 
 
@@ -127,54 +104,80 @@ export const InternalMovement = () => {
 
 
 
-  const onFinish = (values) => {
-    console.log('Success:', values);
+  const onFinish = async (values) => {
+    const id = movementId
+    const lotId = values.lot
+    const type = 3 // movimiento interno
+    const activityId = values.activity
+    const date = values.date
+    const days = parseInt(values.days)
+    const lotDays = parseInt(values.days)  +  parseInt(actualDays)
+    const description = values.description
+    const quantity = 0
+    const balance = actualBalance
+    const userId = localStorage.getItem("USER_ID")
+    const state = true 
+    const movement = {id,date,lotId,productId,quantity,type,activityId,days,description,userId,state,balance,lotDays}
 
+    const movementDetails = detailsList.map((detail) => ({
+      ...detail,
+      movementId,
+      activityId
+    }));
+    const data = {movement, movementDetails}
+    setLoading(true);
+    await movementService.insert(data)
+    message.success("Registros ingresados")
+    setLoading(false);
+    form.resetFields();
+    setDetailsList([])
+    console.log("se ingresó")
+    
+    const uuid = uuidv4()
+    setMovementId(uuid)
 
-    let ticket = parseInt(paramsURL.id)
-    let estado = values.estado
-    let descripcion = values.descripcion
-    let usuario = localStorage.getItem("user_id")
-
-
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('id', id);
-    formData.append('ticket', ticket);
-    formData.append('fecha', fechaActual);
-    formData.append('estado', estado);
-    formData.append('descripcion', descripcion);
-    formData.append('usuario', usuario);
-
-    let url = server + "/api/tickets/insertMovimiento"
-    axios.post(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-      .then(response => {
-        //form.resetFields();
-        Swal.fire({
-          icon: "success",
-          title: "Realizado!",
-          showConfirmButton: false,
-          timer: 1000
-        });
-        form.setFieldValue("descripcion", "")
-      })
-      .catch(error => {
-        console.error('Error uploading file:', error);
-      });
 
   };
 
-  const onFinishFailed= (errorInfo) => {
+  const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
 
+
+
+  const getLotList = async () => {
+    const response = await lotService.getActiveList()
+    if (response) {
+      setLotList(response)
+    }
+  }
+
+
+
+  const getMachineList = async () => {
+    const response = await machineService.getActiveList()
+    if (response) {
+      setMachineList(response)
+    }
+  }
+
+  const getActivityList = async () => {
+    const response = await activityService.getActiveList()
+    if (response) {
+      setActivityList(response)
+    }
+  }
+
+
   useEffect(() => {
+    getActivityList()
+    getMachineList()
+    getLotList()
+
+    const uuid = uuidv4()
+    setMovementId(uuid)
+
 
   }, [])
 
@@ -201,6 +204,7 @@ export const InternalMovement = () => {
                 layout="vertical"
                 initialValues={
                   {
+                    date:startDate
                   }
                 }
                 onFinish={onFinish}
@@ -211,38 +215,66 @@ export const InternalMovement = () => {
 
                 <Row gutter={16}>
 
-                  
-
-                <Col className="gutter-row" span={24}>
-                    <Form.Item
-                      label="Lote"
-                      name="origin"
-                      rules={[{ required: true, message: 'Lote origen' }]}
-                    >
-                      <Select
-                        disabled={false}
-                        style={{ width: '100%' }}
-                        options={lotList}
-                      />
-                    </Form.Item>
-                  </Col>
-
-
 
                   
                 <Col className="gutter-row" span={12}>
                     <Form.Item
-                      label="date"
+                      label="Fecha"
                       name="date"
                     >
-                      <DatePicker style={{width:"100%"}} />
+                      <DatePicker style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
 
 
 
 
-                
+
+
+
+                <Col className="gutter-row" span={12}>
+                    <Form.Item label="Lote" name="lot" >
+                      <Select  
+                      onChange={(value) => {
+                        const selected = lotList.find((option) => option.id === value);
+                        if (selected) {
+                          setProductId(selected.productId)
+                          setActualDays(selected.days)
+                          setActualBalance(selected.balance)
+                        }
+                      }}                          
+                      >
+                        {lotList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>{option.name}</Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+
+                  <Col className="gutter-row" span={12}>
+                    <Form.Item label="Actividad" name="activity" >
+                      <Select                      
+                      onChange={(value) => {
+                        const selected = activityList.find((option) => option.id === value);
+                        if (selected) {
+                          form.setFieldValue("description", selected.description);
+                        }
+                      }}                    
+                      
+                      >
+                        {activityList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>{option.name}</Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+
+                  </Col>
+
+
+
+
+
                   <Col className="gutter-row" span={12}>
                     <Form.Item
                       label="Días de incremento"
@@ -280,17 +312,6 @@ export const InternalMovement = () => {
 
 
 
-                  <Col className="gutter-row" span={12}>
-                    <Form.Item
-                      label=" "
-                    >
-                      <Button className="w-100" type="primary" onClick={showModal} icon={<PlusSquareOutlined />} >
-                        Agregar Actividad
-                      </Button>
-                    </Form.Item>
-                  </Col>
-
-
 
 
 
@@ -299,20 +320,24 @@ export const InternalMovement = () => {
                     <Form.Item
                       label=" "
                     >
+                      <Spin spinning={loading}>
                       <Button className="w-100" type="primary" htmlType="submit">
-                        Guardar
+                        Guardar Registro
                       </Button>
+
+                      </Spin>
+                      
                     </Form.Item>
                   </Col>
 
 
 
 
-                  <Col className="gutter-row d-none" span={6}>
+                  <Col className="gutter-row" span={12} >
                     <Form.Item
                       label=" "
                     >
-                      <Button className="w-100" danger >
+                      <Button className="w-100" danger onClick={clearForm} >
                         Cancelar
                       </Button>
                     </Form.Item>
@@ -340,12 +365,14 @@ export const InternalMovement = () => {
 
             <Divider orientation="left">Tareas máquina</Divider>
 
-
+            
             <Card style={{ overflow: 'auto', height: '500px', backgroundColor: '#FFF' }} >
-
+            <Button  className="w-50 mb-3" color="primary" type="primary" variant="outlined"  onClick={showModal} icon={<PlusSquareOutlined />} >
+                        Agregar Actividad
+                      </Button>
               {
                 detailsList.map(item => {
-                    return (
+                  return (
                     <Card key={item.id} style={{ width: '100%', backgroundColor: '#FFF', boxShadow: "5px 5px 5px 1px rgba(200, 200, 200, 0.2)" }}  >
                       <Row gutter={4}>
                         <Col className="gutter-row" span={18}>
@@ -355,7 +382,7 @@ export const InternalMovement = () => {
 
                         </Col>
                         <Col className="gutter-row" span={6}>
-                          <Button className="w-100" htmlType="button" danger icon={<DeleteOutlined />}  onClick={() => removeDetail(item.id)} >
+                          <Button className="w-100" htmlType="button" danger icon={<DeleteOutlined />} onClick={() => removeDetail(item.id)} >
                             Eliminar
                           </Button>
                         </Col>
@@ -385,7 +412,7 @@ export const InternalMovement = () => {
 
               <Form
                 key={10}
-                form={formMachine}
+                form={formActivity}
                 name="basicInformation"
                 layout="vertical"
                 initialValues={
@@ -406,11 +433,19 @@ export const InternalMovement = () => {
                       name="machine"
                       rules={[{ required: true, message: 'Maquina requerida' }]}
                     >
-                      <Select
-                        disabled={false}
-                        style={{ width: '100%' }}
-                        options={machineList}
-                      />
+                      <Select                       
+                      onChange={(value) => {
+                        const selected = machineList.find((option) => option.id === value);
+                        if (selected) {
+                          console.log(selected.description)
+                          formActivity.setFieldValue("description", selected.description);
+                        }
+                      }}                        
+                      >
+                        {machineList.map((option) => (
+                          <Select.Option key={option.id} value={option.id}>{option.name}</Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Col>
 
@@ -422,7 +457,7 @@ export const InternalMovement = () => {
                       rules={[{ required: true, message: 'minutos requeridos' }]}
                     >
                       <Input
-                        prefix={<ClockCircleOutlined  className="text-primary" />}
+                        prefix={<ClockCircleOutlined className="text-primary" />}
                         placeholder={"Minutos maquina"}
                       />
                     </Form.Item>
@@ -432,11 +467,12 @@ export const InternalMovement = () => {
 
 
 
+
+
                   <Col className="gutter-row" span={24}>
                     <Form.Item
                       label="Descripción de la actividad"
-                      name="activityDescription"
-                      rules={[{ required: true, message: 'descripción requerida' }]}
+                      name="description"
                     >
                       <TextArea rows={2} />
                     </Form.Item>
@@ -448,7 +484,7 @@ export const InternalMovement = () => {
                       label=" "
                     >
                       <Button className="w-100" type="primary" htmlType="submit">
-                        Guardar
+                        Agregar
                       </Button>
                     </Form.Item>
                   </Col>

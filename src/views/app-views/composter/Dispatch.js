@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Card, Divider, Select, Form, Input, Modal, Spin } from 'antd';
+import { Row, Col, Button, Card, Divider, Select, Form, Input, Modal } from 'antd';
 import { DatePicker } from 'antd';
 import { DeleteOutlined, NumberOutlined, ClockCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { message } from 'antd';
-
 
 import lotService from "services/lot-service";
 import machineService from "services/machine-service";
@@ -12,30 +11,23 @@ import movementService from "services/movement-service";
 import dayjs from "dayjs";
 
 
-export const TransferMaterial = () => {
-
+export const Dispatch = () => {
 
   const [startDate, setStartDate] = useState(dayjs());
   const [hiddenSave, setHiddenSave] = useState(false)
-
   const [form] = Form.useForm();
   const [formActivity] = Form.useForm();
   const [movementIdOrigin, setMovementIdOrigin] = useState("")
-  const [movementIdDestination, setMovementIdDestination] = useState("")
   const [productId, setProductId] = useState(1)
   const [actualDaysOrigin, setActualDaysOrigin] = useState(0)
-  const [actualDaysDestination, setActualDaysDestination] = useState(0)
 
 
   const [balanceOrigin, setBalanceOrigin] = useState(0)
-  const [balanceDestination, setBalanceDestination] = useState(0)
 
 
-
-
-  const [originList, setOriginList] = useState([]);
-  const [destinationList, setDestinationList] = useState([]);
+  const [lotList, setLotList] = useState([]);
   const [machineList, setMachineList] = useState([]);
+
 
   const [detailsList, setDetailsList] = useState([])
   const [loading, setLoading] = useState(false);
@@ -47,6 +39,13 @@ export const TransferMaterial = () => {
     setDetailsList([])
     setHiddenSave(false)
   }
+
+  const toUpperTicket = (e) => {
+    const upperWord = e.target.value.toUpperCase()
+    console.log(upperWord)
+    form.setFieldValue("ticket", upperWord);
+  };
+
 
 
   const showModal = () => {
@@ -84,7 +83,7 @@ export const TransferMaterial = () => {
     const uuid = uuidv4()
     const newDetail = {
       id: uuid,
-      movementId: movementIdDestination,
+      movementId: movementIdOrigin,
       machineId: values.machine,
       machineName: machine.name,
       time: values.time,
@@ -102,11 +101,11 @@ export const TransferMaterial = () => {
   const onFinish = async (values) => {
 
     setLoading(true)
-
     let id = movementIdOrigin
     let lotId = values.origin
-    let type = 1 ////Salida de material
-    let activityId = 1 ///traslado de material
+    let ticket = values.ticket
+    let type = 4 ////Despacho
+    let activityId = 2 ///despacho de material
     let date = values.date
     let days = parseInt(actualDaysOrigin)
     let balance = parseInt(balanceOrigin) - parseInt(values.quantity)
@@ -114,38 +113,18 @@ export const TransferMaterial = () => {
     let quantity = values.quantity
     let userId = localStorage.getItem("USER_ID")
     let state = true
-    const movementOrigin = { id, date, lotId, productId, quantity, type, activityId, days, description, userId, state, balance }
-    const movementOriginDetails = [] /// no debe cargarse movimientos al origen
-    const dataOut = { movement: movementOrigin, movementDetails: movementOriginDetails }
+    const movementOrigin = { id, date, lotId, productId, quantity, type, activityId, days, description, userId, state, balance,ticket }
+
+
+    const movementDetails = detailsList.map((detail) => ({
+      ...detail,
+      movementId: movementIdOrigin,
+      activityId
+    }));
+    const dataOut = { movement: movementOrigin, movementDetails: movementDetails }
     await movementService.insert(dataOut)
     console.log("se registro la salida")
 
-
-
-
-
-    id = movementIdDestination
-    lotId = values.destination
-    type = 2 ////Entrada de material
-    activityId = 1 ///traslado de material
-    date = values.date
-    days = parseInt(actualDaysDestination)
-    balance = parseInt(balanceDestination) + parseInt(values.quantity)
-    description = values.description
-    quantity = values.quantity
-    userId = localStorage.getItem("USER_ID")
-    state = true
-    const movementDestination = { id, date, lotId, productId, quantity, type, activityId, days, description, userId, state, balance }
-
-    const movementDestinationDetails = detailsList.map((detail) => ({
-      ...detail,
-      movementId: movementIdDestination,
-      activityId
-    }));
-
-    const data = { movement: movementDestination, movementDetails: movementDestinationDetails }
-    await movementService.insert(data)
-    console.log("se registro la entrada")
     form.resetFields()
     setDetailsList([])
     setLoading(false)
@@ -153,8 +132,6 @@ export const TransferMaterial = () => {
 
     const uuidOrigin = uuidv4()
     setMovementIdOrigin(uuidOrigin)
-    const uuidDestination = uuidv4()
-    setMovementIdDestination(uuidDestination)
 
   };
 
@@ -166,8 +143,7 @@ export const TransferMaterial = () => {
   const getLotList = async () => {
     const response = await lotService.getActiveList()
     if (response) {
-      setOriginList(response)
-      setDestinationList(response)
+      setLotList(response)
     }
   }
 
@@ -188,8 +164,6 @@ export const TransferMaterial = () => {
     setMovementIdOrigin(uuidOrigin)
 
 
-    const uuidDestination = uuidv4()
-    setMovementIdDestination(uuidDestination)
 
 
   }, [])
@@ -204,7 +178,7 @@ export const TransferMaterial = () => {
             span={12}
           >
 
-            <Divider orientation="left">Traslado de material</Divider>
+            <Divider orientation="left">Despacho de material</Divider>
 
             <Card style={{ overflow: 'auto', height: '500px', backgroundColor: '#FFF' }} >
 
@@ -236,62 +210,37 @@ export const TransferMaterial = () => {
 
 
                   <Col className="gutter-row" span={12}>
-                    <Form.Item label="Origen" name="origin" >
+                    <Form.Item label="Lote productivo" name="origin" >
                       <Select
                         onChange={(value) => {
-                          const selected = originList.find((option) => option.id === value);
+                          const selected = lotList.find((option) => option.id === value);
                           if (selected) {
                             setProductId(selected.productId)
                             setActualDaysOrigin(selected.days)
                             setBalanceOrigin(selected.balance)
                             form.setFieldValue("quantity", selected.balance);
-
-                            const newList = originList.filter((option) => option.id != selected.id)
-                            setDestinationList(newList)
-
-                            if(selected.balance<=0){
-                            //  message.error("Lote sin saldo")
-                            //  setHiddenSave(true)
-                            }
-                            else{
-                            //  message.info("Lote con saldo")
-                            //  setHiddenSave(false)
-                            }
-
-                          }
-                        }}
-                      >
-                        {originList.map((option) => (
-                          <Select.Option key={option.id} value={option.id}>{option.name}</Select.Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-
-
-
-                  <Col className="gutter-row" span={12}>
-                    <Form.Item label="Destino" name="destination" >
-                      <Select
-                        onChange={(value) => {
-                          const selected = destinationList.find((option) => option.id === value);
-                          console.log(selected)
-                          if (selected) {
-                            setActualDaysDestination(selected.days)
-                            setBalanceDestination(selected.balance)
-                            setProductId(selected.productId)
                             console.log(selected.balance)
-                            console.log(selected.days)
-                           
+
+                            if (selected.balance <= 0) {
+                              //message.error("Lote sin saldo")
+                              //setHiddenSave(true)
+                            }
+                            else {
+                              //message.info("Lote con saldo")
+                              //setHiddenSave(false)
+                            }
+
                           }
                         }}
                       >
-                        {destinationList.map((option) => (
+                        {lotList.map((option) => (
                           <Select.Option key={option.id} value={option.id}>{option.name}</Select.Option>
                         ))}
                       </Select>
                     </Form.Item>
                   </Col>
+
+
 
                   <Col className="gutter-row" span={12}>
                     <Form.Item
@@ -305,7 +254,6 @@ export const TransferMaterial = () => {
                       ]}
                     >
                       <Input
-
                         prefix={<NumberOutlined className="text-primary" />}
                         placeholder={
                           " Kilogramos del traslado"
@@ -313,6 +261,22 @@ export const TransferMaterial = () => {
                       />
                     </Form.Item>
                   </Col>
+
+
+
+                  <Col className="gutter-row" span={12}>
+                    <Form.Item label="Tiquete asociado" name="ticket" span={12}  >
+                      <Input
+                        name="ticket"
+                        onChange={toUpperTicket}
+                        prefix={<NumberOutlined className="text-primary" />}
+                        placeholder="Tiquete de bascula"
+                        type="text"
+                      />
+                    </Form.Item>
+                  </Col>
+
+
 
                   <Col className="gutter-row" span={24}>
                     <Form.Item
@@ -329,13 +293,9 @@ export const TransferMaterial = () => {
                     <Form.Item
                       label=" "
                     >
-                      <Spin spinning={loading}>
-                        <Button className="w-100" type="primary" htmlType="submit" >
-                          Guardar
-                        </Button>
-
-                      </Spin>
-
+                      <Button className="w-100" type="primary" htmlType="submit">
+                        Guardar
+                      </Button>
                     </Form.Item>
                   </Col>
 
@@ -343,7 +303,7 @@ export const TransferMaterial = () => {
                     <Form.Item
                       label=" "
                     >
-                      <Button className="w-100" danger onClick={clearForm} >
+                      <Button className="w-100" danger  onClick={clearForm}  >
                         Cancelar
                       </Button>
                     </Form.Item>
@@ -358,9 +318,10 @@ export const TransferMaterial = () => {
           <Col span={12} >
             <Divider orientation="left">Tareas máquina  </Divider>
             <Card style={{ overflow: 'auto', height: '500px', backgroundColor: '#FFF' }} >
-            <Button className="w-50 mb-3" type="primary" onClick={showModal} icon={<PlusSquareOutlined />} >
-                        Agregar Actividad
-                      </Button>
+
+              <Button className="w-50 mb-3" type="primary" onClick={showModal} icon={<PlusSquareOutlined />} >
+                Agregar Actividad
+              </Button>
 
               {
                 detailsList.map(item => {
@@ -487,4 +448,4 @@ export const TransferMaterial = () => {
     </>
   )
 }
-export default TransferMaterial;
+export default Dispatch;

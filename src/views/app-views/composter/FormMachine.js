@@ -50,7 +50,7 @@ export const FormMachine = () => {
       key: "name",
     },
     {
-      title: "Descripción",
+      title: "Función",
       dataIndex: "description",
       key: "description"
     },
@@ -194,7 +194,7 @@ export const FormMachine = () => {
                     options={listaEstados}
                   />
                 </Form.Item>
-                <Form.Item label="Descripción" name="description" rules={rules.description}>
+                <Form.Item label="Funciones" name="description" rules={rules.description}>
                   <TextArea name="description" rows={4} />
                 </Form.Item>
                 <Spin spinning={loading}>

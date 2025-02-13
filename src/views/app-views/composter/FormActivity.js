@@ -33,17 +33,14 @@ export const FormActivity = () => {
   const [total, setTotal] = useState(0);
 
 
+  
+
   const handlePageChange = (page, pageSize) => {
     setPage(page);
     setPageSize(pageSize);
   };
 
   const columns = [
-    {
-      title: "id",
-      dataIndex: "id",
-      key: "id",
-    },
     {
       title: "Name",
       dataIndex: "name",
@@ -105,8 +102,9 @@ export const FormActivity = () => {
     let name = values.name;
     let state = values.state;
     let description = values.description;
+    let initial = 0;
     let userId = localStorage.getItem("user_id");
-    const data = { id, name, description, state, userId };
+    const data = { id, name, description, state, userId, initial };
     if (showEdit)
       await activityService.update(data)
     else
@@ -176,7 +174,7 @@ export const FormActivity = () => {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
                 style={{ maxWidth: 800 }}
-                initialValues={{ remember: true }}
+                initialValues={{  }}
                 onFinish={onFinish}
                 form={form}
                 autoComplete="off"
@@ -187,6 +185,9 @@ export const FormActivity = () => {
                 <Form.Item label="Nombre" name="name" rules={rules.name}>
                   <Input name="name" placeholder="Nombre de la actividad" />
                 </Form.Item>
+
+
+                
                 <Form.Item label="Estado" name="state" >
                   <Select
                     disabled={localStorage.getItem("rol") == 3}
@@ -194,6 +195,9 @@ export const FormActivity = () => {
                     options={listaEstados}
                   />
                 </Form.Item>
+
+
+
                 <Form.Item label="Descripción" name="description" rules={rules.description}>
                   <TextArea name="description" rows={4} />
                 </Form.Item>

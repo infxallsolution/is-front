@@ -119,4 +119,25 @@ export const protectedRoutes = [
       import("views/app-views/composter/TransferMaterial")
     ),
   },
+  {
+    key: "dispatch",
+    path: `${APP_PREFIX_PATH}/composter/dispatch`,
+    component: React.lazy(() =>
+      import("views/app-views/composter/Dispatch")
+    ),
+  },
+  {
+    key: "report_movements",
+    path: `${APP_PREFIX_PATH}/composter/report_movements`,
+    component: React.lazy(() =>
+      import("views/app-views/composter/ReportMovements")
+    ),
+  },
+  {
+    key: "report_movement_details",
+    path: `${APP_PREFIX_PATH}/composter/report_movement_details`,
+    component: React.lazy(() =>
+      import("views/app-views/composter/ReportMovementDetails")
+    ),
+  },
 ];

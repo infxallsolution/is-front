@@ -10,10 +10,11 @@ import {
   CheckSquareOutlined ,
   ExperimentOutlined,
   DeploymentUnitOutlined,
-  CarOutlined,
+  ShopOutlined,
   HomeOutlined ,
   InteractionOutlined,
-  ExportOutlined 
+  ExportOutlined, 
+  ShoppingCartOutlined
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 import ModuleService from "services/ModuleService";
@@ -81,6 +82,27 @@ const navigationConfigDos = [
     path: `${APP_PREFIX_PATH}/composter/transfer`,
     title: 'Traslados',
     icon: ExportOutlined,
+    submenu: []
+  },
+  {
+    key: 'dispatch',
+    path: `${APP_PREFIX_PATH}/composter/dispatch`,
+    title: 'Despachos',
+    icon: ShoppingCartOutlined,
+    submenu: []
+  },
+  {
+    key: 'report_movements',
+    path: `${APP_PREFIX_PATH}/composter/report_movements`,
+    title: 'Reporte de movimientos',
+    icon: UnorderedListOutlined,
+    submenu: []
+  },
+  {
+    key: 'report_movement_details',
+    path: `${APP_PREFIX_PATH}/composter/report_movement_details`,
+    title: 'Reporte de actividades',
+    icon: UnorderedListOutlined,
     submenu: []
   }
 ]

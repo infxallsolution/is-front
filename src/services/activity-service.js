@@ -65,12 +65,28 @@ export const get = async (id) => {
 };
 
 
+export const getActiveList = async () => {  
+  try {
+    const config = authHeader()
+    const url = `${URL_BASE}/activity/active-list`
+    const response = await axios.get(url,config)
+    const listado = response.data|| null;
+    return listado;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
+
+
 
 
   export default{
     insert,
     list,
     get,
-    update
+    update,
+    getActiveList
   }
 

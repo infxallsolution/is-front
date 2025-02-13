@@ -7,27 +7,11 @@ const URL_BASE = env.API_ENDPOINT_URL;
 
 
 
-export const update = async (data) => {
-  console.log(data)
-  try {
-    const config = authHeader()
-    const response = await axios.post(URL_BASE+"/machine/update", data, config)
-    const success = response.data?.success || null;
-    return success;
-  } catch (error) {
-    console.error("Error:", error);
-    return false;
-  }
-};
-
-
-
-
 export const insert = async (data) => {
   console.log(data)
   try {
     const config = authHeader()
-    const response = await axios.post(URL_BASE+"/machine/insert", data, config)
+    const response = await axios.post(URL_BASE+"/movement/insert", data, config)
     const success = response.data?.success || null;
     return success;
   } catch (error) {
@@ -35,12 +19,29 @@ export const insert = async (data) => {
     return false;
   }
 };
+
+
+
+export const update = async (data) => {
+  console.log(data)
+  try {
+    const config = authHeader()
+    const response = await axios.post(URL_BASE+"/movement/update", data, config)
+    const success = response.data?.success || null;
+    return success;
+  } catch (error) {
+    console.error("Error:", error);
+    return false;
+  }
+};
+
+
 
 
 export const list = async (page,limit) => {  
   try {
     const config = authHeader()
-    const url = `${URL_BASE}/machine/list?page=${page}&limit=${limit}`
+    const url = `${URL_BASE}/movement/list?page=${page}&limit=${limit}`
     const response = await axios.get(url,config)
     const listado = response.data|| null;
     return listado;
@@ -54,7 +55,7 @@ export const list = async (page,limit) => {
 export const get = async (id) => {  
   try {
     const config = authHeader()
-    const url = `${URL_BASE}/machine/get?id=${id}`
+    const url = `${URL_BASE}/movement/get?id=${id}`
     const response = await axios.get(url,config)
     const data = response.data.data|| null;
     return data;
@@ -68,7 +69,7 @@ export const get = async (id) => {
 export const getActiveList = async () => {  
   try {
     const config = authHeader()
-    const url = `${URL_BASE}/machine/active-list`
+    const url = `${URL_BASE}/movement/active-list`
     const response = await axios.get(url,config)
     const listado = response.data|| null;
     return listado;
@@ -80,11 +81,32 @@ export const getActiveList = async () => {
 
 
 
+
+
+
+
+
+export const deleteMovement = async (movementId) => {
+  try {
+    const config = authHeader()
+    const response = await axios.post(URL_BASE+"/movement/delete", {id:movementId}, config)
+    const success = response.data?.success || null;
+    return success;
+  } catch (error) {
+    console.error("Error:", error);
+    return false;
+  }
+};
+
+
+
+
   export default{
     insert,
     list,
     get,
     update,
-    getActiveList
+    getActiveList,
+    deleteMovement
   }
 

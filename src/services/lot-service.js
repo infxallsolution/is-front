@@ -7,7 +7,7 @@ const URL_BASE = env.API_ENDPOINT_URL;
 
 
 
-export const update = async (data) => {
+const update = async (data) => {
   console.log(data)
   try {
     const config = authHeader()
@@ -23,7 +23,7 @@ export const update = async (data) => {
 
 
 
-export const insert = async (data) => {
+const insert = async (data) => {
   console.log(data)
   try {
     const config = authHeader()
@@ -37,7 +37,7 @@ export const insert = async (data) => {
 };
 
 
-export const list = async (page,limit) => {  
+const list = async (page,limit) => {  
   try {
     const config = authHeader()
     const url = `${URL_BASE}/lot/list?page=${page}&limit=${limit}`
@@ -51,12 +51,12 @@ export const list = async (page,limit) => {
 };
 
 
-export const get = async (id) => {  
+const get = async (id) => {  
   try {
     const config = authHeader()
     const url = `${URL_BASE}/lot/get?id=${id}`
     const response = await axios.get(url,config)
-    const data = response.data.data|| null;
+    const data = response.data|| null;
     return data;
   } catch (error) {
     console.error("Error:", error);
@@ -66,11 +66,43 @@ export const get = async (id) => {
 
 
 
+const getActiveList = async () => {  
+  try {
+    const config = authHeader()
+    const url = `${URL_BASE}/lot/active-list`
+    const response = await axios.get(url,config)
+    const listado = response.data|| null;
+    return listado;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
+
+
+const getMaxConsecutive = async (storeId) => {  
+  try {
+    const config = authHeader()
+    const url = `${URL_BASE}/lot/max-consecutive?storeId=${storeId}`
+    const response = await axios.get(url,config)
+    const data = response.data.max|| 0;
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    return error.response;
+  }
+};
+
+
+
 
   export default{
+    getMaxConsecutive,
     insert,
     list,
     get,
-    update
+    update,
+    getActiveList
   }
 

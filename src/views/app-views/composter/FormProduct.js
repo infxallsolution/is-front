@@ -77,8 +77,8 @@ export const FormProduct = () => {
 
 
   const listaEstados = [
-    { value: true, label: "Activa" },
-    { value: false, label: "Inactiva" },
+    { value: true, label: "Activo" },
+    { value: false, label: "Inactivo" },
   ];
 
   const listType = [
