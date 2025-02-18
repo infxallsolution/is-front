@@ -325,7 +325,7 @@ export const TransferMaterial = () => {
                   </Col>
 
 
-                  <Col className="gutter-row" span={12}  hidden={hiddenSave} >
+                  <Col className="gutter-row" span={8}  hidden={hiddenSave} >
                     <Form.Item
                       label=" "
                     >
@@ -339,7 +339,7 @@ export const TransferMaterial = () => {
                     </Form.Item>
                   </Col>
 
-                  <Col className="gutter-row" span={12}>
+                  <Col className="gutter-row" span={8}>
                     <Form.Item
                       label=" "
                     >
@@ -358,7 +358,7 @@ export const TransferMaterial = () => {
           <Col span={12} >
             <Divider orientation="left">Tareas máquina  </Divider>
             <Card style={{ overflow: 'auto', height: '500px', backgroundColor: '#FFF' }} >
-            <Button className="w-50 mb-3" type="primary" onClick={showModal} icon={<PlusSquareOutlined />} >
+            <Button className="w-30 mb-3" type="primary" onClick={showModal} icon={<PlusSquareOutlined />} >
                         Agregar Actividad
                       </Button>
 

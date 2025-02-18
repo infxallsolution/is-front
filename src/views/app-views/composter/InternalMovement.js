@@ -316,7 +316,7 @@ export const InternalMovement = () => {
 
 
 
-                  <Col className="gutter-row" span={12}>
+                  <Col className="gutter-row" span={8}>
                     <Form.Item
                       label=" "
                     >
@@ -333,7 +333,7 @@ export const InternalMovement = () => {
 
 
 
-                  <Col className="gutter-row" span={12} >
+                  <Col className="gutter-row" span={8} >
                     <Form.Item
                       label=" "
                     >
@@ -367,7 +367,7 @@ export const InternalMovement = () => {
 
             
             <Card style={{ overflow: 'auto', height: '500px', backgroundColor: '#FFF' }} >
-            <Button  className="w-50 mb-3" color="primary" type="primary" variant="outlined"  onClick={showModal} icon={<PlusSquareOutlined />} >
+            <Button  className="w-30 mb-3" color="primary" type="primary" variant="outlined"  onClick={showModal} icon={<PlusSquareOutlined />} >
                         Agregar Actividad
                       </Button>
               {

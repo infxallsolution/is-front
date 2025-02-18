@@ -1,10 +1,10 @@
 const dev = {
-  API_ENDPOINT_URL: 'http://localhost:7000/api'
+  API_ENDPOINT_URL: 'http://localhost:8020/api'
   //API_ENDPOINT_URL: 'https://core-composter.infxsolution.com/api'
 };
 
 const prod = {
-	API_ENDPOINT_URL: 'http://localhost:7000/api'
+	API_ENDPOINT_URL: 'http://localhost:8020/api'
 	//API_ENDPOINT_URL: 'https://core-composter.infxsolution.com/api'
 };
 
