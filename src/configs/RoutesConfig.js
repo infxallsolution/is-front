@@ -127,6 +127,13 @@ export const protectedRoutes = [
     ),
   },
   {
+    key: "adjustments",
+    path: `${APP_PREFIX_PATH}/composter/adjustments`,
+    component: React.lazy(() =>
+      import("views/app-views/composter/Adjustments")
+    ),
+  },
+  {
     key: "report_movements",
     path: `${APP_PREFIX_PATH}/composter/report_movements`,
     component: React.lazy(() =>

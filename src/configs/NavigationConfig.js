@@ -92,6 +92,13 @@ const navigationConfigDos = [
     submenu: []
   },
   {
+    key: 'adjustments',
+    path: `${APP_PREFIX_PATH}/composter/adjustments`,
+    title: 'Ajustes de inventario',
+    icon: ColumnHeightOutlined,
+    submenu: []
+  },
+  {
     key: 'report_movements',
     path: `${APP_PREFIX_PATH}/composter/report_movements`,
     title: 'Reporte de movimientos',
@@ -110,6 +117,17 @@ const navigationConfigDos = [
 
 
 /*
+
+ ,
+  CreditCardOutlined,
+  IdcardOutlined,
+  CheckSquareOutlined ,
+  ExperimentOutlined,
+  DeploymentUnitOutlined,
+  ShopOutlined,
+  HomeOutlined ,
+  InteractionOutlined,
+
 const modulos = []
 
 const getModules = async () => {
