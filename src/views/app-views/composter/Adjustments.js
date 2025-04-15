@@ -106,11 +106,13 @@ export const Adjustments = () => {
       return;
     }
 
+    balance = newBalance;
+
    
     let description = values.description
     let userId = localStorage.getItem("USER_ID")
     let state = true
-    const movementOrigin = { id, date, lotId, productId, quantity, type, activityId, days, description, userId, state, newBalance,ticket }
+    const movementOrigin = { id, date, lotId, productId, quantity, type, activityId, days, description, userId, state, balance,ticket }
 
 
     const movementDetails = detailsList.map((detail) => ({
